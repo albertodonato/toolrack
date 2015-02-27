@@ -30,8 +30,10 @@ config = {
     'maintainer_email': '<alberto.donato@gmail.com>',
     'url': 'https://bitbucket.org/ack/toolrack',
     'download_url': 'https://bitbucket.org/ack/toolrack/downloads',
-    'packages': find_packages(exclude=['*.test.*', '*.test', 'test.*']),
+    'packages': find_packages(exclude=['*.tests.*', '*.tests', 'tests.*']),
     'include_package_data': True,
+    'test_suite': 'toolrack',
+    'tests_require': ['fixtures'],
     'keywords': 'library utility',
     'classifiers': [
         'Development Status :: 3 - Alpha',
