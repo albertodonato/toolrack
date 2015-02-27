@@ -13,10 +13,46 @@
 # You should have received a copy of the GNU General Public License
 # along with ToolRack.  If not, see <http://www.gnu.org/licenses/>.
 
-'''Testcase files.'''
+'''Unittest classes.'''
 
-from fixtures import TestWithFixtures
+import os
+from tempfile import mktemp
+from unittest import TestCase as BaseTestCase
+
+from fixtures import TestWithFixtures, TempDir
 
 
-class ToolRackTestCase(TestWithFixtures):
-    '''Testcase for ToolRack tests.'''
+class TestCase(TestWithFixtures, BaseTestCase):
+    '''Base class for tests.'''
+
+    def setUp(self):
+        super(TestCase, self).setUp()
+        # A base temporary directory
+        self.tempdir = self.useFixture(TempDir()).path
+
+    def mkdir(self):
+        '''Create a temporary directory and return the path.'''
+        fixture = self.useFixture(TempDir(rootdir=self.tempdir))
+        return fixture.path
+
+    def mkfile(self, path=None, content='', mode=None):
+        '''Create a temporary file and return its path.
+
+        if path is specified, it's appended to tempdir and all intermiediate
+        directories are created.
+
+        '''
+        if path is None:
+            path = mktemp(dir=self.tempdir)
+        else:
+            path = os.path.join(self.tempdir, path)
+            dir_path = os.path.dirname(path)
+            if not os.path.isdir(dir_path):
+                os.makedirs(dir_path)
+
+        with open(path, 'w') as fh:
+            fh.write(content)
+
+        if mode is not None:
+            os.chmod(path, mode)
+        return path
