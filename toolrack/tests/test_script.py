@@ -55,7 +55,7 @@ class ErrorExitMessageTests(TestCase):
         self.assertEqual(error.code, 1)
 
     def test_code(self):
-        '''L{ErrorExitMessage} can provide a different error code.'''
+        '''ErrorExitMessage can provide a different error code.'''
         error = ErrorExitMessage('Something went wrong!', code=3)
         self.assertEqual(error.code, 3)
 
