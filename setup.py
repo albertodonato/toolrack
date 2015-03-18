@@ -32,6 +32,8 @@ config = {
     'download_url': 'https://bitbucket.org/ack/toolrack/downloads',
     'packages': find_packages(exclude=['*.tests.*', '*.tests', 'tests.*']),
     'include_package_data': True,
+    'entry_points': {'console_scripts': [
+        'json-indent = toolrack.scripts.json_indent:script']},
     'test_suite': 'toolrack',
     'tests_require': ['fixtures'],
     'keywords': 'library utility',
