@@ -16,7 +16,7 @@
 '''Unittest classes.'''
 
 import os
-from tempfile import mktemp
+from tempfile import mkstemp, mkdtemp
 from unittest import TestCase as BaseTestCase
 
 from fixtures import TestWithFixtures, TempDir
@@ -30,10 +30,14 @@ class TestCase(TestWithFixtures, BaseTestCase):
         # A base temporary directory
         self.tempdir = self.useFixture(TempDir()).path
 
-    def mkdir(self):
-        '''Create a temporary directory and return the path.'''
-        fixture = self.useFixture(TempDir(rootdir=self.tempdir))
-        return fixture.path
+    def mkdir(self, path=None):
+        '''Create a temporary directory and return the path.
+
+        if path is specified, it's appended to tempdir and all intermiediate
+        directories are created.
+
+        '''
+        return self._mkpath(path, mkdtemp)
 
     def mkfile(self, path=None, content='', mode=None):
         '''Create a temporary file and return its path.
@@ -42,17 +46,26 @@ class TestCase(TestWithFixtures, BaseTestCase):
         directories are created.
 
         '''
-        if path is None:
-            path = mktemp(dir=self.tempdir)
-        else:
-            path = os.path.join(self.tempdir, path)
-            dir_path = os.path.dirname(path)
-            if not os.path.isdir(dir_path):
-                os.makedirs(dir_path)
+        path = self._mkpath(path, mkstemp)
 
         with open(path, 'w') as fh:
             fh.write(content)
 
         if mode is not None:
             os.chmod(path, mode)
+        return path
+
+    def readfile(self, path):
+        '''Return the content of a file.'''
+        with open(path) as fd:
+            return fd.read()
+
+    def _mkpath(self, path, create_func):
+        if path is None:
+            path = create_func(dir=self.tempdir)
+        else:
+            path = os.path.join(self.tempdir, path)
+            dir_path = os.path.dirname(path)
+            if not os.path.isdir(dir_path):
+                os.makedirs(dir_path)
         return path
