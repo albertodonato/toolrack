@@ -17,12 +17,13 @@
 
 import sys
 import argparse
-import json
 
+from toolrack.json_util import indent
 from toolrack.script import Script, ErrorExitMessage
 
 
 class JSONIndent(Script):
+    '''Script to indent JSON text.'''
 
     def get_parser(self):
         parser = argparse.ArgumentParser(description='Indent JSON text')
@@ -42,18 +43,13 @@ class JSONIndent(Script):
 
     def main(self, args):
         try:
-            self._indent(args.input, args.output, args.num, args.ascii)
+            indent(
+                args.input, args.output, indent=args.num,
+                ensure_ascii=args.ascii)
         except ValueError as error:
-            raise ErrorExitMessage('Indenting failed: {}'.format(error))
+            raise ErrorExitMessage('Formatting failed: {}'.format(error))
         except KeyboardInterrupt:
             pass
-
-    def _indent(self, in_stream, out_stream, indent, ensure_ascii):
-        data = json.load(in_stream)
-        json.dump(
-            data, out_stream, sort_keys=True, ensure_ascii=ensure_ascii,
-            indent=indent)
-        out_stream.write('\n')
 
 
 script = JSONIndent()
