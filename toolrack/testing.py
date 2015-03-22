@@ -25,11 +25,6 @@ from fixtures import TestWithFixtures, Fixture, TempDir
 class TestCase(TestWithFixtures, BaseTestCase):
     '''Base class for tests.'''
 
-    def setUp(self):
-        super(TestCase, self).setUp()
-        # A base temporary directory
-        self.tempdir = self.useFixture(TempDir()).path
-
     def readfile(self, path):
         '''Return the content of a file.'''
         with open(path) as fd:
