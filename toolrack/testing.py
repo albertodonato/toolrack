@@ -19,7 +19,7 @@ import os
 from tempfile import mkstemp, mkdtemp
 from unittest import TestCase as BaseTestCase
 
-from fixtures import TestWithFixtures, TempDir
+from fixtures import TestWithFixtures, Fixture, TempDir
 
 
 class TestCase(TestWithFixtures, BaseTestCase):
@@ -30,11 +30,24 @@ class TestCase(TestWithFixtures, BaseTestCase):
         # A base temporary directory
         self.tempdir = self.useFixture(TempDir()).path
 
+    def readfile(self, path):
+        '''Return the content of a file.'''
+        with open(path) as fd:
+            return fd.read()
+
+
+class TempDirFixture(Fixture):
+
+    def setUp(self):
+        super(TempDirFixture, self).setUp()
+        self.path = self.useFixture(TempDir()).path
+
     def mkdir(self, path=None):
         '''Create a temporary directory and return the path.
 
-        if path is specified, it's appended to tempdir and all intermiediate
-        directories are created.
+        If a path is specified, it's appended to tempdir and all intermiediate
+        directories are created.  The path attribute can be a tuple, in which
+        case elements are joined.
 
         '''
         return self._mkpath(path, mkdtemp)
@@ -42,7 +55,7 @@ class TestCase(TestWithFixtures, BaseTestCase):
     def mkfile(self, path=None, content='', mode=None):
         '''Create a temporary file and return its path.
 
-        if path is specified, it's appended to tempdir and all intermiediate
+        If path is specified, it's appended to tempdir and all intermiediate
         directories are created.
 
         '''
@@ -55,17 +68,17 @@ class TestCase(TestWithFixtures, BaseTestCase):
             os.chmod(path, mode)
         return path
 
-    def readfile(self, path):
-        '''Return the content of a file.'''
-        with open(path) as fd:
-            return fd.read()
-
     def _mkpath(self, path, create_func):
         if path is None:
-            path = create_func(dir=self.tempdir)
+            path = create_func(dir=self.path)
         else:
-            path = os.path.join(self.tempdir, path)
-            dir_path = os.path.dirname(path)
-            if not os.path.isdir(dir_path):
-                os.makedirs(dir_path)
+            if isinstance(path, tuple):
+                path = os.path.join(*path)
+            if os.path.isabs(path):
+                raise ValueError('Path must be relative.')
+
+            path = os.path.join(self.path, path)
+            dirname = os.path.dirname(path)
+            if not os.path.isdir(dirname):
+                os.makedirs(dirname)
         return path
