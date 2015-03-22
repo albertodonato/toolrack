@@ -13,7 +13,7 @@
 # You should have received a copy of the GNU General Public License
 # along with ToolRack.  If not, see <http://www.gnu.org/licenses/>.
 
-'''Unittest classes.'''
+'''Unit-test features.'''
 
 import os
 from tempfile import mkstemp, mkdtemp
