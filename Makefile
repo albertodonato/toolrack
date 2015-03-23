@@ -29,7 +29,7 @@ devel:
 	$(SETUP) develop
 
 clean:
-	rm -rf build toolrack.egg-info _trial_temp
+	rm -rf build html *.egg-info _trial_temp
 
 test:
 	@$(TEST_RUNNER) $(BASEDIR)
@@ -37,4 +37,7 @@ test:
 lint:
 	@$(LINT) $(BASEDIR)
 
-.PHONY: build
+html:
+	sphinx-build -b html docs html
+
+.PHONY: build html
