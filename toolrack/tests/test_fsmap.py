@@ -42,6 +42,12 @@ class DirectoryTests(TestCase):
         dir_path = self.tempdir.mkdir()
         self.assertIsInstance(self.dir[path.basename(dir_path)], Directory)
 
+    def test_getitem_traverses_paths(self):
+        '''It's possible to traverse subdirectories when accessing elements.'''
+        file_path = path.join('subdir', 'file')
+        self.tempdir.mkfile(path=file_path, content='some content')
+        self.assertEqual(self.dir[file_path], 'some content')
+
     def test_getitem_notfound_raises(self):
         '''An error is raised if the element is not found.'''
         self.assertRaises(KeyError, self.dir.__getitem__, 'unknown')
