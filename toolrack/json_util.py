@@ -24,6 +24,13 @@ def indent(in_fd, out_fd, indent=4, ensure_ascii=False):
     It reads text in JSON format from ``in_fd`` and writes the formatted output
     to ``out_fd``, using the specified amount of ``indent`` spaces.
 
+    Parameters:
+        - in_fd: input file descriptor.
+        - out_fd: output file descriptor.
+        - indent: number of spaces used for indentation.
+        - ensure_ascii: passed to the JSON serializer, if specified, non-ASCII
+          characters are escaped.
+
     '''
     data = load(in_fd)
     dump(
