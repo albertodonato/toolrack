@@ -62,7 +62,7 @@ class Script(object):
 
     Subclasses must implement :func:`get_parser` and :func:`main` methods.
 
-    Inside :func:`main`, :class:`ErrorExitMessage` can be raised with the
+    Inside :func:`main`, :exc:`ErrorExitMessage` can be raised with the
     appropriate ``message`` and ``code`` to cause the script termination, with
     the message outputted to standard error.
 
