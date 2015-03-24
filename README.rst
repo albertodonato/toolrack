@@ -3,8 +3,8 @@ ToolRack
 
 This library is a collection of miscellaneous utility functions and classes.
 
-Available modules:
-------------------
+Available modules
+-----------------
 
 :mod:`toolrack.fsmap`
      Dict-like access to directories and contained files.
