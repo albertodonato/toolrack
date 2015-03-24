@@ -35,7 +35,7 @@ config = {
     'entry_points': {'console_scripts': [
         'json-indent = toolrack.scripts.json_indent:script']},
     'test_suite': 'toolrack',
-    'tests_require': ['fixtures'],
+    'install_requires': ['fixtures'],
     'keywords': 'library utility',
     'classifiers': [
         'Development Status :: 3 - Alpha',
