@@ -32,17 +32,33 @@ class TestCase(TestWithFixtures, BaseTestCase):
 
 
 class TempDirFixture(Fixture):
+    '''Fixture providing a temporary base dir.
+
+    The fixture also provides method to create sub-directories and files under
+    the temporary directory.
+
+    It's can be used in a :class:`fixtures.TestWithFixtures`::
+
+      self.useFixture(TempDirFixture())
+
+    '''
 
     def setUp(self):
+        '''Set up a temporary directory.'''
         super(TempDirFixture, self).setUp()
         self.path = self.useFixture(TempDir()).path
 
     def mkdir(self, path=None):
         '''Create a temporary directory and return the path.
 
-        If a path is specified, it's appended to tempdir and all intermiediate
-        directories are created.  The path attribute can be a tuple, in which
-        case elements are joined.
+        By default, a random name is chosen.
+
+        Parameters:
+          - path: if specified, it's appended to the base directory and all
+            intermiediate directories are created too.
+            A relative path *must* be specified.
+            A tuple of strings can be also passed, in which case elements are
+            joined using :data:`os.path.sep`.
 
         '''
         return self._mkpath(path, mkdtemp)
@@ -50,8 +66,16 @@ class TempDirFixture(Fixture):
     def mkfile(self, path=None, content='', mode=None):
         '''Create a temporary file and return its path.
 
-        If path is specified, it's appended to tempdir and all intermiediate
-        directories are created.
+        By default, a random name is chosen.
+
+        Parameters:
+          - path: if specified, it's appended to the base directory and all
+            intermiediate directories are created too.
+            A relative path *must* be specified.
+            A tuple of strings can be also passed, in which case elements are
+            joined using :data:`os.path.sep`.
+          - content: the content of the file.
+          - mode: Unix permissions for the file.
 
         '''
         path = self._mkpath(path, mkstemp)
