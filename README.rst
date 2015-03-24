@@ -17,7 +17,7 @@ Development installation
 ------------------------
 
 The source tree is available available at
-`<https://bitbucket.com/ack/toolrack/>`_, users should install `Virtualenv
+`<https://bitbucket.com/ack/toolrack>`_, users should install `Virtualenv
 <https://virtualenv.pypa.io/>`_ for development.
 
 As a user run::
