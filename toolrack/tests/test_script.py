@@ -40,7 +40,7 @@ class DummyScript(Script):
         if self.failure is not None:
             raise self.failure
 
-    def exit(self, code):
+    def _exit(self, code):
         self.code = code
 
 

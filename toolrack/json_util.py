@@ -19,7 +19,12 @@ from json import load, dump
 
 
 def indent(in_fd, out_fd, indent=4, ensure_ascii=False):
-    '''Indent JSON data.'''
+    '''Indent JSON data.
+
+    It reads text in JSON format from ``in_fd`` and writes the formatted output
+    to ``out_fd``, using the specified amount of ``indent`` spaces.
+
+    '''
     data = load(in_fd)
     dump(
         data, out_fd, sort_keys=True, ensure_ascii=ensure_ascii,

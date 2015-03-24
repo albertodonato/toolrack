@@ -13,22 +13,30 @@
 # You should have received a copy of the GNU General Public License
 # along with ToolRack.  If not, see <http://www.gnu.org/licenses/>.
 
-'''A base class for python scripts.
+'''Base class for python scripts.
 
+This module provides a :class:`Script` class to reduce boilerplate when
+creating python scripts.
 
-Subclasses of Script must implement the following methods:
+:class:`Script` instances are callable, and can optionally receive a list of
+arguments (by default they look at :data:`sys.argv`).
 
- - get_parser(): it must return an argparser.ArgumentParser instance,
-   configured with the proper options/arguments that the script handles.  - -
+A typical use of :class:`Script` is to declare a subclass with the script
+logic and create an instance::
 
- - main(args): the actual script code, it gets called with the
-   argparse.Namespace instance returned by the parser.
+  class MyScript(Script):
 
-Inside main, Scripts can raise ErrorExitMessage with the appropriate message
-and code to cause the program termination.
+      def main(self, args):
+         # script logic here
+         ...
 
-Script instances are callable, and can be passed the argument list (which
-defaults to sys.argv if not provided).
+  my_script = MyScript()
+
+The instance can be referenced in :mod:`setuptools` ``entry_points`` key::
+
+  setup(
+      entry_points={'console_scripts': ['my_script=path.to.script:my_script']},
+      ...)
 
 '''
 
@@ -36,7 +44,13 @@ import sys
 
 
 class ErrorExitMessage(Exception):
-    '''Raised to exit the process with the specified message and exit code.'''
+    '''Raised to exit the process with the specified message and exit code.
+
+    Parameters:
+        - message: the error message.
+        - code: the script exit code.
+
+    '''
 
     def __init__(self, message, code=1):
         super(ErrorExitMessage, self).__init__(message)
@@ -44,28 +58,51 @@ class ErrorExitMessage(Exception):
 
 
 class Script(object):
-    '''Wraps a python script handling argument parsing.'''
+    '''Wraps a python script handling argument parsing.
 
-    exit = sys.exit
+    Subclasses must implement :func:`get_parser` and :func:`main` methods.
 
-    def __init__(self, stdout=sys.stdout, stderr=sys.stderr):
-        self._stdout = stdout
-        self._stderr = stderr
+    Inside :func:`main`, :class:`ErrorExitMessage` can be raised with the
+    appropriate :data:`message` and :data:`code` to cause the script
+    termination, with the message outputted to standard error.
+
+    Script instances are callable, and can be passed the argument list (which
+    defaults to :data:`sys.argv` if not provided).
+
+    '''
+
+    _exit = sys.exit
+
+    def __init__(self, stdout=None, stderr=None):
+        self._stdout = stdout or sys.stdout
+        self._stderr = stderr or sys.stderr
 
     def get_parser(self):
-        '''Return a configured argparse.ArgumentParser instance.'''
+        '''Return a configured :class:`argparse.ArgumentParser` instance.
+
+        .. note::
+            Subclasses must implement this method.
+
+        '''
         raise NotImplementedError()
 
     def main(self, args):
-        '''Body of the script.
+        '''The body of the script.
 
-        It gets called with the argparse.Namespace instance returned by
-        get_parser.
+        It gets called with the :class:`argparse.Namespace` instance returned
+        by :func:`get_parser`.
+
+        Parameters:
+            - args: a :class:`argparse.Namespace` with the command line.
+
+        .. note::
+            Subclasses must implement this method.
 
         '''
         raise NotImplementedError()
 
     def __call__(self, args=None):
+        '''Call the script, passing sys.argv by default.'''
         parser = self.get_parser()
         parsed_args = parser.parse_args(args=args)
         try:
@@ -75,5 +112,5 @@ class Script(object):
 
     def _error_exit(self, error):
         '''Terminate with the specified ErrorExitMessage.'''
-        self._stderr.write(error.message + '\n')
-        self.exit(error.code)
+        self._stderr.write('{}\n'.format(error.message))
+        self._exit(error.code)

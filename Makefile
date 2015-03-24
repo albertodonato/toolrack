@@ -13,12 +13,10 @@
 # You should have received a copy of the GNU General Public License
 # along with ToolRack.  If not, see <http://www.gnu.org/licenses/>.
 
-BASEDIR = toolrack
-
 PYTHON = python
-TEST_RUNNER = trial
-LINT = flake8
 SETUP = $(PYTHON) setup.py
+LINT = flake8
+
 
 all: build
 
@@ -32,10 +30,10 @@ clean:
 	rm -rf build html *.egg-info _trial_temp
 
 test:
-	@$(TEST_RUNNER) $(BASEDIR)
+	@$(SETUP) test
 
 lint:
-	@$(LINT) $(BASEDIR)
+	@$(LINT) .
 
 html:
 	sphinx-build -b html docs html
