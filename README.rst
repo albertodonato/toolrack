@@ -3,6 +3,11 @@ ToolRack
 
 This library is a collection of miscellaneous utility functions and classes.
 
+`documentation <http://toolrack.readthedocs.org/>`_ |
+`sources <https://bitbucket.org/ack/toolrack>`_ |
+`issues <https://bitbucket.org/ack/toolrack/issues>`_
+
+
 Install
 -------
 
