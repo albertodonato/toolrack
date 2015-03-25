@@ -30,7 +30,7 @@ config = {
     'maintainer_email': '<alberto.donato@gmail.com>',
     'url': 'https://bitbucket.org/ack/toolrack',
     'download_url': 'https://bitbucket.org/ack/toolrack/downloads',
-    'packages': find_packages(exclude=['*.tests.*', '*.tests', 'tests.*']),
+    'packages': find_packages(),
     'include_package_data': True,
     'entry_points': {'console_scripts': [
         'json-indent = toolrack.scripts.json_indent:script']},
