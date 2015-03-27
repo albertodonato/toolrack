@@ -1,5 +1,7 @@
-_`toolrack.convert`
--------------------
+.. _mod-convert:
+
+toolrack.convert
+----------------
 
 .. automodule:: toolrack.convert
       :members:

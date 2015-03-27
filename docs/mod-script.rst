@@ -1,5 +1,7 @@
-_`toolrack.script`
-------------------
+.. _mod-script:
+
+toolrack.script
+---------------
 
 .. automodule:: toolrack.script
       :members:

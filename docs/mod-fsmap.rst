@@ -1,5 +1,7 @@
-_`toolrack.fsmap`
------------------
+.. _mod-fsmap:
+
+toolrack.fsmap
+--------------
 
 .. automodule:: toolrack.fsmap
       :members:

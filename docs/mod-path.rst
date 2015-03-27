@@ -1,5 +1,7 @@
-_`toolrack.path`
-----------------
+.. _mod-path:
+
+toolrack.path
+-------------
 
 .. automodule:: toolrack.path
       :members:

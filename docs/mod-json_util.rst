@@ -1,5 +1,7 @@
-_`toolrack.json_util`
----------------------
+.. _mod-json_util:
+
+toolrack.json_util
+------------------
 
 .. automodule:: toolrack.json_util
       :members:

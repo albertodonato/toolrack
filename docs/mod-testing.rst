@@ -1,5 +1,7 @@
-_`toolrack.testing`
--------------------
+.. _mod-testing:
+
+toolrack.testing
+----------------
 
 .. automodule:: toolrack.testing
       :members:
