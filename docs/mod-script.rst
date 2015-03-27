@@ -1,5 +1,3 @@
-.. _mod-script:
-
 toolrack.script
 ---------------
 

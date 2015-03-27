@@ -1,6 +1,6 @@
-toolrack.testing
+toolrack.iterate
 ----------------
 
-.. automodule:: toolrack.testing
+.. automodule:: toolrack.iterate
       :members:
       :undoc-members:

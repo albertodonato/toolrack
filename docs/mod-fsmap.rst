@@ -1,5 +1,3 @@
-.. _mod-fsmap:
-
 toolrack.fsmap
 --------------
 

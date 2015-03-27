@@ -1,5 +1,3 @@
-.. _mod-convert:
-
 toolrack.convert
 ----------------
 

@@ -1,5 +1,3 @@
-.. _mod-path:
-
 toolrack.path
 -------------
 

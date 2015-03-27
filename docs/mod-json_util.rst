@@ -1,5 +1,3 @@
-.. _mod-json_util:
-
 toolrack.json_util
 ------------------
 
