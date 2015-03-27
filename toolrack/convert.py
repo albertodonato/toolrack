@@ -15,11 +15,12 @@
 
 '''Unit conversion utilities.'''
 
+#: Binary byte multipliers
 BYTE_SUFFIXES = (None, 'kib', 'mib', 'gib', 'tib', 'pib', 'eib', 'zib', 'yib')
 
 
-def byte_convert(value, suffix=None, to=None):
-    '''Convert the specified value from one multiplier to another.'''
+def convert_bbyte(value, suffix=None, to=None):
+    '''Convert the specified binary byte value across multipliers.'''
     if suffix:
         suffix = suffix.lower()
     multiplier = 2 ** (10 * BYTE_SUFFIXES.index(suffix))
