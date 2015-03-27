@@ -13,7 +13,7 @@
 # You should have received a copy of the GNU General Public License
 # along with ToolRack.  If not, see <http://www.gnu.org/licenses/>.
 
-from toolrack.testing import TestCase
+from unittest import TestCase
 
 from toolrack.convert import convert_bbyte
 
