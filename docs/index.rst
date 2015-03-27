@@ -6,6 +6,7 @@
    :hidden:
    :maxdepth: 3
 
+   modules.rst
    mod-convert.rst
    mod-fsmap.rst
    mod-json_util.rst
