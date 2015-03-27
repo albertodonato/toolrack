@@ -13,14 +13,21 @@
 # You should have received a copy of the GNU General Public License
 # along with ToolRack.  If not, see <http://www.gnu.org/licenses/>.
 
-'''Unit conversion utilities.'''
+'''Utilities for unit conversion.'''
 
 #: Binary byte multipliers
 BYTE_SUFFIXES = (None, 'kib', 'mib', 'gib', 'tib', 'pib', 'eib', 'zib', 'yib')
 
 
 def convert_bbyte(value, suffix=None, to=None):
-    '''Convert the specified binary byte value across multipliers.'''
+    '''Convert a binary byte value across multipliers.
+
+    Parameters:
+        - value: the current value.
+        - suffix: the current multiplier for the value (`None` for bytes).
+        - to: the target multiplier (`None` for bytes).
+
+    '''
     if suffix:
         suffix = suffix.lower()
     multiplier = 2 ** (10 * BYTE_SUFFIXES.index(suffix))

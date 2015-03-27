@@ -37,6 +37,9 @@ As a user run::
 Available modules
 -----------------
 
+:mod:`toolrack.convert`
+     Utilities for unit conversion.
+
 :mod:`toolrack.fsmap`
      Dict-like access to directories and contained files.
 
