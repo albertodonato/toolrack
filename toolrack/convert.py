@@ -15,6 +15,7 @@
 
 '''Utilities for unit conversion.'''
 
+
 #: Binary byte multipliers
 BYTE_SUFFIXES = (None, 'kib', 'mib', 'gib', 'tib', 'pib', 'eib', 'zib', 'yib')
 

@@ -6,6 +6,7 @@
    :hidden:
    :maxdepth: 3
 
+   mod-collection.rst
    mod-convert.rst
    mod-iterate.rst
    mod-fsmap.rst
