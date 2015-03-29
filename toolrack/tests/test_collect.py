@@ -15,7 +15,7 @@
 
 from unittest import TestCase
 
-from toolrack.collection import Collection, UnknownObject, DuplicatedObject
+from toolrack.collect import Collection, UnknownObject, DuplicatedObject
 
 
 class SampleObject(object):
