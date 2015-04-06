@@ -7,9 +7,10 @@
    :maxdepth: 3
 
    mod-collect.rst
+   mod-config.rst
    mod-convert.rst
-   mod-iterate.rst
    mod-fsmap.rst
+   mod-iterate.rst
    mod-json_util.rst
    mod-path.rst
    mod-script.rst
