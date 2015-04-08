@@ -27,7 +27,10 @@ will use ``obj.name`` as key and::
 
 will return the object with ``obj.name == foo``.
 
+The :class:`Collection` is iterable, and yields the contained objects::
 
+  for obj in collection:
+      # ... do something with obj
 
 '''
 
