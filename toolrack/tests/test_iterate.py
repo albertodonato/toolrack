@@ -58,3 +58,8 @@ class FlattenDictTests(TestCase):
         data = {'a': {'1': 1}, 'b': {'2': 2}}
         items = flatten_dict(data, prefix='pre')
         self.assertItemsEqual(items, [('pre.a.1', 1), ('pre.b.2', 2)])
+
+    def test_flatten_dict_key_not_string(self):
+        '''If the key is not a string, it's converted to string.'''
+        items = flatten_dict({1: 'a'})
+        self.assertItemsEqual(items, [('1', 'a')])

@@ -35,10 +35,10 @@ def flatten_dict(data, join_char='.', prefix=''):
         - prefix: an optional prefix to prepend to keys.
 
     '''
-
     if isinstance(data, dict):
         base_prefix = prefix
         for key, value in data.iteritems():
+            key = str(key)  # force to string
             if base_prefix:
                 prefix = join_char.join((base_prefix, key))
             else:
