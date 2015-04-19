@@ -95,9 +95,15 @@ class ConfigKeyTests(TestCase):
         '''A ConfigKey has a name.'''
         config_key = ConfigKey('key', 'str')
         self.assertEqual(config_key.name, 'key')
+        self.assertEqual(config_key.description, '')
         self.assertIsNone(config_key.default)
         self.assertIsNone(config_key.validator)
         self.assertFalse(config_key.required)
+
+    def test_instantiate_with_description(self):
+        '''A ConfigKey can have a description.'''
+        config_key = ConfigKey('key', 'str', description='a config key')
+        self.assertEqual(config_key.description, 'a config key')
 
     def test_instantiate_with_required(self):
         '''A ConfigKey can be marked as required.'''

@@ -92,13 +92,15 @@ class ConfigKeyTypes(object):
 class ConfigKey(object):
     '''A key in the Configuration.'''
 
-    def __init__(self, name, _type, required=False, default=None,
-                 validator=None):
+    def __init__(self, name, _type, description='', required=False,
+                 default=None, validator=None):
         self.name = name
         self.type = _type
+        self.description = description
         self.required = required
         self.default = default
         self.validator = validator
+        self.description
         self._config_types = ConfigKeyTypes()
 
     def parse(self, value):
