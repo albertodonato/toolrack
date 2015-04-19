@@ -93,6 +93,10 @@ class Collection(object):
         '''Return an iterator with collection keys.'''
         return self._objects.iterkeys()
 
+    def sorted(self):
+        '''Return a list of objects sorted by key.'''
+        return sorted(self, key=self._get_key)
+
     def __iter__(self):
         '''Return an iterator yielding all objects.'''
         return self._objects.itervalues()

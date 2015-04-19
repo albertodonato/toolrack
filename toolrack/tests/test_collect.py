@@ -86,3 +86,12 @@ class CollectionTests(TestCase):
         for obj in objs:
             self.collection.add(obj)
         self.assertItemsEqual(self.collection.keys(), ['foo', 'bar', 'baz'])
+
+    def test_sorted(self):
+        '''The Collection can return objects ordered by key.'''
+        objs = [SampleObject('bar'), SampleObject('baz'), SampleObject('foo')]
+        # Add objects in a different order.
+        self.collection.add(objs[1])
+        self.collection.add(objs[0])
+        self.collection.add(objs[2])
+        self.assertEqual(self.collection.sorted(), objs)
