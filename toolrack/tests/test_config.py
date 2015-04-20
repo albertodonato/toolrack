@@ -13,6 +13,7 @@
 # You should have received a copy of the GNU General Public License
 # along with ToolRack.  If not, see <http://www.gnu.org/licenses/>.
 
+from operator import attrgetter
 from unittest import TestCase
 
 from toolrack.config import (
@@ -166,17 +167,20 @@ class ConfigKeyTests(TestCase):
 class ConfigTests(TestCase):
 
     def test_keys(self):
-        '''Config.keys return a sotred list of configuration keys.'''
-        config = Config(ConfigKey('foo', 'str'), ConfigKey('bar', 'str'))
-        self.assertEqual(config.keys, ['bar', 'foo'])
+        '''Config.keys return a sorted list of ConfigKeys.'''
+        keys = [ConfigKey('foo', 'str'), ConfigKey('bar', 'str')]
+        config = Config(*keys)
+        self.assertEqual(config.keys(), sorted(keys, key=attrgetter('name')))
 
     def test_extend(self):
         '''Config.extend returns a new Config with additional keys.'''
-        config = Config(ConfigKey('foo', 'str'), ConfigKey('bar', 'str'))
-        new_config = config.extend(
-            ConfigKey('baz', 'str'), ConfigKey('bza', 'str'))
+        keys = [ConfigKey('foo', 'str'), ConfigKey('bar', 'str')]
+        config = Config(*keys)
+        new_keys = [ConfigKey('baz', 'str'), ConfigKey('bza', 'str')]
+        new_config = config.extend(*new_keys)
         self.assertIsNot(new_config, config)
-        self.assertEqual(new_config.keys, ['bar', 'baz', 'bza', 'foo'])
+        all_keys = sorted(keys + new_keys, key=attrgetter('name'))
+        self.assertEqual(new_config.keys(), all_keys)
 
     def test_extend_overwrite(self):
         '''Config.extend overwrites configuration keys with the same name.'''

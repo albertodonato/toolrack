@@ -32,6 +32,7 @@ returns ``{'option1': 4, 'option2': True}``.
 '''
 
 
+from operator import attrgetter
 from functools import partial
 
 
@@ -141,10 +142,9 @@ class Config(object):
     def __init__(self, *keys):
         self._config_keys = {key.name: key for key in keys}
 
-    @property
     def keys(self):
-        '''Return available config keys sorted alphabetically.'''
-        return sorted(self._config_keys)
+        '''Return ConfigKeys sorted by name alphabetically.'''
+        return sorted(self._config_keys.values(), key=attrgetter('name'))
 
     def extend(self, *keys):
         '''Return a new Config with additional keys.'''
