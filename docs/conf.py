@@ -37,8 +37,8 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'ToolRack'
-copyright = u'{}, Alberto Donato'.format(datetime.today().year)
+project = 'ToolRack'
+copyright = '{}, Alberto Donato'.format(datetime.today().year)
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -83,8 +83,8 @@ htmlhelp_basename = 'toolrackdoc'
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ('index', 'toolrack', u'ToolRack Documentation',
-     [u'Alberto Donato'], 1)
+    ('index', 'toolrack', 'ToolRack Documentation',
+     ['Alberto Donato'], 1)
 ]
 
 # If true, show URL addresses after external links.

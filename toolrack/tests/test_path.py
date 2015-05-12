@@ -33,7 +33,7 @@ class MatchFilesTests(TestCase):
         dir2 = self.useFixture(TempDirFixture())
         dir1.mkfile(path='name')
         dir2.mkfile(path='name')
-        self.assertItemsEqual(
+        self.assertCountEqual(
             match_files([dir1.path, dir2.path], ['name']),
             [(dir1.path, 'name'), (dir2.path, 'name')])
 
@@ -42,7 +42,7 @@ class MatchFilesTests(TestCase):
         tempdir = self.useFixture(TempDirFixture())
         tempdir.mkfile(path='name1')
         tempdir.mkfile(path='name2')
-        self.assertItemsEqual(
+        self.assertCountEqual(
             match_files([tempdir.path], ['name*']),
             [(tempdir.path, 'name1'), (tempdir.path, 'name2')])
 
@@ -52,7 +52,7 @@ class MatchFilesTests(TestCase):
         tempdir.mkfile(path='this-name')
         tempdir.mkfile(path='other-name')
         tempdir.mkfile(path='name1')
-        self.assertItemsEqual(
+        self.assertCountEqual(
             match_files([tempdir.path], ['name*', '*-name']),
             [(tempdir.path, 'this-name'), (tempdir.path, 'other-name'),
              (tempdir.path, 'name1')])
@@ -63,7 +63,7 @@ class MatchFilesTests(TestCase):
         tempdir.mkfile(path='name')
         tempdir.mkfile(path='Name')
         tempdir.mkfile(path='NAME')
-        self.assertItemsEqual(
+        self.assertCountEqual(
             match_files([tempdir.path], ['name']), [(tempdir.path, 'name')])
 
     def test_case_insensitive(self):
@@ -72,7 +72,7 @@ class MatchFilesTests(TestCase):
         tempdir.mkfile(path='name')
         tempdir.mkfile(path='Name')
         tempdir.mkfile(path='NAME')
-        self.assertItemsEqual(
+        self.assertCountEqual(
             match_files([tempdir.path], ['name'], ignorecase=True),
             [(tempdir.path, 'name'), (tempdir.path, 'Name'),
              (tempdir.path, 'NAME')])

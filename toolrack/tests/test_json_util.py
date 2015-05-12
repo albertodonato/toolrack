@@ -13,7 +13,7 @@
 # You should have received a copy of the GNU General Public License
 # along with ToolRack.  If not, see <http://www.gnu.org/licenses/>.
 
-from cStringIO import StringIO
+from io import StringIO
 from json import dumps
 
 from toolrack.testing import TestCase
@@ -36,9 +36,9 @@ class IndentTests(TestCase):
             self.out_fd.getvalue(),
             '{\n'
             '    "bar": [\n'
-            '        4, \n'
+            '        4,\n'
             '        5\n'
-            '    ], \n'
+            '    ],\n'
             '    "foo": 3\n'
             '}\n')
 
@@ -51,15 +51,15 @@ class IndentTests(TestCase):
             self.out_fd.getvalue(),
             '{\n'
             '  "bar": [\n'
-            '    4, \n'
+            '    4,\n'
             '    5\n'
-            '  ], \n'
+            '  ],\n'
             '  "foo": 3\n'
             '}\n')
 
     def test_indent_ensure_ascii(self):
         '''Unicode chars can be encoded.'''
-        self.in_fd.write(dumps({'foo': u'\N{SNOWMAN}'}))
+        self.in_fd.write(dumps({'foo': '\N{SNOWMAN}'}))
         self.in_fd.seek(0)
         indent(self.in_fd, self.out_fd, indent=2, ensure_ascii=True)
         self.assertEqual(

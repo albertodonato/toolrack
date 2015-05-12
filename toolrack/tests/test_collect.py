@@ -78,14 +78,14 @@ class CollectionTests(TestCase):
         objs = [SampleObject('foo'), SampleObject('bar'), SampleObject('baz')]
         for obj in objs:
             self.collection.add(obj)
-        self.assertItemsEqual(self.collection, objs)
+        self.assertCountEqual(self.collection, objs)
 
     def test_keys(self):
         '''The Collection returns an iterable with keys.'''
         objs = [SampleObject('foo'), SampleObject('bar'), SampleObject('baz')]
         for obj in objs:
             self.collection.add(obj)
-        self.assertItemsEqual(self.collection.keys(), ['foo', 'bar', 'baz'])
+        self.assertCountEqual(self.collection.keys(), ['foo', 'bar', 'baz'])
 
     def test_sorted(self):
         '''The Collection can return objects ordered by key.'''

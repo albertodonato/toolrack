@@ -32,5 +32,5 @@ def match_files(dirpaths, patterns, ignorecase=False):
         for dirname, _, filenames in walk(dirpath):
             for filename in filenames:
                 fname = filename.lower() if ignorecase else filename
-                if any(map(lambda pattern: fnmatch(fname, pattern), patterns)):
+                if any(fnmatch(fname, pattern) for pattern in patterns):
                     yield dirname, filename

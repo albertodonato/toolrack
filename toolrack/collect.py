@@ -91,7 +91,7 @@ class Collection(object):
 
     def keys(self):
         '''Return an iterator with collection keys.'''
-        return self._objects.iterkeys()
+        return iter(self._objects.keys())
 
     def sorted(self):
         '''Return a list of objects sorted by key.'''
@@ -99,7 +99,7 @@ class Collection(object):
 
     def __iter__(self):
         '''Return an iterator yielding all objects.'''
-        return self._objects.itervalues()
+        return iter(self._objects.values())
 
     def __contains__(self, key):
         '''Whether an object with the specified key is present.'''

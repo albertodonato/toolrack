@@ -37,7 +37,7 @@ def flatten_dict(data, join_char='.', prefix=''):
     '''
     if isinstance(data, dict):
         base_prefix = prefix
-        for key, value in data.iteritems():
+        for key, value in data.items():
             key = str(key)  # force to string
             if base_prefix:
                 prefix = join_char.join((base_prefix, key))

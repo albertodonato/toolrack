@@ -163,7 +163,7 @@ class Config(object):
             config = {}
 
         parsed_config = {}
-        for name, config_key in self._config_keys.iteritems():
+        for name, config_key in self._config_keys.items():
             if config_key.required and name not in config:
                 raise MissingConfigKey(name)
 
