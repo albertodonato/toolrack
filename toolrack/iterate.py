@@ -43,8 +43,8 @@ def flatten_dict(data, join_char='.', prefix=''):
                 prefix = join_char.join((base_prefix, key))
             else:
                 prefix = key
-            for item in flatten_dict(
-                    value, join_char=join_char, prefix=prefix):
-                yield item
+            yield from flatten_dict(
+                value, join_char=join_char, prefix=prefix)
+
     else:
         yield prefix, data
