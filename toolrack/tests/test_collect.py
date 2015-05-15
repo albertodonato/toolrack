@@ -28,7 +28,7 @@ class SampleObject(object):
 class CollectionTests(TestCase):
 
     def setUp(self):
-        super(CollectionTests, self).setUp()
+        super().setUp()
         self.collection = Collection('SampleObject', 'name')
 
     def test_add(self):

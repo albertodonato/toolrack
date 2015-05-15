@@ -39,16 +39,14 @@ from functools import partial
 class MissingConfigKey(Exception):
 
     def __init__(self, key):
-        super(MissingConfigKey, self).__init__(
-            'Missing configuration key: {}'.format(key))
+        super().__init__('Missing configuration key: {}'.format(key))
         self.key = key
 
 
 class InvalidConfigValue(Exception):
 
     def __init__(self, key):
-        super(InvalidConfigValue, self).__init__(
-            'Invalid value for configuration key: {}'.format(key))
+        super().__init__('Invalid value for configuration key: {}'.format(key))
         self.key = key
 
 

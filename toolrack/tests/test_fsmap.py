@@ -22,7 +22,7 @@ from toolrack.fsmap import Directory, DIR
 class DirectoryTests(TestCase):
 
     def setUp(self):
-        super(DirectoryTests, self).setUp()
+        super().setUp()
         self.tempdir = self.useFixture(TempDirFixture())
         self.dir = Directory(self.tempdir.path)
 

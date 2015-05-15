@@ -23,7 +23,7 @@ from toolrack.json_util import indent
 class IndentTests(TestCase):
 
     def setUp(self):
-        super(IndentTests, self).setUp()
+        super().setUp()
         self.in_fd = StringIO()
         self.out_fd = StringIO()
 

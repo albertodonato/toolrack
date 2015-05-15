@@ -39,16 +39,14 @@ class UnknownObject(Exception):
     '''No object with the specified key in the :class:`Collection`.'''
 
     def __init__(self, obj_type, obj_key):
-        super(UnknownObject, self).__init__(
-            'Unknown {}: {}'.format(obj_type, obj_key))
+        super().__init__('Unknown {}: {}'.format(obj_type, obj_key))
 
 
 class DuplicatedObject(Exception):
     '''An object with the specified key is already the :class:`Collection`.'''
 
     def __init__(self, obj_type, obj_key):
-        super(DuplicatedObject, self).__init__(
-            'Duplicated {}: {}'.format(obj_type, obj_key))
+        super().__init__('Duplicated {}: {}'.format(obj_type, obj_key))
 
 
 class Collection(object):

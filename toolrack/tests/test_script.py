@@ -63,7 +63,7 @@ class ErrorExitMessageTests(TestCase):
 class ScriptTests(TestCase):
 
     def setUp(self):
-        super(ScriptTests, self).setUp()
+        super().setUp()
         self.stderr = StringIO()
         self.script = DummyScript(stderr=self.stderr)
 

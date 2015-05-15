@@ -45,7 +45,7 @@ class TempDirFixture(Fixture):
 
     def setUp(self):
         '''Set up a temporary directory.'''
-        super(TempDirFixture, self).setUp()
+        super().setUp()
         self.path = self.useFixture(TempDir()).path
 
     def mkdir(self, path=None):

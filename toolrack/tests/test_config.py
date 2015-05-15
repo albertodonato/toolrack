@@ -23,7 +23,7 @@ from toolrack.config import (
 class ConfigKeyTypesTests(TestCase):
 
     def setUp(self):
-        super(ConfigKeyTypesTests, self).setUp()
+        super().setUp()
         self.key_types = ConfigKeyTypes()
 
     def test_get_converter_unknown_type(self):
