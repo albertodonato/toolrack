@@ -13,7 +13,7 @@
 # You should have received a copy of the GNU General Public License
 # along with ToolRack.  If not, see <http://www.gnu.org/licenses/>.
 
-PYTHON = python
+PYTHON = python3
 SETUP = $(PYTHON) setup.py
 LINT = flake8
 
