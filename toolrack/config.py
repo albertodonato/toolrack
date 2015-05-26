@@ -50,7 +50,7 @@ class InvalidConfigValue(Exception):
         self.key = key
 
 
-class ConfigKeyTypes(object):
+class ConfigKeyTypes:
     '''Collection of type converters for ConfigKeys.'''
 
     # Base types
@@ -88,7 +88,7 @@ class ConfigKeyTypes(object):
         return [converter(item) for item in value]
 
 
-class ConfigKey(object):
+class ConfigKey:
     '''A key in the Configuration.'''
 
     def __init__(self, name, _type, description='', required=False,
@@ -131,7 +131,7 @@ class ConfigKey(object):
         return converter(value)
 
 
-class Config(object):
+class Config:
     '''Parse a configuration dictionary.
 
     A configuration has a set of keys of specific types.

@@ -29,7 +29,7 @@ from shutil import rmtree
 DIR = object()
 
 
-class Directory(object):
+class Directory:
     '''Provide access to the sub-tree of a directrory.
 
     It represents a directory in the filesystem::

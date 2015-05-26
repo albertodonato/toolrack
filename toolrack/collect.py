@@ -49,7 +49,7 @@ class DuplicatedObject(Exception):
         super().__init__('Duplicated {}: {}'.format(obj_type, obj_key))
 
 
-class Collection(object):
+class Collection:
     '''A Collection of objects keyed on an attribute.
 
     It collects objects identified by the value of an attribute.

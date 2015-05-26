@@ -57,7 +57,7 @@ class ErrorExitMessage(Exception):
         self.code = code
 
 
-class Script(object):
+class Script:
     '''Wraps a python script handling argument parsing.
 
     Subclasses must implement :func:`get_parser` and :func:`main` methods.

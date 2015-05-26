@@ -18,7 +18,7 @@ from unittest import TestCase
 from toolrack.collect import Collection, UnknownObject, DuplicatedObject
 
 
-class SampleObject(object):
+class SampleObject:
 
     def __init__(self, name, other_attr=None):
         self.name = name
