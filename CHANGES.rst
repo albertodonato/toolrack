@@ -1,4 +1,10 @@
-v0.2.0 - 2015-05-22
+v0.3.0 - 2015-05-30
+===================
+
+- Finalize switch to python3.
+- Code cleanups.
+
+v0.3.0 - 2015-05-22
 ===================
 
 - Switch to python3.
