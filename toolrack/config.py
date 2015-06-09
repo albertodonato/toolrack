@@ -23,14 +23,13 @@ provided.
 As an example::
 
   config = Config(
-    ConfigKey('option1', 'int', default=4),
-    ConfigKey('option2', 'bool', required=True))
+      ConfigKey('option1', 'int', default=4),
+      ConfigKey('option2', 'bool', required=True))
   config.parse({'option2': 'true'})
 
 returns ``{'option1': 4, 'option2': True}``.
 
 '''
-
 
 from operator import attrgetter
 from functools import partial
