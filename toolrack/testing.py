@@ -52,6 +52,12 @@ class TempDirFixture(Fixture):
         '''Join the specified path fragments with directory prefix.'''
         return os.path.join(self.path, *paths)
 
+    def mkstemp(self, **kwargs):
+        '''Wrap tempfile.mkstemp.'''
+        fd, path = mkstemp(**kwargs)
+        os.close(fd)
+        return path
+
     def mkdir(self, path=None):
         '''Create a temporary directory and return the path.
 
@@ -82,7 +88,7 @@ class TempDirFixture(Fixture):
           - mode: Unix permissions for the file.
 
         '''
-        path = self._mkpath(path, self._mkstemp)
+        path = self._mkpath(path, self.mkstemp)
 
         with open(path, 'w') as fh:
             fh.write(content)
@@ -104,9 +110,4 @@ class TempDirFixture(Fixture):
             dirname = os.path.dirname(path)
             if not os.path.isdir(dirname):
                 os.makedirs(dirname)
-        return path
-
-    def _mkstemp(self, **kwargs):
-        fd, path = mkstemp(**kwargs)
-        os.close(fd)
         return path
