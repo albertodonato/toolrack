@@ -48,6 +48,10 @@ class TempDirFixture(Fixture):
         super().setUp()
         self.path = self.useFixture(TempDir()).path
 
+    def join(self, *paths):
+        '''Join the specified path fragments with directory prefix.'''
+        return os.path.join(self.path, *paths)
+
     def mkdir(self, path=None):
         '''Create a temporary directory and return the path.
 
