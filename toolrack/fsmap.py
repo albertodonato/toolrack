@@ -39,7 +39,7 @@ class Directory:
     The object is iterable and yields names of contained elements::
 
       for elem in directory:
-         do_something(directory[elem])
+          do_something(directory[elem])
 
     Sub-directories and files below the base path can be accessed as items of a
     dict. For instance::
