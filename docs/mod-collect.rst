@@ -1,5 +1,6 @@
+================
 toolrack.collect
-----------------
+================
 
 .. automodule:: toolrack.collect
       :members:

@@ -1,5 +1,6 @@
+================
 toolrack.testing
-----------------
+================
 
 .. automodule:: toolrack.testing
       :members:

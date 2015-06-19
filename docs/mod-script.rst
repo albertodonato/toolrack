@@ -1,5 +1,6 @@
+===============
 toolrack.script
----------------
+===============
 
 .. automodule:: toolrack.script
       :members:

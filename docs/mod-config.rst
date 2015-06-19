@@ -1,5 +1,6 @@
+===============
 toolrack.config
----------------
+===============
 
 .. automodule:: toolrack.config
       :members:

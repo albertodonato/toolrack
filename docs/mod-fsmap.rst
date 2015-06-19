@@ -1,5 +1,6 @@
+==============
 toolrack.fsmap
---------------
+==============
 
 .. automodule:: toolrack.fsmap
       :members:

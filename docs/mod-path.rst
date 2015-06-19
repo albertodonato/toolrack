@@ -1,5 +1,6 @@
+=============
 toolrack.path
--------------
+=============
 
 .. automodule:: toolrack.path
       :members:

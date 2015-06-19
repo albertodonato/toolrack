@@ -15,6 +15,7 @@
    mod-path.rst
    mod-script.rst
    mod-testing.rst
+   mod-threading.rst
 
 .. include:: ../README.rst
 

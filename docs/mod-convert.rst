@@ -1,5 +1,6 @@
+================
 toolrack.convert
-----------------
+================
 
 .. automodule:: toolrack.convert
       :members:
