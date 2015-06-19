@@ -13,7 +13,7 @@
 # You should have received a copy of the GNU General Public License
 # along with ToolRack.  If not, see <http://www.gnu.org/licenses/>.
 
-'''Threading-related utilities.'''
+'''Thread-related utilities.'''
 
 from threading import local
 
