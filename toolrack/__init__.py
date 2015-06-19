@@ -13,6 +13,6 @@
 # You should have received a copy of the GNU General Public License
 # along with ToolRack.  If not, see <http://www.gnu.org/licenses/>.
 
-'''Library with a collection of utility functions.'''
+'''A collection of miscellaneous utility functions and classes.'''
 
-__version__ = '1.0.0'
+__version__ = '1.0.1'
