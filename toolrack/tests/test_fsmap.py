@@ -30,7 +30,7 @@ class DirectoryTests(TestCase):
         '''Iterating on the Directory returns contained file names.'''
         self.tempdir.mkfile(path='foo')
         self.tempdir.mkfile(path='bar')
-        self.assertCountEqual(['bar', 'foo'], self.dir)
+        self.assertCountEqual(self.dir, ['bar', 'foo'])
 
     def test_getitem_reads_file(self):
         '''Accessing a file item returns the content.'''
