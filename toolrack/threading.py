@@ -21,7 +21,7 @@ from threading import local
 class ThreadLocalAttribute:
     '''Descriptor to proxy access to a class attribute, making it thread-local.
 
-    This descriptor can be use to make a class attribute thread-local in a
+    This descriptor can be used to make a class attribute thread-local in a
     trasparent way::
 
       class MyClass:
