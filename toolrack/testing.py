@@ -65,7 +65,7 @@ class TempDirFixture(Fixture):
             joined using :data:`os.path.sep`.
 
         '''
-        return self._mkpath(path, mkdtemp)
+        return self._mkpath(path, mkdtemp, os.mkdir)
 
     def mkfile(self, path=None, content='', mode=None):
         '''Create a temporary file and return its path.
@@ -82,7 +82,7 @@ class TempDirFixture(Fixture):
           - mode: Unix permissions for the file.
 
         '''
-        path = self._mkpath(path, self._mkstemp)
+        path = self._mkpath(path, self._mkstemp, self._touch)
 
         with open(path, 'w') as fh:
             fh.write(content)
@@ -91,22 +91,27 @@ class TempDirFixture(Fixture):
             os.chmod(path, mode)
         return path
 
-    def _mkpath(self, path, create_func):
+    def _mkpath(self, path, create_temp, create_func):
         if path is None:
-            path = create_func(dir=self.path)
-        else:
-            if isinstance(path, tuple):
-                path = os.path.join(*path)
-            if os.path.isabs(path):
-                raise ValueError('Path must be relative.')
+            return create_temp(dir=self.path)
 
-            path = os.path.join(self.path, path)
-            dirname = os.path.dirname(path)
-            if not os.path.isdir(dirname):
-                os.makedirs(dirname)
+        if isinstance(path, tuple):
+            path = os.path.join(*path)
+        if os.path.isabs(path):
+            raise ValueError('Path must be relative.')
+
+        path = os.path.join(self.path, path)
+        dirname = os.path.dirname(path)
+        if dirname and not os.path.exists(dirname):
+            os.makedirs(dirname)
+        create_func(path)
         return path
 
     def _mkstemp(self, **kwargs):
         fd, path = mkstemp(**kwargs)
         os.close(fd)
         return path
+
+    def _touch(self, path):
+        fd = open(path, 'w')
+        fd.close()
