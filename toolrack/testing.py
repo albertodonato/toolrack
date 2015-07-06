@@ -84,8 +84,9 @@ class TempDirFixture(Fixture):
         '''
         path = self._mkpath(path, self._mkstemp, self._touch)
 
-        with open(path, 'w') as fh:
-            fh.write(content)
+        if content:
+            with open(path, 'w') as fh:
+                fh.write(content)
 
         if mode is not None:
             os.chmod(path, mode)
