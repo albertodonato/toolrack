@@ -84,3 +84,10 @@ class ScriptTests(TestCase):
         self.script([])
         self.assertEqual(self.stderr.getvalue(), 'Fail!\n')
         self.assertEqual(self.script.code, 3)
+
+    def test_exit(self):
+        '''Script.exit exits the process with 0 as return value.'''
+        calls = []
+        self.script._exit = calls.append
+        self.script.exit()
+        self.assertEqual(calls, [0])

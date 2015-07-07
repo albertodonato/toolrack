@@ -110,6 +110,10 @@ class Script:
         except ErrorExitMessage as error:
             self._error_exit(error)
 
+    def exit(self):
+        '''Exit cleanly.'''
+        self._exit(0)
+
     def _error_exit(self, error):
         '''Terminate with the specified ErrorExitMessage.'''
         self._stderr.write('{}\n'.format(error.message))
