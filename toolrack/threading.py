@@ -32,7 +32,7 @@ class ThreadLocalAttribute:
       instance = MyClass()
 
     The attribute will be normally accessible as ``instance.attr``, but it's
-    stored in a :func:``threading.local`` context.
+    stored in a :func:`threading.local` context.
 
     '''
 
