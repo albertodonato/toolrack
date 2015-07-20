@@ -13,6 +13,7 @@
    mod-iterate.rst
    mod-json_util.rst
    mod-path.rst
+   mod-property.rst
    mod-script.rst
    mod-testing.rst
    mod-threading.rst
