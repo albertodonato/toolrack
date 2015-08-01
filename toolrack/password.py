@@ -13,7 +13,22 @@
 # You should have received a copy of the GNU General Public License
 # along with ToolRack.  If not, see <http://www.gnu.org/licenses/>.
 
-'''Password generation functions.'''
+'''Password generation functions.
+
+
+:class:`PasswordProfile` defines a set of characters to use for generating
+password.  It's creating by passing a string with characters or character
+definitions encosed in curly braces (such as ``{alnum}``, ``{num}``,
+``{alpha}``), which are expanded to the corresponding set of characters.
+
+For instance::
+
+ profile = PasswordProfile('{alpha}-_')
+ profile.generate(length=5)
+
+yields a 5-chars password composed of letters, dashes and underscores.
+
+'''
 
 import string
 from random import SystemRandom
@@ -38,7 +53,7 @@ def generate_password(chars=DEFAULT_CHARS, length=DEFAULT_LENGTH):
 
 
 class PasswordProfile:
-    '''A password profile, specifying how to generate a random password .'''
+    '''A password profile, specifying how to generate a random password.'''
 
     CHAR_DEFS = {
         'alnum': string.ascii_letters + string.digits,
