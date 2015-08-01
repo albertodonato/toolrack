@@ -33,7 +33,8 @@ config = {
     'packages': find_packages(),
     'include_package_data': True,
     'entry_points': {'console_scripts': [
-        'json-indent = toolrack.scripts.json_indent:script']},
+        'json-indent = toolrack.scripts.json_indent:script',
+        'password-generator = toolrack.scripts.password_generator:script']},
     'test_suite': 'toolrack',
     'install_requires': ['fixtures'],
     'keywords': 'library utility',
