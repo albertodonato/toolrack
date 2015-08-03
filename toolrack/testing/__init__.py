@@ -18,4 +18,4 @@
 from toolrack.testing.base import TestCase
 
 
-__all__ = ["TestCase"]
+__all__ = ['TestCase']
