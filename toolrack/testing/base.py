@@ -12,3 +12,18 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with ToolRack.  If not, see <http://www.gnu.org/licenses/>.
+
+'''Base unit-test classes.'''
+
+from unittest import TestCase as BaseTestCase
+
+from fixtures import TestWithFixtures
+
+
+class TestCase(TestWithFixtures, BaseTestCase):
+    '''Base class for tests.'''
+
+    def readfile(self, path):
+        '''Return the content of a file.'''
+        with open(path) as fd:
+            return fd.read()

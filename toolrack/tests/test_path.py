@@ -16,7 +16,8 @@
 from collections import Iterable
 
 from toolrack.path import match_files
-from toolrack.testing import TestCase, TempDirFixture
+from toolrack.testing import TestCase
+from toolrack.testing.fixtures import TempDirFixture
 
 
 class MatchFilesTests(TestCase):

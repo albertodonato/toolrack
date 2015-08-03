@@ -12,3 +12,10 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with ToolRack.  If not, see <http://www.gnu.org/licenses/>.
+
+'''Unit-test features.'''
+
+from toolrack.testing.base import TestCase
+
+
+__all__ = ["TestCase"]

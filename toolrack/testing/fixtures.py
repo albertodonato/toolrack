@@ -13,22 +13,12 @@
 # You should have received a copy of the GNU General Public License
 # along with ToolRack.  If not, see <http://www.gnu.org/licenses/>.
 
-'''Unit-test features.'''
+'''Unit-test fixtures.'''
 
 import os
 from tempfile import mkstemp, mkdtemp
-from unittest import TestCase as BaseTestCase
 
-from fixtures import TestWithFixtures, Fixture, TempDir
-
-
-class TestCase(TestWithFixtures, BaseTestCase):
-    '''Base class for tests.'''
-
-    def readfile(self, path):
-        '''Return the content of a file.'''
-        with open(path) as fd:
-            return fd.read()
+from fixtures import Fixture, TempDir
 
 
 class TempDirFixture(Fixture):

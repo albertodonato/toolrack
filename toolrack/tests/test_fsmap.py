@@ -15,7 +15,8 @@
 
 from os import path
 
-from toolrack.testing import TestCase, TempDirFixture
+from toolrack.testing import TestCase
+from toolrack.testing.fixtures import TempDirFixture
 from toolrack.fsmap import Directory, DIR
 
 
