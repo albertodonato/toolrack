@@ -1,3 +1,15 @@
+v1.2.0 - 2015-08-04
+===================
+
+- Added modules:
+  - toolrack.async
+  - toolrack.property
+  - toolrack.testing.async
+
+- Moved TempDirFixture to the toolrack.testing.fixtures module.
+- Added password-generator script.
+
+
 v1.1.0 - 2015-06-25
 ===================
 
