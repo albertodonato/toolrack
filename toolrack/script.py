@@ -101,20 +101,31 @@ class Script:
         '''
         raise NotImplementedError()
 
-    def __call__(self, args=None):
-        '''Call the script, passing sys.argv by default.'''
-        parser = self.get_parser()
-        parsed_args = parser.parse_args(args=args)
-        try:
-            self.main(parsed_args)
-        except ErrorExitMessage as error:
-            self._error_exit(error)
-
     def exit(self):
         '''Exit cleanly.'''
         self._exit(0)
 
+    def handle_keyboard_interrupt(self, interrupt):
+        '''Called when a :class:`KeyboardInterrupt` is raised.
+
+        By default it just traps the exception and exits with success.
+        It can be overridden to perform additional cleanups.
+
+        '''
+        self.exit()
+
+    def __call__(self, args=None):
+        '''Call the script, passing :data:`sys.argv` by default.'''
+        parser = self.get_parser()
+        parsed_args = parser.parse_args(args=args)
+        try:
+            self.main(parsed_args)
+        except KeyboardInterrupt as interrupt:
+            self.handle_keyboard_interrupt(interrupt)
+        except ErrorExitMessage as error:
+            self._error_exit(error)
+
     def _error_exit(self, error):
-        '''Terminate with the specified ErrorExitMessage.'''
+        '''Terminate with the specified :class:`ErrorExitMessage`.'''
         self._stderr.write('{}\n'.format(error.message))
         self._exit(error.code)

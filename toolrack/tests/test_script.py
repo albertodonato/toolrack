@@ -91,3 +91,19 @@ class ScriptTests(TestCase):
         self.script._exit = calls.append
         self.script.exit()
         self.assertEqual(calls, [0])
+
+    def test_handle_keyboard_interrupt(self):
+        '''Script.handle_keyboard_interrupt exits cleanly by default.'''
+        calls = []
+        self.script._exit = calls.append
+        self.script.handle_keyboard_interrupt(KeyboardInterrupt())
+        self.assertEqual(calls, [0])
+
+    def test_handle_keyboard_interrupt_called(self):
+        '''Script.handle_keyboard_interrupt is called on KeyboardInterrupt.'''
+        interrupt = KeyboardInterrupt()
+        calls = []
+        self.script.failure = interrupt
+        self.script.handle_keyboard_interrupt = calls.append
+        self.script([])
+        self.assertEqual(calls, [interrupt])

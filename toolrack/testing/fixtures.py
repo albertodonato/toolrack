@@ -52,7 +52,7 @@ class TempDirFixture(Fixture):
             intermiediate directories are created too.
             A relative path *must* be specified.
             A tuple of strings can be also passed, in which case elements are
-            joined using :data:`os.path.sep`.
+            joined using :func:`os.path.sep`.
 
         '''
         return self._mkpath(path, mkdtemp, os.mkdir)
@@ -67,7 +67,7 @@ class TempDirFixture(Fixture):
             intermiediate directories are created too.
             A relative path *must* be specified.
             A tuple of strings can be also passed, in which case elements are
-            joined using :data:`os.path.sep`.
+            joined using :func:`os.path.sep`.
           - content: the content of the file.
           - mode: Unix permissions for the file.
 
