@@ -34,7 +34,6 @@ class PeriodicCallTests(LoopTestCase):
     def test_start(self):
         '''Starting the PeriodicCall makes it call the function immediately.'''
         self.periodic_call.start(5)
-        yield from self.periodic_call.stop()
         self.assertEqual(self.calls, [True])
 
     def test_stop(self):
@@ -49,18 +48,17 @@ class PeriodicCallTests(LoopTestCase):
         '''The PeriodicCall gets called at each interval.'''
         self.periodic_call.start(5)
         self.loop.advance(5)
-        yield from self.periodic_call.stop()
         self.assertEqual(self.calls, [True, True])
+        self.loop.advance(5)
+        self.assertEqual(self.calls, [True, True, True])
 
     def test_start_later(self):
         '''If now is False, the function is not run immediately.'''
         self.periodic_call.start(5, now=False)
-        yield from self.periodic_call.stop()
         self.assertEqual(self.calls, [])
 
     def test_start_later_run_after_interval(self):
         '''If now is False, the function is run after the interval.'''
         self.periodic_call.start(5, now=False)
         self.loop.advance(5)
-        yield from self.periodic_call.stop()
         self.assertEqual(self.calls, [True])
