@@ -71,7 +71,7 @@ class Script:
 
     '''
 
-    _exit = sys.exit
+    _exit = sys.exit  # For testing
 
     def __init__(self, stdout=None, stderr=None):
         self._stdout = stdout or sys.stdout
@@ -101,9 +101,9 @@ class Script:
         '''
         raise NotImplementedError()
 
-    def exit(self):
-        '''Exit cleanly.'''
-        self._exit(0)
+    def exit(self, code=0):
+        '''Exit with the specified return code.'''
+        self._exit(code)
 
     def handle_keyboard_interrupt(self, interrupt):
         '''Called when a :class:`KeyboardInterrupt` is raised.
@@ -128,4 +128,4 @@ class Script:
     def _error_exit(self, error):
         '''Terminate with the specified :class:`ErrorExitMessage`.'''
         self._stderr.write('{}\n'.format(error.message))
-        self._exit(error.code)
+        self.exit(error.code)

@@ -86,11 +86,18 @@ class ScriptTests(TestCase):
         self.assertEqual(self.script.code, 3)
 
     def test_exit(self):
-        '''Script.exit exits the process with 0 as return value.'''
+        '''Script.exit exits the process with 0 as return code.'''
         calls = []
         self.script._exit = calls.append
         self.script.exit()
         self.assertEqual(calls, [0])
+
+    def test_exit_with_code(self):
+        '''Script.exit exits the process with the specified return code.'''
+        calls = []
+        self.script._exit = calls.append
+        self.script.exit(code=4)
+        self.assertEqual(calls, [4])
 
     def test_handle_keyboard_interrupt(self):
         '''Script.handle_keyboard_interrupt exits cleanly by default.'''
