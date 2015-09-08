@@ -16,7 +16,7 @@
 from operator import attrgetter
 from unittest import TestCase
 
-from toolrack.config import (
+from ..config import (
     Config, ConfigKey, ConfigKeyTypes, MissingConfigKey, InvalidConfigValue)
 
 

@@ -18,8 +18,8 @@
 import sys
 from argparse import ArgumentParser, FileType
 
-from toolrack.json_util import indent
-from toolrack.script import Script, ErrorExitMessage
+from ..json_util import indent
+from ..script import Script, ErrorExitMessage
 
 
 class JSONIndent(Script):

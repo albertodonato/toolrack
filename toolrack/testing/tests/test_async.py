@@ -15,7 +15,7 @@
 
 from asyncio import coroutine
 
-from toolrack.testing.async import LoopTestCase
+from ..async import LoopTestCase
 
 
 class AsyncTests(LoopTestCase):

@@ -16,8 +16,8 @@
 from io import StringIO
 from json import dumps
 
-from toolrack.testing import TestCase
-from toolrack.json_util import indent
+from ..testing import TestCase
+from ..json_util import indent
 
 
 class IndentTests(TestCase):

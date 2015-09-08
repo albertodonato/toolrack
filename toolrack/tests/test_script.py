@@ -18,7 +18,7 @@ from argparse import ArgumentParser
 
 from unittest import TestCase
 
-from toolrack.script import ErrorExitMessage, Script
+from ..script import ErrorExitMessage, Script
 
 
 class DummyScript(Script):

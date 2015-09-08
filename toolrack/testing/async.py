@@ -25,7 +25,7 @@ from functools import wraps
 from asyncio import set_event_loop, Future, coroutine, iscoroutine, async
 from asyncio.test_utils import TestLoop as AsyncioTestLoop
 
-from toolrack.testing import TestCase
+from . import TestCase
 
 
 class TestLoop(AsyncioTestLoop):

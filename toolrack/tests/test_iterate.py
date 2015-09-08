@@ -15,7 +15,7 @@
 
 from unittest import TestCase
 
-from toolrack.iterate import flatten_dict
+from ..iterate import flatten_dict
 
 
 class FlattenDictTests(TestCase):

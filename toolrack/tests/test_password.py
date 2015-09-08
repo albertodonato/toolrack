@@ -15,7 +15,7 @@
 
 from unittest import TestCase
 
-from toolrack.password import generate_password, PasswordProfile, DEFAULT_CHARS
+from ..password import generate_password, PasswordProfile, DEFAULT_CHARS
 
 
 class GeneratePasswordTests(TestCase):

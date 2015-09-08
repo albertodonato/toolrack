@@ -15,7 +15,7 @@
 
 '''Unit-test features.'''
 
-from toolrack.testing.base import TestCase
+from .base import TestCase
 
 
 __all__ = ['TestCase']

@@ -15,7 +15,7 @@
 
 from unittest import TestCase
 
-from toolrack.property import cachedproperty
+from ..property import cachedproperty
 
 
 class SampleClass:

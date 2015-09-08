@@ -13,8 +13,8 @@
 # You should have received a copy of the GNU General Public License
 # along with ToolRack.  If not, see <http://www.gnu.org/licenses/>.
 
-from toolrack.testing.async import LoopTestCase
-from toolrack.async import PeriodicCall
+from ..testing.async import LoopTestCase
+from ..async import PeriodicCall
 
 
 class PeriodicCallTests(LoopTestCase):

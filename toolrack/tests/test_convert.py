@@ -15,7 +15,7 @@
 
 from unittest import TestCase
 
-from toolrack.convert import convert_bbyte
+from ..convert import convert_bbyte
 
 
 class ConvertBbyteTests(TestCase):

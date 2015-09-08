@@ -15,8 +15,8 @@
 
 from threading import Thread
 
-from toolrack.testing import TestCase
-from toolrack.threading import ThreadLocalAttribute, thread_local_attrs
+from ..testing import TestCase
+from ..threading import ThreadLocalAttribute, thread_local_attrs
 
 
 class SampleClass:

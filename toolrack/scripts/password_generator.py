@@ -18,8 +18,8 @@
 from collections import OrderedDict
 from argparse import ArgumentParser
 
-from toolrack.password import DEFAULT_LENGTH, PasswordProfile
-from toolrack.script import Script
+from ..password import DEFAULT_LENGTH, PasswordProfile
+from ..script import Script
 
 
 PROFILES = OrderedDict(
