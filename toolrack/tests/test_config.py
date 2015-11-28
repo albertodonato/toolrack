@@ -118,7 +118,10 @@ class ConfigKeyTests(TestCase):
 
     def test_instantiate_with_validator(self):
         '''A ConfigKey can have a default value.'''
-        validator = lambda value: value > 0
+
+        def validator(value):
+            return value > 0
+
         config_key = ConfigKey('key', 'str', validator=validator)
         self.assertIs(config_key.validator, validator)
 
