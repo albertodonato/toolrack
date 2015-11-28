@@ -34,7 +34,7 @@ test:
 	@$(SETUP) test
 
 lint:
-	@$(LINT) .
+	@$(LINT) setup.py toolrack
 
 html:
 	sphinx-build -b html docs html
