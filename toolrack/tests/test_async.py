@@ -28,7 +28,7 @@ class PeriodicCallTests(LoopTestCase):
         '''The PeriodicCall is not running by default.'''
         self.assertFalse(self.periodic_call.running)
         self.periodic_call.start(5)
-        self.addCleanup(self.periodic_call.stop)
+        self.addCleanup(self.periodic_call.stop())
         self.assertTrue(self.periodic_call.running)
 
     def test_start(self):
@@ -36,10 +36,10 @@ class PeriodicCallTests(LoopTestCase):
         self.periodic_call.start(5)
         self.assertEqual(self.calls, [True])
 
-    def test_stop(self):
-        '''Stopping the PeriodicCall stops runs.'''
+    async def test_stop(self):
+        '''Stopping the PeriodicCall stops periodic runs.'''
         self.periodic_call.start(5)
-        yield from self.periodic_call.stop()
+        await self.periodic_call.stop()
         self.loop.advance(5)
         # Only the initial call is performed
         self.assertEqual(self.calls, [True])

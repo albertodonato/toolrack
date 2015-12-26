@@ -22,7 +22,7 @@ unittesting :mod:`asincio`-based code.
 '''
 
 from functools import wraps
-from asyncio import set_event_loop, Future, coroutine, iscoroutine, async
+from asyncio import set_event_loop, Future, iscoroutine, ensure_future
 from asyncio.test_utils import TestLoop as AsyncioTestLoop
 
 from . import TestCase
@@ -76,13 +76,14 @@ class LoopTestCase(TestCase):
     in tests.
 
     Beside providing a separate `loop` for each test, the class automatically
-    wraps test methods that behave like coroutine or return a :class:`Future`,
-    so that the loop will wait for the test method to complete.
+    wraps test methods declared with `async`, that behave like coroutine or
+    return a :class:`Future`, so that the loop will wait for the test method to
+    complete.
 
     This makes test code more straighforward and easier to read::
 
-        def test_mycoro(self):
-            result = yield form mycoro()
+        async def test_mycoro(self):
+            result = await mycoro()
             self.assertEqual(result, 'result')
 
 
@@ -100,12 +101,23 @@ class LoopTestCase(TestCase):
         # Use new event loop for each test
         self.loop = TestLoop()
         set_event_loop(self.loop)
-        self.addCleanup(self.loop.close)
 
     def run(self, result=None):
         test_method = getattr(self, self._testMethodName)
         setattr(self, self._testMethodName, self._wrap_async(test_method))
-        return super().run(result=result)
+        super().run(result=result)
+        # Close the loop here since cleanups (which are called in run()) might
+        # wait on async stuff too.
+        self.loop.close()
+
+    def addCleanup(self, function, *args, **kwargs):
+        if self._is_async(function):
+            # Run the loop to wait for the function to complete, passing the
+            # original function as argument.
+            args = (function,) + args
+            function = self.loop.run_until_complete
+
+        super().addCleanup(function, *args, **kwargs)
 
     def async_result(self, call):
         '''Wait for the async call to complete and return its result.'''
@@ -117,13 +129,12 @@ class LoopTestCase(TestCase):
         future = self.loop.run_until_complete(self._wrap_async_call(call))
         return future.exception()
 
-    @coroutine
-    def _wrap_async_call(self, call):
+    async def _wrap_async_call(self, call):
         '''Return a Future with the result or exception from an async call.'''
         future = Future()
 
         try:
-            result = yield from call
+            result = await call
             future.set_result(result)
         except BaseException as error:
             future.set_exception(error)
@@ -136,9 +147,14 @@ class LoopTestCase(TestCase):
         @wraps(method)
         def wrapper():
             result = method()
-            if iscoroutine(result) or isinstance(result, Future):
-                self.loop.run_until_complete(async(result, loop=self.loop))
+            if self._is_async(result):
+                self.loop.run_until_complete(
+                    ensure_future(result, loop=self.loop))
             elif result is not None:
                 raise RuntimeError('Test method should not return a value')
 
         return wrapper
+
+    def _is_async(self, obj):
+        '''Return whether an object is a coroutine or Future.'''
+        return iscoroutine(obj) or isinstance(obj, Future)

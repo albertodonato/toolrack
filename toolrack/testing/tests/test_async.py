@@ -13,8 +13,6 @@
 # You should have received a copy of the GNU General Public License
 # along with ToolRack.  If not, see <http://www.gnu.org/licenses/>.
 
-from asyncio import coroutine
-
 from ..async import LoopTestCase
 
 
@@ -37,8 +35,7 @@ class AsyncTests(LoopTestCase):
     def test_create_task(self):
         '''TestLoop.create_task immediately executes the task.'''
 
-        @coroutine
-        def coro():
+        async def coro():
             return 'result'
 
         task = self.loop.create_task(coro())
@@ -47,8 +44,7 @@ class AsyncTests(LoopTestCase):
     def test_async_result(self):
         '''TestLoop.async_result returns the result of the coroutine.'''
 
-        @coroutine
-        def coro():
+        async def coro():
             return 'result'
 
         result = self.async_result(coro())
@@ -57,8 +53,7 @@ class AsyncTests(LoopTestCase):
     def test_async_error(self):
         '''TestLoop.async_error returns the error raised by the coroutine.'''
 
-        @coroutine
-        def coro():
+        async def coro():
             raise Exception('failed')
 
         error = self.async_error(coro())

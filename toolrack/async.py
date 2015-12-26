@@ -65,7 +65,7 @@ class PeriodicCall:
         self._future = Future()
         self._run(now=now)
 
-    def stop(self):
+    async def stop(self):
         '''Stop calling the function periodically.
 
         It returns an :class:`asyncio.Future` to wait for the stop to complete.
