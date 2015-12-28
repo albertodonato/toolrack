@@ -22,7 +22,10 @@ unittesting :mod:`asincio`-based code.
 '''
 
 from functools import wraps
-from asyncio import set_event_loop, Future, iscoroutine, ensure_future
+from asyncio import (
+    get_event_loop_policy, set_event_loop_policy, set_event_loop,
+    Future, ensure_future, iscoroutine)
+from asyncio.events import BaseDefaultEventLoopPolicy
 from asyncio.test_utils import TestLoop as AsyncioTestLoop
 
 from . import TestCase
@@ -98,6 +101,7 @@ class LoopTestCase(TestCase):
 
     def setUp(self):
         super().setUp()
+        self._original_loop_policy = get_event_loop_policy()
         self.set_event_loop()
 
     def run(self, result=None):
@@ -107,6 +111,8 @@ class LoopTestCase(TestCase):
         # Close the loop here since cleanups (which are called in run()) might
         # wait on async stuff too.
         self.loop.close()
+        # Reset the original event loop policy
+        set_event_loop_policy(self._original_loop_policy)
 
     def addCleanup(self, function, *args, **kwargs):
         if self._is_async(function):
@@ -123,6 +129,7 @@ class LoopTestCase(TestCase):
         Can be overridden to set a different loop type.
 
         '''
+        set_event_loop_policy(BaseDefaultEventLoopPolicy())
         self.loop = TestLoop()
         set_event_loop(self.loop)
 
