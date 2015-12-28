@@ -98,9 +98,7 @@ class LoopTestCase(TestCase):
 
     def setUp(self):
         super().setUp()
-        # Use new event loop for each test
-        self.loop = TestLoop()
-        set_event_loop(self.loop)
+        self.set_event_loop()
 
     def run(self, result=None):
         test_method = getattr(self, self._testMethodName)
@@ -118,6 +116,15 @@ class LoopTestCase(TestCase):
             function = self.loop.run_until_complete
 
         super().addCleanup(function, *args, **kwargs)
+
+    def set_event_loop(self):
+        '''Set a new :class:`TestLoop` for each test.
+
+        Can be overridden to set a different loop type.
+
+        '''
+        self.loop = TestLoop()
+        set_event_loop(self.loop)
 
     def async_result(self, call):
         '''Wait for the async call to complete and return its result.'''
