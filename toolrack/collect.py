@@ -95,6 +95,10 @@ class Collection:
         '''Return a list of objects sorted by key.'''
         return sorted(self, key=self._get_key)
 
+    def clear(self):
+        '''Empty the collection.'''
+        self._objects.clear()
+
     def __iter__(self):
         '''Return an iterator yielding all objects.'''
         return iter(self._objects.values())
@@ -102,6 +106,10 @@ class Collection:
     def __contains__(self, key):
         '''Whether an object with the specified key is present.'''
         return key in self._objects
+
+    def __len__(self):
+        '''Return the number of objects in the collection.'''
+        return len(self._objects)
 
     def _get_key(self, entity):
         '''Return the value of the key attribute of the entity.'''

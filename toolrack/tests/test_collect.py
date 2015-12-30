@@ -87,6 +87,12 @@ class CollectionTests(TestCase):
             self.collection.add(obj)
         self.assertCountEqual(self.collection.keys(), ['foo', 'bar', 'baz'])
 
+    def test_len(self):
+        '''The length of a Collection is the number of objects in it.'''
+        self.collection.add(SampleObject('foo'))
+        self.collection.add(SampleObject('bar'))
+        self.assertEqual(2, len(self.collection))
+
     def test_sorted(self):
         '''The Collection can return objects ordered by key.'''
         objs = [SampleObject('bar'), SampleObject('baz'), SampleObject('foo')]
@@ -95,3 +101,10 @@ class CollectionTests(TestCase):
         self.collection.add(objs[0])
         self.collection.add(objs[2])
         self.assertEqual(self.collection.sorted(), objs)
+
+    def test_clear(self):
+        '''The Collection can be cleared.'''
+        self.collection.add(SampleObject('foo'))
+        self.collection.add(SampleObject('bar'))
+        self.collection.clear()
+        self.assertEqual(0, len(self.collection))
