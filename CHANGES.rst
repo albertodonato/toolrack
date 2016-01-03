@@ -1,3 +1,13 @@
+v1.3.0 - 2016-01-03
+===================
+
+- Require Python 3.5 for new asyncio async/await syntax.
+  - Update code to use async/await.
+  - LoopTestCase now requires async test methods to be declared as such.
+- Add clear() and len() support to Collection.
+- Add overridable Script.handle_keyboard_interrupt handler.
+- Use relative imports in library code.
+
 v1.2.0 - 2015-08-04
 ===================
 
