@@ -12,6 +12,7 @@
    mod-fsmap.rst
    mod-iterate.rst
    mod-json_util.rst
+   mod-log.rst
    mod-password.rst
    mod-path.rst
    mod-property.rst
