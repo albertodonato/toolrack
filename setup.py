@@ -17,7 +17,6 @@ from setuptools import setup, find_packages
 
 from toolrack import __version__, __doc__ as description
 
-
 config = {
     'name': 'toolrack',
     'version': __version__,
@@ -37,7 +36,7 @@ config = {
         'password-generator = toolrack.scripts.password_generator:script']},
     'test_suite': 'toolrack',
     'install_requires': ['fixtures'],
-    'keywords': 'library utility',
+    'keywords': 'library utility unittest asyncio',
     'classifiers': [
         'Development Status :: 4 - Beta',
         'Intended Audience :: Developers',
