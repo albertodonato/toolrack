@@ -4,7 +4,7 @@ ToolRack
 
 This library is a collection of reusable functions and classes.
 
-`documentation <http://toolrack.readthedocs.org/>`_ |
+`documentation <http://toolrack.readthedocs.io/>`_ |
 `sources <https://bitbucket.org/ack/toolrack>`_ |
 `issues <https://bitbucket.org/ack/toolrack/issues>`_
 
