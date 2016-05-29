@@ -6,6 +6,7 @@
    :hidden:
    :maxdepth: 3
 
+   mod-certificate.rst
    mod-collect.rst
    mod-config.rst
    mod-convert.rst

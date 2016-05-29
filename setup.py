@@ -32,6 +32,7 @@ config = {
     'packages': find_packages(),
     'include_package_data': True,
     'entry_points': {'console_scripts': [
+        'cert-info = toolrack.scripts.certinfo:script',
         'json-indent = toolrack.scripts.json_indent:script',
         'password-generator = toolrack.scripts.password_generator:script']},
     'test_suite': 'toolrack',
