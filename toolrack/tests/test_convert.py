@@ -38,3 +38,15 @@ class ConvertBbyteTests(TestCase):
         '''It's possible to covert across multipliers.'''
         self.assertEqual(convert_bbyte(1024, suffix='mib', to='gib'), 1)
         self.assertEqual(convert_bbyte(1048576, suffix='kib', to='gib'), 1)
+
+    def test_convert_unknown_suffix(self):
+        '''If the passed value for `suffix` is unknown, an error is raised.'''
+        with self.assertRaises(ValueError) as error:
+            convert_bbyte(100, suffix='boo')
+        self.assertEqual(str(error.exception), 'Unknown multiplier suffix')
+
+    def test_convert_unknown_to(self):
+        '''If the passed value for `to` is unknown, an error is raised.'''
+        with self.assertRaises(ValueError) as error:
+            convert_bbyte(100, to='boo')
+        self.assertEqual(str(error.exception), 'Unknown target multiplier')

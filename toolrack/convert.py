@@ -31,6 +31,10 @@ def convert_bbyte(value, suffix=None, to=None):
     '''
     if suffix:
         suffix = suffix.lower()
+    if suffix not in BYTE_SUFFIXES:
+        raise ValueError('Unknown multiplier suffix')
+    if to not in BYTE_SUFFIXES:
+        raise ValueError('Unknown target multiplier')
     multiplier = 2 ** (10 * BYTE_SUFFIXES.index(suffix))
     converted = value * multiplier
     if to:
