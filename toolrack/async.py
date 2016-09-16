@@ -51,10 +51,11 @@ class PeriodicCall:
 
     '''
 
-    def __init__(self, loop, func, *args):
+    def __init__(self, loop, func, *args, **kwargs):
         self._loop = loop
         self._func = func
         self._args = args
+        self._kwargs = kwargs
         self._interval = None
         self._next_time = None
         self._future = None
@@ -103,4 +104,4 @@ class PeriodicCall:
         self._next_time += self._interval
         self._handle = self._loop.call_at(self._next_time, self._run)
         if now:
-            self._func(*self._args)
+            self._func(*self._args, **self._kwargs)

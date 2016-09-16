@@ -62,3 +62,16 @@ class PeriodicCallTests(LoopTestCase):
         self.periodic_call.start(5, now=False)
         self.loop.advance(5)
         self.assertEqual(self.calls, [True])
+
+    async def test_func_arguments(self):
+        '''Specified arguments are passed to the function on call.'''
+
+        def func(*args, **kwargs):
+            self.calls.append((args, kwargs))
+
+        periodic_call = PeriodicCall(
+            self.loop, func, 'foo', 'bar', baz='baz', bza='bza')
+        periodic_call.start(5)
+        await periodic_call.stop()
+        [call] = self.calls
+        self.assertEqual((('foo', 'bar'), {'baz': 'baz', 'bza': 'bza'}), call)
