@@ -13,7 +13,12 @@
 # You should have received a copy of the GNU General Public License
 # along with ToolRack.  If not, see <http://www.gnu.org/licenses/>.
 
-'''Asynchronous execution utils.'''
+'''Utilities based on the asyncio library.
+
+This modules provides a :class:`PeriodicCall` class to periodically execute a
+task.
+
+'''
 
 from asyncio import Future
 
@@ -34,6 +39,10 @@ class NotRunning(Exception):
 
 class PeriodicCall:
     '''Call a function at a periodic interval.
+
+    The class takes a function with optional arguments. Upon
+    :meth:`start()`, the function is scheduled with the specified interval,
+    until :meth:`stop()` is called.
 
     Parameters:
         - loop: the event loop to use.
@@ -56,7 +65,13 @@ class PeriodicCall:
         return self._future is not None
 
     def start(self, interval, now=True):
-        '''Start calling the function periodically.'''
+        '''Start calling the function periodically.
+
+        Parameters:
+            - interval: the time interval in seconds between calls.
+            - now: whether to make the first call immediately.
+
+        '''
         if self.running:
             raise AlreadyRunning()
 
