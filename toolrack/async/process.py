@@ -85,7 +85,7 @@ class _StreamHelper:
     def _parse_data(self, data):
         '''Process data parsing full lines.'''
         lines = data.split('\n')
-        lines[0] += self._pop_partial()
+        lines[0] = self._pop_partial() + lines[0]
         self._partial.write(lines.pop())
         # Call the parser on full lines
         for line in lines:
