@@ -24,8 +24,11 @@ class ProcessParserProtocol(SubprocessProtocol):
     '''Collect process stdout and stderr.
 
     Line parser functions can be passed for stdout and stderr, and they are
-    called on each full line of output.  When the process ends, the full output
-    and error are returned.
+    called on each full line of output.
+
+    When the process ends, the ``future`` returns a tuple with the full stdout
+    and stderr. Each tuple element is ``None`` if a parser is passed for that
+    stream.
 
     Parameters:
         - future: an :class:`asyncio.Future` which is called with a tuple with
@@ -38,7 +41,7 @@ class ProcessParserProtocol(SubprocessProtocol):
     def __init__(self, future, out_parser=None, err_parser=None):
         self.future = future
         self._outputs = {
-            fd: _FileDescriptorHelper(parser)
+            fd: _StreamHelper(parser)
             for fd, parser in enumerate((out_parser, err_parser), 1)}
 
     def pipe_data_received(self, fd, data):
@@ -47,42 +50,50 @@ class ProcessParserProtocol(SubprocessProtocol):
             return
 
         data = data.decode(getpreferredencoding(False))
-        stream.buffer.write(data)
-        parser = stream.parser
-        if not parser:
-            return
-
-        # Append pending partial line
-        lines = data.split('\n')
-        lines[0] += stream.pop_partial()
-        stream.write_partial(lines.pop())
-        for line in lines:
-            if line:
-                parser(line)
+        stream.receive_data(data)
 
     def connection_lost(self, exc):
-        stdout = self._outputs[1].buffer.getvalue()
-        stderr = self._outputs[2].buffer.getvalue()
+        stdout = self._outputs[1].get_data()
+        stderr = self._outputs[2].get_data()
         if exc:
             self.future.set_exception(exc)
         else:
             self.future.set_result((stdout, stderr))
 
 
-class _FileDescriptorHelper:
-    '''Helper class to track content for a stream.'''
+class _StreamHelper:
+    '''Helper class to track data from a stream.'''
 
-    def __init__(self, parser):
-        self.parser = parser
-        self.buffer = StringIO()
+    def __init__(self, parser=None):
+        self._parser = parser
+        self._buffer = StringIO() if not parser else None
         self._partial = StringIO()
 
-    def pop_partial(self):
+    def receive_data(self, data):
+        '''Receive (and possibly parse) data form from a stream.'''
+        if self._parser:
+            self._parse_data(data)
+        else:
+            self._buffer.write(data)
+
+    def get_data(self):
+        '''Return the full content of the stream.'''
+        if not self._buffer:
+            return
+        return self._buffer.getvalue()
+
+    def _parse_data(self, data):
+        '''Process data parsing full lines.'''
+        lines = data.split('\n')
+        lines[0] += self._pop_partial()
+        self._partial.write(lines.pop())
+        # Call the parser on full lines
+        for line in lines:
+            if line:
+                self._parser(line)
+
+    def _pop_partial(self):
         '''Return the current partial line and reset it.'''
         line = self._partial.getvalue()
         self._partial.truncate()
         return line
-
-    def write_partial(self, data):
-        '''Write a partial line.'''
-        self._partial.write(data)

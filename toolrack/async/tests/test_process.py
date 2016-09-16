@@ -79,8 +79,10 @@ class ProcessParserProtocolTests(LoopTestCase):
             protocol_factory, cmd)
         transport.close()
 
-        await self.future
+        result = await self.future
         self.assertEqual(lines, ['line 1', 'line 2'])
+        # Full stdout is not returned
+        self.assertEqual(result, (None, 'not parsed\n'))
 
     async def test_parse_stderr(self):
         '''It's possible to pass a function to parse stderr line by line.'''
@@ -101,5 +103,7 @@ class ProcessParserProtocolTests(LoopTestCase):
             protocol_factory, cmd)
         transport.close()
 
-        await self.future
+        result = await self.future
         self.assertEqual(lines, ['line 1', 'line 2'])
+        # Full stderr is not returned
+        self.assertEqual(result, ('not parsed\n', None))
