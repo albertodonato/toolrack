@@ -38,34 +38,51 @@ class ProcessParserProtocol(SubprocessProtocol):
     def __init__(self, future, out_parser=None, err_parser=None):
         self.future = future
         self._outputs = {
-            fd: {'buffer': StringIO(),
-                 'partial': '',
-                 'parser': parser}
+            fd: _FileDescriptorHelper(parser)
             for fd, parser in enumerate((out_parser, err_parser), 1)}
 
     def pipe_data_received(self, fd, data):
-        output = self._outputs.get(fd)
-        if not output:
+        stream = self._outputs.get(fd)
+        if not stream:
             return
 
         data = data.decode(getpreferredencoding(False))
-        output['buffer'].write(data)
-        parser = output['parser']
+        stream.buffer.write(data)
+        parser = stream.parser
         if not parser:
             return
 
-        # Append pending partial output
+        # Append pending partial line
         lines = data.split('\n')
-        lines[0] = output['partial'] + lines[0]
-        output['partial'] = lines.pop()
+        lines[0] += stream.pop_partial()
+        stream.write_partial(lines.pop())
         for line in lines:
             if line:
                 parser(line)
 
     def connection_lost(self, exc):
-        stdout = self._outputs[1]['buffer'].getvalue()
-        stderr = self._outputs[2]['buffer'].getvalue()
+        stdout = self._outputs[1].buffer.getvalue()
+        stderr = self._outputs[2].buffer.getvalue()
         if exc:
             self.future.set_exception(exc)
         else:
             self.future.set_result((stdout, stderr))
+
+
+class _FileDescriptorHelper:
+    '''Helper class to track content for a stream.'''
+
+    def __init__(self, parser):
+        self.parser = parser
+        self.buffer = StringIO()
+        self._partial = StringIO()
+
+    def pop_partial(self):
+        '''Return the current partial line and reset it.'''
+        line = self._partial.getvalue()
+        self._partial.truncate()
+        return line
+
+    def write_partial(self, data):
+        '''Write a partial line.'''
+        self._partial.write(data)
