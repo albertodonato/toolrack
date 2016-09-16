@@ -23,6 +23,10 @@ from asyncio import SubprocessProtocol
 class ProcessParserProtocol(SubprocessProtocol):
     '''Collect process stdout and stderr.
 
+    Line parser functions can be passed for stdout and stderr, and they are
+    called on each full line of output.  When the process ends, the full output
+    and error are returned.
+
     Parameters:
         - future: an :class:`asyncio.Future` which is called with a tuple with
           (stdout, stderr) from the process once it it exits.
