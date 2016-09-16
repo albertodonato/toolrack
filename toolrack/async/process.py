@@ -23,7 +23,12 @@ from asyncio import SubprocessProtocol
 class ProcessParserProtocol(SubprocessProtocol):
     '''Collect process stdout and stderr.
 
-    , and return it with a :class:`asyncio.Future'.
+    Parameters:
+        - future: an :class:`asyncio.Future` which is called with a tuple with
+          (stdout, stderr) from the process once it it exits.
+        - out_parser: an optional parser for the process standard output.
+        - err_parser: an optional parser for the process standard error.
+
     '''
 
     def __init__(self, future, out_parser=None, err_parser=None):
