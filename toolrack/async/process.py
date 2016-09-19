@@ -41,7 +41,7 @@ class ProcessParserProtocol(SubprocessProtocol):
     def __init__(self, future, out_parser=None, err_parser=None):
         self.future = future
         self._outputs = {
-            fd: _StreamHelper(parser)
+            fd: StreamHelper(parser)
             for fd, parser in enumerate((out_parser, err_parser), 1)}
 
     def pipe_data_received(self, fd, data):
@@ -53,6 +53,8 @@ class ProcessParserProtocol(SubprocessProtocol):
         stream.receive_data(data)
 
     def connection_lost(self, exc):
+        self._outputs[1].flush_partial()
+        self._outputs[2].flush_partial()
         stdout = self._outputs[1].get_data()
         stderr = self._outputs[2].get_data()
         if exc:
@@ -61,7 +63,7 @@ class ProcessParserProtocol(SubprocessProtocol):
             self.future.set_result((stdout, stderr))
 
 
-class _StreamHelper:
+class StreamHelper:
     '''Helper class to track data from a stream.'''
 
     def __init__(self, parser=None):
@@ -80,7 +82,15 @@ class _StreamHelper:
         '''Return the full content of the stream.'''
         if not self._buffer:
             return
-        return self._buffer.getvalue()
+        return self._buffer.getvalue() + self._partial.getvalue()
+
+    def flush_partial(self):
+        '''Flush and process pending data from a partial line'''
+        if not self._parser:
+            return
+        partial = self._partial.getvalue()
+        if partial:
+            self._parser(partial)
 
     def _parse_data(self, data):
         '''Process data parsing full lines.'''

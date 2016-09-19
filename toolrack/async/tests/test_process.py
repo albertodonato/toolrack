@@ -15,10 +15,11 @@
 
 from textwrap import dedent
 from asyncio import Future, new_event_loop, set_event_loop
+from unittest import TestCase
 
 from ...testing.fixtures import TempDirFixture
 from ...testing.async import LoopTestCase
-from ..process import ProcessParserProtocol
+from ..process import ProcessParserProtocol, StreamHelper
 
 
 class ProcessParserProtocolTests(LoopTestCase):
@@ -107,3 +108,39 @@ class ProcessParserProtocolTests(LoopTestCase):
         self.assertEqual(lines, ['line 1', 'line 2'])
         # Full stderr is not returned
         self.assertEqual(result, ('not parsed\n', None))
+
+    async def test_parse_no_ending_newline(self):
+        '''The last line of output is partse if it doesn't have a newline.'''
+        script = dedent(
+            '''#!/bin/sh
+            echo line 1
+            echo -n line 2''')
+        cmd = self.tempdir.mkfile(content=script, mode=0o755)
+
+        lines = []
+
+        def protocol_factory():
+            return ProcessParserProtocol(
+                self.future, out_parser=lines.append)
+
+        transport, _ = await self.loop.subprocess_exec(
+            protocol_factory, cmd)
+        transport.close()
+
+        await self.future
+        self.assertEqual(lines, ['line 1', 'line 2'])
+
+
+class StreamHelperTests(TestCase):
+
+    def setUp(self):
+        super().setUp()
+        self.lines = []
+        self.helper = StreamHelper(parser=self.lines.append)
+
+    def test_receive_data_handles_partial(self):
+        '''receive_data caches partial lines and joins them. '''
+        self.helper.receive_data('foo\nbar')
+        self.assertEqual(self.lines, ['foo'])
+        self.helper.receive_data('baz\n')
+        self.assertEqual(self.lines, ['foo', 'barbaz'])
