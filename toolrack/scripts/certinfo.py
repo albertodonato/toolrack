@@ -31,7 +31,7 @@ class CertInfo(Script):
             metavar='ACTION', dest='action', help='action to perform')
 
         get_cert_parser = subparsers.add_parser(
-            'get-cert', help='Get certificate for an host')
+            'get-cert', help='get certificate for a host')
         get_cert_parser.add_argument(
             'hostname',
             help='hostname in the host[:port] format. Port defaults to 443')
