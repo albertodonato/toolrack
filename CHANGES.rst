@@ -1,3 +1,10 @@
+v1.5.0 - 2016-12-03
+===================
+
+- Add toolrack.async.process module.
+- Add missing modules in documentation.
+- Add cert-info script.
+
 v1.4.0 - 2016-01-30
 ===================
 

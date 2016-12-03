@@ -29,6 +29,7 @@ class CertInfo(Script):
             description='Get information about SSL certificates.')
         subparsers = parser.add_subparsers(
             metavar='ACTION', dest='action', help='action to perform')
+        subparsers.required = True
 
         get_cert_parser = subparsers.add_parser(
             'get-cert', help='get certificate for a host')
