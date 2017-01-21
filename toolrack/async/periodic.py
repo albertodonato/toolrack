@@ -24,14 +24,14 @@ from asyncio import Future
 
 
 class AlreadyRunning(Exception):
-    '''The PeriodicCall is already running.'''
+    '''The :class:`PeriodicCall` is already running.'''
 
     def __init__(self):
         super().__init__('PeriodicCall is already running')
 
 
 class NotRunning(Exception):
-    '''The PeriodicCall is not running.'''
+    '''The :class:`PeriodicCall` is not running.'''
 
     def __init__(self):
         super().__init__('PeriodicCall is not running')

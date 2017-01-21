@@ -136,11 +136,17 @@ class StreamHelperTests(TestCase):
     def setUp(self):
         super().setUp()
         self.lines = []
-        self.helper = StreamHelper(parser=self.lines.append)
 
     def test_receive_data_handles_partial(self):
         '''receive_data caches partial lines and joins them. '''
-        self.helper.receive_data('foo\nbar')
+        helper = StreamHelper(callback=self.lines.append)
+        helper.receive_data('foo\nbar')
         self.assertEqual(self.lines, ['foo'])
-        self.helper.receive_data('baz\n')
+        helper.receive_data('baz\n')
         self.assertEqual(self.lines, ['foo', 'barbaz'])
+
+    def test_receive_data_separator(self):
+        '''It's possible to specify a different line separator. '''
+        helper = StreamHelper(callback=self.lines.append, separator='X')
+        helper.receive_data('fooXbarX')
+        self.assertEqual(self.lines, ['foo', 'bar'])
