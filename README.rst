@@ -10,6 +10,11 @@ ToolRack
    :target: http://toolrack.readthedocs.io/en/stable/?badge=stable
    :alt: Documentation Status
 
+.. image:: https://travis-ci.org/albertodonato/toolrack.svg?branch=master
+   :target: https://travis-ci.org/albertodonato/toolrack
+   :alt: Build Status
+
+
 A collection of utility functions and classes, and a few scripts too.
 
 
