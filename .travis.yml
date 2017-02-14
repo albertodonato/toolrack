@@ -2,5 +2,7 @@ language: python
 python:
   - "3.5"
   - "3.6"
-install: python setup.py install
-script: python setup.py -m unittest
+install:
+  - "pip install setuptools==34.2.0"
+  - "python setup.py install"
+script: python -m unittest
