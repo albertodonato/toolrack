@@ -2,7 +2,13 @@
 ToolRack
 ========
 
-|docs|
+.. image:: https://img.shields.io/pypi/v/toolrack.svg
+   :target: https://pypi.python.org/pypi/toolrack
+   :alt: Latest Version
+
+.. image:: https://readthedocs.org/projects/toolrack/badge/?version=stable
+   :target: http://toolrack.readthedocs.io/en/stable/?badge=stable
+   :alt: Documentation Status
 
 A collection of utility functions and classes, and a few scripts too.
 
@@ -33,8 +39,5 @@ As a user run::
   $ python setup.py develop
 
 
-.. |docs| image:: https://readthedocs.org/projects/toolrack/badge/
-    :alt: Documentation Status
-    :target: https://toolrack.readthedocs.io/en/latest/
 .. _PyPI: https://pypi.python.org/
 .. _Virtualenv: https://virtualenv.pypa.io/
