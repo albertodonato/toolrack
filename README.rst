@@ -14,6 +14,10 @@ ToolRack
    :target: https://travis-ci.org/albertodonato/toolrack
    :alt: Build Status
 
+.. image:: https://coveralls.io/repos/github/albertodonato/toolrack/badge.svg?branch=master
+   :target: https://coveralls.io/github/albertodonato/toolrack?branch=master
+   :alt: Coverage Status
+
 
 A collection of utility functions and classes, and a few scripts too.
 
