@@ -14,8 +14,8 @@ ToolRack
    :target: https://travis-ci.org/albertodonato/toolrack
    :alt: Build Status
 
-.. image:: https://coveralls.io/repos/github/albertodonato/toolrack/badge.svg?branch=master
-   :target: https://coveralls.io/github/albertodonato/toolrack?branch=master
+.. image:: https://codecov.io/gh/albertodonato/toolrack/branch/master/graph/badge.svg
+   :target: https://codecov.io/gh/albertodonato/toolrack
    :alt: Coverage Status
 
 
