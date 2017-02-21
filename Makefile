@@ -18,6 +18,11 @@ clean:
 test:
 	tox
 
+coverage:
+	@coverage run -m unittest
+	@coverage report --show-missing --skip-covered --fail-under=100 \
+		--include=toolrack/*
+
 lint:
 	@$(LINT) setup.py toolrack
 
