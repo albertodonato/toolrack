@@ -30,10 +30,7 @@ class ProcessParserProtocol(SubprocessProtocol):
             for fd, parser in enumerate((out_parser, err_parser), 1)}
 
     def pipe_data_received(self, fd, data):
-        stream = self._outputs.get(fd)
-        if not stream:
-            return
-
+        stream = self._outputs[fd]
         data = data.decode(getpreferredencoding(False))
         stream.receive_data(data)
 

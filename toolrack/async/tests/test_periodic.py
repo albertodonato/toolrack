@@ -1,5 +1,5 @@
 from ...testing.async import LoopTestCase
-from ..periodic import PeriodicCall
+from ..periodic import PeriodicCall, AlreadyRunning, NotRunning
 
 
 class PeriodicCallTests(LoopTestCase):
@@ -21,6 +21,11 @@ class PeriodicCallTests(LoopTestCase):
         self.periodic_call.start(5)
         self.assertEqual(self.calls, [True])
 
+    def test_start_already_running(self):
+        '''Starting an already started PeriodicCall raises an error.'''
+        self.periodic_call.start(5)
+        self.assertRaises(AlreadyRunning, self.periodic_call.start, 5)
+
     async def test_stop(self):
         '''Stopping the PeriodicCall stops periodic runs.'''
         self.periodic_call.start(5)
@@ -28,6 +33,11 @@ class PeriodicCallTests(LoopTestCase):
         self.loop.advance(5)
         # Only the initial call is performed
         self.assertEqual(self.calls, [True])
+
+    async def test_stop_not_running(self):
+        '''Stopping a PeriodicCall that is not running raises an error.'''
+        with self.assertRaises(NotRunning):
+            await self.periodic_call.stop()
 
     def test_periodic(self):
         '''The PeriodicCall gets called at each interval.'''
@@ -60,3 +70,8 @@ class PeriodicCallTests(LoopTestCase):
         await periodic_call.stop()
         [call] = self.calls
         self.assertEqual((('foo', 'bar'), {'baz': 'baz', 'bza': 'bza'}), call)
+
+    def test_run_no_op_if_not_running(self):
+        '''The _run() method no-ops if the PeriodicCall is not running.'''
+        self.periodic_call._run()
+        self.assertEqual(self.calls, [])

@@ -51,6 +51,14 @@ class ScriptTests(TestCase):
         self.stderr = StringIO()
         self.script = DummyScript(stderr=self.stderr)
 
+    def test_get_parser_not_implemented(self):
+        '''get_parser() raises a NotImplementedError by default.'''
+        self.assertRaises(NotImplementedError, Script().get_parser)
+
+    def test_main_not_implemented(self):
+        '''main() raises a NotImplementedError by default.'''
+        self.assertRaises(NotImplementedError, Script().main, None)
+
     def test_call_runs_main(self):
         '''When a Script is called, the main method is executed.'''
         self.script([])

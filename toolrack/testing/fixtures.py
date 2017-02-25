@@ -74,7 +74,7 @@ class TempDirFixture(Fixture):
         if isinstance(path, tuple):
             path = os.path.join(*path)
         if os.path.isabs(path):
-            raise ValueError('Path must be relative.')
+            raise ValueError('Path must be relative')
 
         path = os.path.join(self.path, path)
         dirname = os.path.dirname(path)

@@ -53,6 +53,10 @@ class Directory:
     def __init__(self, path):
         self.path = normpath(path)
 
+    def __str__(self):
+        '''Return the path of the directory.'''
+        return self.path
+
     def __iter__(self):
         '''Return an iterator yielding names of directory elements.'''
         return iter(listdir(self.path))

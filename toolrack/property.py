@@ -13,11 +13,8 @@ class cachedproperty:
         self._func = func
         self._name = func.__name__
 
-    def __get__(self, obj, cls=None):
-        if obj is None:
-            return self
-
-        value = self._func(obj)
+    def __get__(self, instance, owner):
+        value = self._func(instance)
         # The property itself is replaced with the result of the function call
-        setattr(obj, self._name, value)
+        setattr(instance, self._name, value)
         return value

@@ -31,14 +31,26 @@ class ConfigKeyTypesTests(TestCase):
         self.assertEqual(converter(10), '10')
 
     def test_bool_true(self):
-        '''Vaues 'true' and 'yes' accepted as True for boolean.'''
+        '''Values that are true return True.'''
+        converter = self.key_types.get_converter('bool')
+        self.assertTrue(converter(3))
+        self.assertTrue(converter(['foo']))
+
+    def test_bool_false(self):
+        '''Values that are false return False.'''
+        converter = self.key_types.get_converter('bool')
+        self.assertFalse(converter(0))
+        self.assertFalse(converter([]))
+
+    def test_bool_true_from_string(self):
+        '''Values 'true' and 'yes' accepted as True for boolean.'''
         converter = self.key_types.get_converter('bool')
         self.assertTrue(converter('true'))
         self.assertTrue(converter('yes'))
         self.assertTrue(converter('True'))
         self.assertTrue(converter('Yes'))
 
-    def test_bool_false(self):
+    def test_bool_false_from_string(self):
         '''Other string values are converted as False.'''
         converter = self.key_types.get_converter('bool')
         self.assertFalse(converter('false'))

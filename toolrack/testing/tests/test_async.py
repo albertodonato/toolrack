@@ -1,3 +1,5 @@
+from unittest import TestResult
+
 from ..async import LoopTestCase
 
 
@@ -44,3 +46,18 @@ class AsyncTests(LoopTestCase):
         error = self.async_error(coro())
         self.assertIsInstance(error, Exception)
         self.assertEqual(str(error), 'failed')
+
+    def test_wrap_async_no_result_if_not_async(self):
+        '''If a test method is not async, it should not return a value.'''
+
+        class SampleTestCase(LoopTestCase):
+
+            def test_method(self):
+                return 'something'
+
+        sample_testcase = SampleTestCase(methodName='test_method')
+        result = TestResult()
+        sample_testcase.run(result=result)
+        [(_, traceback)] = result.errors
+        self.assertIn(
+            'RuntimeError: Test method should not return a value', traceback)

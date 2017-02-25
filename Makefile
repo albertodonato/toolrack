@@ -21,7 +21,7 @@ test:
 coverage:
 	@coverage run -m unittest
 	@coverage report --show-missing --skip-covered --fail-under=100 \
-		--include=toolrack/*
+		--include=toolrack/\* --omit=**/test_\*.py
 
 lint:
 	@$(LINT) setup.py toolrack

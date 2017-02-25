@@ -50,13 +50,24 @@ class DirectoryTests(TestCase):
         self.assertTrue(path.isdir(path.join(self.tempdir.path, 'foo')))
 
     def test_delitem_removes_file(self):
-        '''Deeleting an item removes the corresponding file.'''
+        '''Deleting an item removes the corresponding file.'''
         self.tempdir.mkfile(path='foo')
         del self.dir['foo']
         self.assertFalse(path.exists(path.join(self.tempdir.path, 'foo')))
 
     def test_delitem_removes_directory(self):
-        '''Deeleting an item removes the corresponding directory.'''
+        '''Deleting an item removes the corresponding directory.'''
         dir_path = self.tempdir.mkdir()
         del self.dir[path.basename(dir_path)]
         self.assertFalse(path.exists(dir_path))
+
+    def test_add(self):
+        '''Adding two Directory returns joins their path.'''
+        dir1 = Directory('/foo')
+        dir2 = Directory('bar')
+        dir = dir1 + dir2
+        self.assertEqual(dir.path, '/foo/bar')
+
+    def test_str(self):
+        '''Covnerting a Directory to a string returns its path.'''
+        self.assertEqual(self.tempdir.path, str(self.dir))
