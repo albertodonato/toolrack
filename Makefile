@@ -12,7 +12,7 @@ devel:
 	$(SETUP) develop
 
 clean:
-	rm -rf build html *.egg-info _trial_temp
+	rm -rf build html *.egg-info
 	find . -type d -name __pycache__ | xargs rm -rf
 
 test:
