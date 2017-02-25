@@ -114,11 +114,8 @@ class ConfigKeyTests(TestCase):
         self.assertEqual(config_key.default, 9)
 
     def test_instantiate_with_validator(self):
-        '''A ConfigKey can have a default value.'''
-
-        def validator(value):
-            return value > 0
-
+        '''A ConfigKey can have a validator.'''
+        validator = object()  # just a marker
         config_key = ConfigKey('key', 'str', validator=validator)
         self.assertIs(config_key.validator, validator)
 
