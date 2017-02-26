@@ -16,7 +16,7 @@ clean:
 	find . -type d -name __pycache__ | xargs rm -rf
 
 test:
-	tox
+	@$(PYTHON) -m unittest
 
 coverage:
 	@coverage run -m unittest
