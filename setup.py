@@ -5,7 +5,7 @@ from toolrack import __version__, __doc__ as description
 config = {
     'name': 'toolrack',
     'version': __version__,
-    'license': 'GPLv3+',
+    'license': 'LGPLv3+',
     'description': description,
     'long_description': open('README.rst').read(),
     'author': 'Alberto Donato',
@@ -26,7 +26,8 @@ config = {
         'Development Status :: 4 - Beta',
         'Intended Audience :: Developers',
         'Intended Audience :: System Administrators',
-        'License :: OSI Approved :: GNU General Public License (GPL)',
+        ('License :: OSI Approved :: '
+         'GNU Lesser General Public License v3 or later (LGPLv3+)'),
         'Operating System :: OS Independent',
         'Programming Language :: Python :: 3.5',
         'Topic :: Utilities',
