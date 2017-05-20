@@ -16,9 +16,12 @@ def get_host_certificate(uri, get_func=get_server_certificate):
     if split.scheme:
         # This is a complete URL, just take the host
         uri = split.netloc
+    else:
+        uri, _ = uri.split('/', 1)
 
     if ':' in uri:
         host, port = uri.split(':', maxsplit=1)
+        port = int(port)
     else:
         host = uri
         port = 443

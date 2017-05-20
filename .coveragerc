@@ -1,3 +1,5 @@
 [run]
 source =
   toolrack
+omit =
+  toolrack/scripts/*
