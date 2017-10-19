@@ -7,6 +7,12 @@ ToolRack
 A collection of utility functions and classes, and a few scripts too.
 
 
+Documentation
+-------------
+
+API docs are available on ReadTheDocs_.
+
+
 Installation
 ------------
 
@@ -37,6 +43,7 @@ As a user run:
   $ python setup.py develop
 
 
+.. _ReadTheDocs: https://toolrack.readthedocs.io/en/latest/
 .. _PyPI: https://pypi.python.org/
 .. _Virtualenv: https://virtualenv.pypa.io/
 
@@ -47,7 +54,7 @@ As a user run:
 .. |Coverage Status| image:: https://img.shields.io/codecov/c/github/albertodonato/toolrack/master.svg
    :target: https://codecov.io/gh/albertodonato/toolrack
 .. |Documentation Status| image:: https://readthedocs.org/projects/toolrack/badge/?version=stable
-   :target: http://toolrack.readthedocs.io/en/stable/?badge=stable
+   :target: https://toolrack.readthedocs.io/en/stable/?badge=stable
 
 
 
