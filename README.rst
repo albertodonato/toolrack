@@ -2,32 +2,19 @@
 ToolRack
 ========
 
-.. image:: https://img.shields.io/pypi/v/toolrack.svg
-   :target: https://pypi.python.org/pypi/toolrack
-   :alt: Latest Version
-
-.. image:: https://readthedocs.org/projects/toolrack/badge/?version=stable
-   :target: http://toolrack.readthedocs.io/en/stable/?badge=stable
-   :alt: Documentation Status
-
-.. image:: https://travis-ci.org/albertodonato/toolrack.svg?branch=master
-   :target: https://travis-ci.org/albertodonato/toolrack
-   :alt: Build Status
-
-.. image:: https://codecov.io/gh/albertodonato/toolrack/branch/master/graph/badge.svg
-   :target: https://codecov.io/gh/albertodonato/toolrack
-   :alt: Coverage Status
-
+|Latest Version| |Build Status| |Coverage Status| |Documentation Status|
 
 A collection of utility functions and classes, and a few scripts too.
 
 
-Install
--------
+Installation
+------------
 
 ToolRack can be installed from PyPI_.
 
-As a user run::
+As a user run:
+
+.. code:: bash
 
   $ pip install toolrack
 
@@ -39,7 +26,9 @@ The source tree is available available at
 `<https://github.com/albertodonato/toolrack>`_, users should install
 Virtualenv_ for development.
 
-As a user run::
+As a user run:
+
+.. code:: bash
 
   $ virtualenv <target-dir>
   $ . <target-dir>/bin/activate
@@ -50,3 +39,15 @@ As a user run::
 
 .. _PyPI: https://pypi.python.org/
 .. _Virtualenv: https://virtualenv.pypa.io/
+
+.. |Latest Version| image:: https://img.shields.io/pypi/v/toolrack.svg
+   :target: https://pypi.python.org/pypi/toolrack
+.. |Build Status| image:: https://img.shields.io/travis/albertodonato/toolrack.svg
+   :target: https://travis-ci.org/albertodonato/toolrack
+.. |Coverage Status| image:: https://img.shields.io/codecov/c/github/albertodonato/toolrack/master.svg
+   :target: https://codecov.io/gh/albertodonato/toolrack
+.. |Documentation Status| image:: https://readthedocs.org/projects/toolrack/badge/?version=stable
+   :target: http://toolrack.readthedocs.io/en/stable/?badge=stable
+
+
+
