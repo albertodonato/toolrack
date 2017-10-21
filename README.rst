@@ -1,4 +1,3 @@
-========
 ToolRack
 ========
 
@@ -55,6 +54,3 @@ As a user run:
    :target: https://codecov.io/gh/albertodonato/toolrack
 .. |Documentation Status| image:: https://readthedocs.org/projects/toolrack/badge/?version=stable
    :target: https://toolrack.readthedocs.io/en/stable/?badge=stable
-
-
-
