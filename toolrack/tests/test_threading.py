@@ -19,21 +19,21 @@ class ThreadLocalAttributeTests(TestCase):
         self.instance = SampleClass('value')
 
     def test_get_attr(self):
-        '''The descriptor allows getting the attribute value.'''
+        """The descriptor allows getting the attribute value."""
         self.assertEqual(self.instance.attr, 'value')
 
     def test_set_attr(self):
-        '''The descriptor allows setting the attribute value.'''
+        """The descriptor allows setting the attribute value."""
         self.instance.attr = 'other value'
         self.assertEqual(self.instance.attr, 'other value')
 
     def test_del_attr(self):
-        '''The descriptor allows deleting the attribute.'''
+        """The descriptor allows deleting the attribute."""
         del self.instance.attr
         self.assertFalse(hasattr(self.instance, 'attr'))
 
     def test_thread_local(self):
-        '''The attribute value is thread-local.'''
+        """The attribute value is thread-local."""
         thread_value = []
 
         def target():
@@ -51,7 +51,7 @@ class ThreadLocalAttributeTests(TestCase):
 class ThreadLocalAttrsTests(TestCase):
 
     def test_decorator(self):
-        '''The decorator makes specified attributes thread-local.'''
+        """The decorator makes specified attributes thread-local."""
 
         @thread_local_attrs('attr1')
         class DecoratedSampleClass:

@@ -1,10 +1,10 @@
-'''Access the filesystem in a dict-like fashion.
+"""Access the filesystem in a dict-like fashion.
 
 This module provides a :class:`Directory` class which provides access to the
 filesystem subtree below its path, allow accessing files and sub-directories as
 elements of a dict (e.g. ``directory['foo']`` or ``directory['foo/bar']``).
 
-'''
+"""
 
 from os import listdir, mkdir, unlink
 from os.path import join, normpath, exists, isfile, isdir
@@ -15,7 +15,7 @@ DIR = object()
 
 
 class Directory:
-    '''Provide access to the sub-tree of a directrory.
+    """Provide access to the sub-tree of a directrory.
 
     It represents a directory in the filesystem::
 
@@ -48,21 +48,21 @@ class Directory:
 
       directory['a-new-dir'] = DIR
 
-    '''
+    """
 
     def __init__(self, path):
         self.path = normpath(path)
 
     def __str__(self):
-        '''Return the path of the directory.'''
+        """Return the path of the directory."""
         return self.path
 
     def __iter__(self):
-        '''Return an iterator yielding names of directory elements.'''
+        """Return an iterator yielding names of directory elements."""
         return iter(listdir(self.path))
 
     def __getitem__(self, attr):
-        '''Access a subitem of the Directory by name.'''
+        """Access a subitem of the Directory by name."""
         path = self._get_path(attr)
         if isfile(path):
             with open(path) as fd:
@@ -71,7 +71,7 @@ class Directory:
             return Directory(path)
 
     def __setitem__(self, attr, value):
-        '''Set the content of a file, or create a sub-directory.'''
+        """Set the content of a file, or create a sub-directory."""
         path = join(self.path, attr)
         if value is DIR:
             mkdir(path)
@@ -80,7 +80,7 @@ class Directory:
                 fd.write(value)
 
     def __delitem__(self, attr):
-        '''Remove a file or sub-directory.'''
+        """Remove a file or sub-directory."""
         path = self._get_path(attr)
         if isdir(path):
             rmtree(path)
@@ -88,11 +88,11 @@ class Directory:
             unlink(path)
 
     def __add__(self, other):
-        '''Return a Directory joining paths of two Directories.'''
+        """Return a Directory joining paths of two Directories."""
         return Directory(join(self.path, other.path))
 
     def _get_path(self, attr):
-        '''Return the normalized path for a name.'''
+        """Return the normalized path for a name."""
         path = normpath(join(self.path, attr))
         if not exists(path):
             raise KeyError(attr)

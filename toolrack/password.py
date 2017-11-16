@@ -1,4 +1,4 @@
-'''Password generation functions.
+"""Password generation functions.
 
 :class:`PasswordProfile` defines a set of characters to use for generating
 password.  It's creating by passing a string with characters or character
@@ -12,7 +12,7 @@ For instance::
 
 yields a 5-chars password composed of letters, dashes and underscores.
 
-'''
+"""
 
 import string
 from random import SystemRandom
@@ -25,19 +25,19 @@ DEFAULT_LENGTH = 10
 
 
 def generate_password(chars=DEFAULT_CHARS, length=DEFAULT_LENGTH):
-    '''Generate a random password using the supplied characters.
+    """Generate a random password using the supplied characters.
 
     Parameters:
         - chars: a list of chars to choose from.
         - length: number of chars for the password.
 
-    '''
+    """
     random = SystemRandom()
     return ''.join(random.choice(chars) for _ in range(length))
 
 
 class PasswordProfile:
-    '''A password profile, specifying how to generate a random password.'''
+    """A password profile, specifying how to generate a random password."""
 
     CHAR_DEFS = {
         'alnum': string.ascii_letters + string.digits,
@@ -52,15 +52,15 @@ class PasswordProfile:
 
     @property
     def chars(self):
-        '''Return the set of characters used in generation.'''
+        """Return the set of characters used in generation."""
         return self._chars
 
     def generate(self, length=DEFAULT_LENGTH):
-        '''Generate a random password.'''
+        """Generate a random password."""
         return generate_password(chars=self._chars, length=length)
 
     def _get_chars(self):
-        '''Return a list of chars from a definition.'''
+        """Return a list of chars from a definition."""
         chars_def = self.definition
         for tag, chars in self.CHAR_DEFS.items():
             chars_def = chars_def.replace('{{{}}}'.format(tag), chars)

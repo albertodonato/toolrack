@@ -13,7 +13,7 @@ class IndentTests(TestCase):
         self.out_fd = StringIO()
 
     def test_indent(self):
-        '''JSON text is indented by 4 spaces by default.'''
+        """JSON text is indented by 4 spaces by default."""
         self.in_fd.write(dumps({'foo': 3, 'bar': [4, 5]}))
         self.in_fd.seek(0)
         indent(self.in_fd, self.out_fd)
@@ -28,7 +28,7 @@ class IndentTests(TestCase):
             '}\n')
 
     def test_indent_different_spaces(self):
-        '''Indentation level can be changed.'''
+        """Indentation level can be changed."""
         self.in_fd.write(dumps({'foo': 3, 'bar': [4, 5]}))
         self.in_fd.seek(0)
         indent(self.in_fd, self.out_fd, indent=2)
@@ -43,7 +43,7 @@ class IndentTests(TestCase):
             '}\n')
 
     def test_indent_ensure_ascii(self):
-        '''Unicode chars can be encoded.'''
+        """Unicode chars can be encoded."""
         self.in_fd.write(dumps({'foo': '\N{SNOWMAN}'}))
         self.in_fd.seek(0)
         indent(self.in_fd, self.out_fd, indent=2, ensure_ascii=True)

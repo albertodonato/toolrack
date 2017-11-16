@@ -1,13 +1,13 @@
-'''Property decorators.'''
+"""Property decorators."""
 
 
 class cachedproperty:
-    '''Decorator to a class method a cached property.
+    """Decorator to a class method a cached property.
 
     The property method is called just the first time for an instance, and its
     result cached.
 
-    '''
+    """
 
     def __init__(self, func):
         self._func = func

@@ -6,7 +6,7 @@ from ..certificate import get_host_certificate
 class GetHostCertificateTest(TestCase):
 
     def test_host_and_port(self):
-        '''get_host_certificate returns the host certificate.'''
+        """get_host_certificate returns the host certificate."""
         remotes = []
 
         def fake_get_host_certificate(remote):
@@ -20,7 +20,7 @@ class GetHostCertificateTest(TestCase):
         self.assertEqual(remotes, [('example.com', 443)])
 
     def test_default_port(self):
-        '''The default port is 443.'''
+        """The default port is 443."""
         remotes = []
 
         def fake_get_host_certificate(remote):
@@ -34,7 +34,7 @@ class GetHostCertificateTest(TestCase):
         self.assertEqual(remotes, [('example.com', 443)])
 
     def test_no_scheme(self):
-        '''An URL without scheme can be passed.'''
+        """An URL without scheme can be passed."""
         remotes = []
 
         def fake_get_host_certificate(remote):

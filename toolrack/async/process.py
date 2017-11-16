@@ -1,4 +1,4 @@
-'''Protocol class for collecting a process stdout/stderr.'''
+"""Protocol class for collecting a process stdout/stderr."""
 
 from io import StringIO
 from locale import getpreferredencoding
@@ -6,7 +6,7 @@ from asyncio import SubprocessProtocol
 
 
 class ProcessParserProtocol(SubprocessProtocol):
-    '''Collect process stdout and stderr.
+    """Collect process stdout and stderr.
 
     Line parser functions can be passed for stdout and stderr, and they are
     called on each full line of output.
@@ -21,7 +21,7 @@ class ProcessParserProtocol(SubprocessProtocol):
         - out_parser: an optional parser for the process standard output.
         - err_parser: an optional parser for the process standard error.
 
-    '''
+    """
 
     def __init__(self, future, out_parser=None, err_parser=None):
         self.future = future
@@ -46,7 +46,7 @@ class ProcessParserProtocol(SubprocessProtocol):
 
 
 class StreamHelper:
-    '''Helper to cache data until full lines of text are received.
+    """Helper to cache data until full lines of text are received.
 
     This is useful to collect data from a stream and process them when full
     lines are received.
@@ -64,7 +64,7 @@ class StreamHelper:
           text from the stream.
         - separator: the line separator
 
-    '''
+    """
 
     def __init__(self, callback=None, separator='\n'):
         self.separator = separator
@@ -73,25 +73,25 @@ class StreamHelper:
         self._partial = StringIO()
 
     def receive_data(self, data):
-        '''Receive data and process them.
+        """Receive data and process them.
 
         If a ``callback`` has been passed to the class, it's called for each
         full line of text.
 
-        '''
+        """
         if self._callback:
             self._parse_data(data)
         else:
             self._buffer.write(data)
 
     def get_data(self):
-        '''Return the full content of the stream.'''
+        """Return the full content of the stream."""
         if not self._buffer:
             return
         return self._buffer.getvalue() + self._partial.getvalue()
 
     def flush_partial(self):
-        '''Flush and process pending data from a partial line.'''
+        """Flush and process pending data from a partial line."""
         if not self._callback:
             return
         partial = self._partial.getvalue()
@@ -99,7 +99,7 @@ class StreamHelper:
             self._callback(partial)
 
     def _parse_data(self, data):
-        '''Process data parsing full lines.'''
+        """Process data parsing full lines."""
         lines = data.split(self.separator)
         lines[0] = self._pop_partial() + lines[0]
         self._partial.write(lines.pop())
@@ -109,7 +109,7 @@ class StreamHelper:
                 self._callback(line)
 
     def _pop_partial(self):
-        '''Return the current partial line and reset it.'''
+        """Return the current partial line and reset it."""
         line = self._partial.getvalue()
         self._partial.truncate()
         return line

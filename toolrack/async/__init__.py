@@ -1,4 +1,4 @@
-'''Utilities based on the asyncio library.'''
+"""Utilities based on the asyncio library."""
 
 from .periodic import PeriodicCall, AlreadyRunning, NotRunning
 from .process import ProcessParserProtocol, StreamHelper

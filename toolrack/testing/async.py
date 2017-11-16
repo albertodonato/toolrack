@@ -1,10 +1,10 @@
-'''Unit-test for asynchronous code.
+"""Unit-test for asynchronous code.
 
 
 This module provides a :class:`LoopTestCase` class with helpers to simplify
 unittesting :mod:`asincio`-based code.
 
-'''
+"""
 
 from functools import wraps
 from asyncio import (
@@ -17,7 +17,7 @@ from . import TestCase
 
 
 class TestLoop(AsyncioTestLoop):
-    '''Test loop which schedules a run when time is advanced.
+    """Test loop which schedules a run when time is advanced.
 
     Tests can call the :meth:`advance()` method to move the time forward.
     For instance::
@@ -26,24 +26,24 @@ class TestLoop(AsyncioTestLoop):
         loop.call_at(5, callback)
         loop.advance(5)  # callback gets executed
 
-    '''
+    """
 
     def __init__(self):
         super().__init__(gen=self._gen)
 
     def advance(self, advance):
-        '''Advance the loop time and schedule a run.'''
+        """Advance the loop time and schedule a run."""
         assert advance >= 0, 'Time advance must not be negative'
         self.advance_time(advance)
         self._run_once()
 
     def create_task(self, coro):
-        '''Create a task from a coroutine.
+        """Create a task from a coroutine.
 
         The loop is run to consume all pending ready callbacks that can be
         created by the added task.
 
-        '''
+        """
         task = super().create_task(coro)
         # Execute the task
         while self._ready:
@@ -51,14 +51,14 @@ class TestLoop(AsyncioTestLoop):
         return task
 
     def _gen(self):
-        '''Generator for the TestLoop.'''
+        """Generator for the TestLoop."""
         absolute_time = -1
         while absolute_time:
             absolute_time = yield 0
 
 
 class LoopTestCase(TestCase):
-    '''Base test class for tests requiring an :mod:`asyncio` loop.
+    """Base test class for tests requiring an :mod:`asyncio` loop.
 
     It uses a :class:`TestLoop`, so that it's possible to manually advance time
     in tests.
@@ -82,7 +82,7 @@ class LoopTestCase(TestCase):
             result = self.async_result(mycoro())
             error = self.async_error(myfailingcoro())
 
-    '''
+    """
 
     def setUp(self):
         super().setUp()
@@ -109,27 +109,27 @@ class LoopTestCase(TestCase):
         super().addCleanup(function, *args, **kwargs)
 
     def set_event_loop(self):
-        '''Set a new :class:`TestLoop` for each test.
+        """Set a new :class:`TestLoop` for each test.
 
         Can be overridden to set a different loop type.
 
-        '''
+        """
         set_event_loop_policy(BaseDefaultEventLoopPolicy())
         self.loop = TestLoop()
         set_event_loop(self.loop)
 
     def async_result(self, call):
-        '''Wait for the async call to complete and return its result.'''
+        """Wait for the async call to complete and return its result."""
         future = self.loop.run_until_complete(self._wrap_async_call(call))
         return future.result()
 
     def async_error(self, call):
-        '''Wait for the async call to fail and return the exception.'''
+        """Wait for the async call to fail and return the exception."""
         future = self.loop.run_until_complete(self._wrap_async_call(call))
         return future.exception()
 
     async def _wrap_async_call(self, call):
-        '''Return a Future with the result or exception from an async call.'''
+        """Return a Future with the result or exception from an async call."""
         future = Future()
 
         try:
@@ -141,7 +141,7 @@ class LoopTestCase(TestCase):
         return future
 
     def _wrap_async(self, method):
-        '''If the method is a coroutine, wrap it and wait for it.'''
+        """If the method is a coroutine, wrap it and wait for it."""
 
         @wraps(method)
         def wrapper():
@@ -155,5 +155,5 @@ class LoopTestCase(TestCase):
         return wrapper
 
     def _is_async(self, obj):
-        '''Return whether an object is a coroutine or Future.'''
+        """Return whether an object is a coroutine or Future."""
         return iscoroutine(obj) or isinstance(obj, Future)

@@ -1,4 +1,4 @@
-'''Unit-test fixtures.'''
+"""Unit-test fixtures."""
 
 import os
 from tempfile import mkstemp, mkdtemp
@@ -7,7 +7,7 @@ from fixtures import Fixture, TempDir
 
 
 class TempDirFixture(Fixture):
-    '''Fixture providing a temporary base dir.
+    """Fixture providing a temporary base dir.
 
     The fixture also provides method to create sub-directories and files under
     the temporary directory.
@@ -16,19 +16,19 @@ class TempDirFixture(Fixture):
 
       self.useFixture(TempDirFixture())
 
-    '''
+    """
 
     def setUp(self):
-        '''Set up a temporary directory.'''
+        """Set up a temporary directory."""
         super().setUp()
         self.path = self.useFixture(TempDir()).path
 
     def join(self, *paths):
-        '''Join the specified path fragments with directory prefix.'''
+        """Join the specified path fragments with directory prefix."""
         return os.path.join(self.path, *paths)
 
     def mkdir(self, path=None):
-        '''Create a temporary directory and return the path.
+        """Create a temporary directory and return the path.
 
         By default, a random name is chosen.
 
@@ -39,11 +39,11 @@ class TempDirFixture(Fixture):
             A tuple of strings can be also passed, in which case elements are
             joined using :func:`os.path.sep`.
 
-        '''
+        """
         return self._mkpath(path, mkdtemp, os.mkdir)
 
     def mkfile(self, path=None, content='', mode=None):
-        '''Create a temporary file and return its path.
+        """Create a temporary file and return its path.
 
         By default, a random name is chosen.
 
@@ -56,7 +56,7 @@ class TempDirFixture(Fixture):
           - content: the content of the file.
           - mode: Unix permissions for the file.
 
-        '''
+        """
         path = self._mkpath(path, self._mkstemp, self._touch)
 
         if content:

@@ -1,10 +1,10 @@
-'''Logging helpers.
+"""Logging helpers.
 
 The :class:`Loggable` mixin provides a :data:`logger` attribute with a
 configured logger using the class name (including the module path) as logger
 name.
 
-'''
+"""
 
 import logging
 
@@ -15,7 +15,7 @@ LOG_FORMAT = '%(asctime)s - %(levelname)s - %(name)s - %(message)s'
 
 
 def setup_logger(name=None, stream=None, level=None, format=LOG_FORMAT):
-    '''Helper to setup a logger with a default handler.
+    """Helper to setup a logger with a default handler.
 
     Parameters:
         - name: the name of the logger. If not specified, the :data:`root`
@@ -24,7 +24,7 @@ def setup_logger(name=None, stream=None, level=None, format=LOG_FORMAT):
           the null handler is installed.
         - level: the minimum log level for the logger.
 
-    '''
+    """
     logger = logging.getLogger(name=name)
 
     if stream is None:
@@ -43,11 +43,11 @@ def setup_logger(name=None, stream=None, level=None, format=LOG_FORMAT):
 
 
 class Loggable:
-    '''Mixin class providing a :data:`logger` attribute.'''
+    """Mixin class providing a :data:`logger` attribute."""
 
     @cachedproperty
     def logger(self):
-        '''Return a logger for this class.'''
+        """Return a logger for this class."""
         logger_name = '{}.{}'.format(self.__module__, self.__class__.__name__)
         if hasattr(self, 'name'):
             logger_name += '[{}]'.format(self.name)

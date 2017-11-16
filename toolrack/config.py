@@ -1,4 +1,4 @@
-'''Hold and parse key/value configurations.
+"""Hold and parse key/value configurations.
 
 The :class:`Config` describes valid configuration keys along with their types,
 and performs parsing and type conversion from a dict of config options.  It
@@ -14,7 +14,7 @@ As an example::
 
 returns ``{'option1': 4, 'option2': True}``.
 
-'''
+"""
 
 from operator import attrgetter
 from functools import partial
@@ -35,7 +35,7 @@ class InvalidConfigValue(Exception):
 
 
 class ConfigKeyTypes:
-    '''Collection of type converters for ConfigKeys.'''
+    """Collection of type converters for ConfigKeys."""
 
     # Base types
     _type_int = int
@@ -43,7 +43,7 @@ class ConfigKeyTypes:
     _type_str = str
 
     def get_converter(self, _type):
-        '''Return the converter method for the specified type.'''
+        """Return the converter method for the specified type."""
         if _type.endswith('[]'):
             _type = _type.strip('[]')
             elem_converter = self.get_converter(_type)
@@ -57,23 +57,23 @@ class ConfigKeyTypes:
         return converter
 
     def _type_bool(self, value):
-        '''Convert to boolean.
+        """Convert to boolean.
 
         Accepted values for True are 'true', 'yes' and '1', case insensitive.
-        '''
+        """
         if isinstance(value, str):
             return value.lower() in ('true', 'yes', '1')
         return bool(value)
 
     def _type_list(self, converter, value):
-        '''Convert to list.'''
+        """Convert to list."""
         if isinstance(value, str):
             value = value.split()
         return [converter(item) for item in value]
 
 
 class ConfigKey:
-    '''A key in the Configuration.'''
+    """A key in the Configuration."""
 
     def __init__(self, name, _type, description='', required=False,
                  default=None, validator=None):
@@ -87,7 +87,7 @@ class ConfigKey:
         self._config_types = ConfigKeyTypes()
 
     def parse(self, value):
-        '''Convert and validate a value.'''
+        """Convert and validate a value."""
         try:
             value = self._convert(value)
             self._validate(value)
@@ -96,51 +96,51 @@ class ConfigKey:
         return value
 
     def validate(self, value):
-        '''Validate a value based for the key.
+        """Validate a value based for the key.
 
         Can be overridden by subclasses. It should raise a ValueError if the
         value is invalid.
-        '''
+        """
         pass
 
     def _validate(self, value):
-        '''Call the type validator.'''
+        """Call the type validator."""
         self.validate(value)
         if self.validator is not None:
             self.validator(value)
 
     def _convert(self, value):
-        '''Convert the value to the proper type.'''
+        """Convert the value to the proper type."""
         converter = self._config_types.get_converter(self.type)
         return converter(value)
 
 
 class Config:
-    '''Parse a configuration dictionary.
+    """Parse a configuration dictionary.
 
     A configuration has a set of keys of specific types.
-    '''
+    """
 
     def __init__(self, *keys):
         self._config_keys = {key.name: key for key in keys}
 
     def keys(self):
-        '''Return ConfigKeys sorted by name alphabetically.'''
+        """Return ConfigKeys sorted by name alphabetically."""
         return sorted(self._config_keys.values(), key=attrgetter('name'))
 
     def extend(self, *keys):
-        '''Return a new Config with additional keys.'''
+        """Return a new Config with additional keys."""
         all_keys = self._config_keys.copy()
         all_keys.update((key.name, key) for key in keys)
         return Config(*all_keys.values())
 
     def parse(self, config):
-        '''Parse the provided configuration dict.
+        """Parse the provided configuration dict.
 
         Returns a dict with configuration keys and values converted to the
         proper type. The dict includes only keys declared in the Config, with
         default values if not present in the config dict.
-        '''
+        """
         if config is None:
             config = {}
 

@@ -1,4 +1,4 @@
-'''SSL/TSL certificates info tool.'''
+"""SSL/TSL certificates info tool."""
 
 from argparse import ArgumentParser
 
@@ -7,7 +7,7 @@ from ..script import Script, ErrorExitMessage
 
 
 class CertInfo(Script):
-    '''Get information about SSL certificates.'''
+    """Get information about SSL certificates."""
 
     def get_parser(self):
         parser = ArgumentParser(

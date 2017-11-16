@@ -1,4 +1,4 @@
-'''Generate random passwords.'''
+"""Generate random passwords."""
 
 from collections import OrderedDict
 from argparse import ArgumentParser
@@ -13,7 +13,7 @@ PROFILES = OrderedDict(
 
 
 class PasswordGenerator(Script):
-    '''Script to generate random passwords.'''
+    """Script to generate random passwords."""
 
     def get_parser(self):
         parser = ArgumentParser(description='Generate random passwords')
@@ -53,13 +53,13 @@ class PasswordGenerator(Script):
             print(password)
 
     def _list_profiles(self):
-        '''List available profiles.'''
+        """List available profiles."""
         for name, profile in PROFILES.items():
             message = '{}:\n  definition: {}\n  characters: {}'
             print(message.format(name, profile.definition, profile.chars))
 
     def _list_definitions(self):
-        '''List available character set definitions.'''
+        """List available character set definitions."""
         for tag, chars in PasswordProfile.CHAR_DEFS.items():
             print('{}: {!r}'.format(tag, chars))
 

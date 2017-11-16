@@ -1,29 +1,29 @@
-'''Utilities based on the asyncio library.
+"""Utilities based on the asyncio library.
 
 This modules provides a :class:`PeriodicCall` class to periodically execute a
 task.
 
-'''
+"""
 
 from asyncio import Future
 
 
 class AlreadyRunning(Exception):
-    '''The :class:`PeriodicCall` is already running.'''
+    """The :class:`PeriodicCall` is already running."""
 
     def __init__(self):
         super().__init__('PeriodicCall is already running')
 
 
 class NotRunning(Exception):
-    '''The :class:`PeriodicCall` is not running.'''
+    """The :class:`PeriodicCall` is not running."""
 
     def __init__(self):
         super().__init__('PeriodicCall is not running')
 
 
 class PeriodicCall:
-    '''Call a function at a periodic interval.
+    """Call a function at a periodic interval.
 
     The class takes a function with optional arguments. Upon
     :meth:`start()`, the function is scheduled with the specified interval,
@@ -34,7 +34,7 @@ class PeriodicCall:
         - func: the function to call periodically.
         - args: arguments to pass to the function.
 
-    '''
+    """
 
     def __init__(self, loop, func, *args, **kwargs):
         self._loop = loop
@@ -47,17 +47,17 @@ class PeriodicCall:
 
     @property
     def running(self):
-        '''Whether the PeriodicCall is currently running.'''
+        """Whether the PeriodicCall is currently running."""
         return self._future is not None
 
     def start(self, interval, now=True):
-        '''Start calling the function periodically.
+        """Start calling the function periodically.
 
         Parameters:
             - interval: the time interval in seconds between calls.
             - now: whether to make the first call immediately.
 
-        '''
+        """
         if self.running:
             raise AlreadyRunning()
 
@@ -67,11 +67,11 @@ class PeriodicCall:
         self._run(now=now)
 
     async def stop(self):
-        '''Stop calling the function periodically.
+        """Stop calling the function periodically.
 
         It returns an :class:`asyncio.Future` to wait for the stop to complete.
 
-        '''
+        """
         if not self.running:
             raise NotRunning()
 

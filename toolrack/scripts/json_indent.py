@@ -1,4 +1,4 @@
-'''Indent JSON text.'''
+"""Indent JSON text."""
 
 import sys
 from argparse import ArgumentParser, FileType
@@ -8,7 +8,7 @@ from ..script import Script, ErrorExitMessage
 
 
 class JSONIndent(Script):
-    '''Script to indent JSON text.'''
+    """Script to indent JSON text."""
 
     def get_parser(self):
         parser = ArgumentParser(description='Indent JSON text')

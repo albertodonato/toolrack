@@ -1,1 +1,1 @@
-'''Miscellaneous scripts.'''
+"""Miscellaneous scripts."""

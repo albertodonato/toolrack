@@ -20,7 +20,7 @@ class ProcessParserProtocolTests(LoopTestCase):
         set_event_loop(self.loop)
 
     async def test_result(self):
-        '''When the process ends, stdout and stderr are returned.'''
+        """When the process ends, stdout and stderr are returned."""
         script = dedent(
             '''#!/bin/sh
             echo out
@@ -37,7 +37,7 @@ class ProcessParserProtocolTests(LoopTestCase):
         self.assertEqual(err, 'err\n')
 
     async def test_error(self):
-        '''If the process errors, an exception is raised.'''
+        """If the process errors, an exception is raised."""
         protocol = ProcessParserProtocol(self.future)
         exception = Exception('fail!')
         # Simulate an error while process is running
@@ -47,7 +47,7 @@ class ProcessParserProtocolTests(LoopTestCase):
         self.assertIs(e.exception, exception)
 
     async def test_parse_stdout(self):
-        '''It's possible to pass a function to parse stdout line by line.'''
+        """It's possible to pass a function to parse stdout line by line."""
         script = dedent(
             '''#!/bin/sh
             echo line 1
@@ -71,7 +71,7 @@ class ProcessParserProtocolTests(LoopTestCase):
         self.assertEqual(result, (None, 'not parsed\n'))
 
     async def test_parse_stderr(self):
-        '''It's possible to pass a function to parse stderr line by line.'''
+        """It's possible to pass a function to parse stderr line by line."""
         script = dedent(
             '''#!/bin/sh
             echo line 1 >&2
@@ -95,7 +95,7 @@ class ProcessParserProtocolTests(LoopTestCase):
         self.assertEqual(result, ('not parsed\n', None))
 
     async def test_parse_no_ending_newline(self):
-        '''The last line of output is partse if it doesn't have a newline.'''
+        """The last line of output is partse if it doesn't have a newline."""
         script = dedent(
             '''#!/bin/sh
             echo line 1
@@ -123,7 +123,7 @@ class StreamHelperTests(TestCase):
         self.lines = []
 
     def test_receive_data_handles_partial(self):
-        '''receive_data caches partial lines and joins them. '''
+        """receive_data caches partial lines and joins them. """
         helper = StreamHelper(callback=self.lines.append)
         helper.receive_data('foo\nbar')
         self.assertEqual(self.lines, ['foo'])
@@ -131,7 +131,7 @@ class StreamHelperTests(TestCase):
         self.assertEqual(self.lines, ['foo', 'barbaz'])
 
     def test_receive_data_separator(self):
-        '''It's possible to specify a different line separator. '''
+        """It's possible to specify a different line separator. """
         helper = StreamHelper(callback=self.lines.append, separator='X')
         helper.receive_data('fooXbarX')
         self.assertEqual(self.lines, ['foo', 'bar'])

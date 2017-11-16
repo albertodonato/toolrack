@@ -18,13 +18,13 @@ class SampleClass:
 class CachedpropertyTests(TestCase):
 
     def test_single_call(self):
-        '''The property function is called just once.'''
+        """The property function is called just once."""
         obj = SampleClass()
         obj.property
         obj.property
         self.assertEqual(obj.calls, 1)
 
     def test_value(self):
-        '''The property returns the value from the method.'''
+        """The property returns the value from the method."""
         obj = SampleClass(value=100)
         self.assertEqual(obj.property, 100)

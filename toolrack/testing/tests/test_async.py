@@ -6,7 +6,7 @@ from ..async import LoopTestCase
 class AsyncTests(LoopTestCase):
 
     def test_advance(self):
-        '''TestLoop.advance advances time and runs the loop.'''
+        """TestLoop.advance advances time and runs the loop."""
         calls = []
 
         def callback():
@@ -20,7 +20,7 @@ class AsyncTests(LoopTestCase):
         self.assertEqual(calls, [5, 10])
 
     def test_create_task(self):
-        '''TestLoop.create_task immediately executes the task.'''
+        """TestLoop.create_task immediately executes the task."""
 
         async def coro():
             return 'result'
@@ -29,7 +29,7 @@ class AsyncTests(LoopTestCase):
         self.assertEqual(task.result(), 'result')
 
     def test_async_result(self):
-        '''TestLoop.async_result returns the result of the coroutine.'''
+        """TestLoop.async_result returns the result of the coroutine."""
 
         async def coro():
             return 'result'
@@ -38,7 +38,7 @@ class AsyncTests(LoopTestCase):
         self.assertEqual(result, 'result')
 
     def test_async_error(self):
-        '''TestLoop.async_error returns the error raised by the coroutine.'''
+        """TestLoop.async_error returns the error raised by the coroutine."""
 
         async def coro():
             raise Exception('failed')
@@ -48,7 +48,7 @@ class AsyncTests(LoopTestCase):
         self.assertEqual(str(error), 'failed')
 
     def test_wrap_async_no_result_if_not_async(self):
-        '''If a test method is not async, it should not return a value.'''
+        """If a test method is not async, it should not return a value."""
 
         class SampleTestCase(LoopTestCase):
 

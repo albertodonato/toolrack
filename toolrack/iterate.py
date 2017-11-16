@@ -1,8 +1,8 @@
-'''Utility functions for iterables.'''
+"""Utility functions for iterables."""
 
 
 def flatten_dict(data, join_char='.', prefix=''):
-    '''Flatten a nested dict to (key, value) tuples.
+    """Flatten a nested dict to (key, value) tuples.
 
     A neted dict like::
 
@@ -19,7 +19,7 @@ def flatten_dict(data, join_char='.', prefix=''):
         - join_char: the character to use to join key tokens.
         - prefix: an optional prefix to prepend to keys.
 
-    '''
+    """
     if isinstance(data, dict):
         base_prefix = prefix
         for key, value in data.items():
