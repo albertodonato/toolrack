@@ -2,6 +2,7 @@
 
 import os
 from pathlib import Path
+from functools import partial
 from tempfile import (
     mkdtemp,
     mkstemp,
@@ -35,7 +36,7 @@ class TempDirFixture(Fixture):
         return self.path.joinpath(*paths)
 
     def mkdir(self, path=None):
-        """Create a temporary directory and return the path.
+        """Create a temporary directory and return the :class:`pathlib.Path`.
 
         By default, a random name is chosen.
 
@@ -49,7 +50,7 @@ class TempDirFixture(Fixture):
         return self._mkpath(path, mkdtemp, os.mkdir)
 
     def mkfile(self, path=None, content='', mode=None):
-        """Create a temporary file and return its path.
+        """Create a temporary file and return the :class:`pathlib.Path`.
 
         By default, a random name is chosen.
 
@@ -62,7 +63,7 @@ class TempDirFixture(Fixture):
         :param int mode: Unix permissions for the file.
 
         """
-        path = self._mkpath(path, self._mkstemp, self._touch)
+        path = self._mkpath(path, self._mkstemp, lambda p: p.touch())
 
         if content:
             path.write_text(content)
@@ -70,6 +71,23 @@ class TempDirFixture(Fixture):
         if mode is not None:
             path.chmod(mode)
         return path
+
+    def mksymlink(self, target, path=None):
+        """Create a symbolic link and return the :class:`pathlib.Path`.
+
+        By default, a random name is chosen.
+
+        :param target: path of the symlink target.
+        :param path: if specified, it's appended to the base directory and all
+            intermiediate directories are created too.
+            A relative path *must* be specified.
+            A tuple of strings can be also passed, in which case elements are
+            joined using :func:`os.path.sep`.
+
+        """
+        return self._mkpath(
+            path, partial(self._mkstemp_symlink, target),
+            lambda p: p.symlink_to(target))
 
     def _mkpath(self, path, create_temp, create_func):
         if path is None:
@@ -88,10 +106,13 @@ class TempDirFixture(Fixture):
         create_func(path)
         return path
 
-    def _mkstemp(self, **kwargs):
-        fd, path = mkstemp(**kwargs)
+    def _mkstemp(self, dir=None):
+        fd, path = mkstemp(dir=dir)
         os.close(fd)
         return Path(path)
 
-    def _touch(self, path):
-        path.touch()
+    def _mkstemp_symlink(self, target, dir=None):
+        path = self._mkstemp(dir=dir)
+        path.unlink()
+        path.symlink_to(target)
+        return path

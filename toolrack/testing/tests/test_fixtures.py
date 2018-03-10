@@ -1,5 +1,7 @@
-from .. import TestCase
-from ..fixtures import TempDirFixture
+from .. import (
+    TestCase,
+    TempDirFixture,
+)
 
 
 class TempDirFixtureTests(TestCase):
@@ -59,3 +61,17 @@ class TempDirFixtureTests(TestCase):
         path = self.fixture.mkfile('foo', mode=0o700)
         mode = path.stat().st_mode & 0o777
         self.assertEqual(mode, 0o700)
+
+    def test_mksymlink(self):
+        """mksymlink() creates a symlink to the target."""
+        target = self.fixture.mkfile()
+        link = self.fixture.mksymlink(target)
+        self.assertEqual(link.parent, self.fixture.path)
+        self.assertTrue(link.is_symlink())
+
+    def test_mksymlink_name(self):
+        """mksymlink() creates a symlink with specified name."""
+        target = self.fixture.mkfile()
+        link = self.fixture.mksymlink(target, path='foo')
+        self.assertEqual(link, self.fixture.path / 'foo')
+        self.assertTrue(link.is_symlink())
