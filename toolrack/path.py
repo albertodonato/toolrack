@@ -1,16 +1,17 @@
 """Functions for paths handling."""
 
-from os import walk
 from fnmatch import fnmatch
+from pathlib import Path
+from os import walk
 
 
 def match_files(dirpaths, patterns, ignorecase=False):
     """Search files by name based on shell patterns.
 
-    A list of paths to search in and patters to match can be provided.
+    :param list dirpaths: a list of paths to search from.
+    :param list patterns: a list of name patterns to match.
 
-    An iterator yielding tuples with directory and file name for each match is
-    returned.
+    :returns: an iterator yielding matched files.
 
     """
     for dirpath in dirpaths:
@@ -18,4 +19,4 @@ def match_files(dirpaths, patterns, ignorecase=False):
             for filename in filenames:
                 fname = filename.lower() if ignorecase else filename
                 if any(fnmatch(fname, pattern) for pattern in patterns):
-                    yield dirname, filename
+                    yield Path(dirname) / filename

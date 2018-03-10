@@ -1,5 +1,3 @@
-import os
-
 from .. import TestCase
 from ..fixtures import TempDirFixture
 
@@ -14,19 +12,19 @@ class TempDirFixtureTests(TestCase):
         """join() joins paths under the fixture dir."""
         full_path = self.fixture.join('foo', 'bar', 'baz')
         self.assertEqual(
-            os.path.join(self.fixture.path, 'foo', 'bar', 'baz'), full_path)
+            full_path, self.fixture.path / 'foo' / 'bar' / 'baz')
 
     def test_mkdir(self):
         """mkdir() creates a directory."""
-        dir_path = os.path.join(self.fixture.path, 'foo')
-        self.fixture.mkdir('foo')
-        self.assertTrue(os.path.isdir(dir_path))
+        path = self.fixture.mkdir('foo')
+        self.assertTrue(path.is_dir())
+        self.assertEqual(path, self.fixture.path / 'foo')
 
     def test_mkdir_path_tuple(self):
         """mkdir() creates a directory with the path specified as a tuple."""
-        dir_path = os.path.join(self.fixture.path, 'foo', 'bar')
-        self.fixture.mkdir(('foo', 'bar'))
-        self.assertTrue(os.path.isdir(dir_path))
+        path = self.fixture.mkdir(('foo', 'bar'))
+        self.assertTrue(path.is_dir())
+        self.assertEqual(path, self.fixture.path / 'foo' / 'bar')
 
     def test_mkdir_no_absolute_path(self):
         """mkdir() raises an error if the path is absolute."""
@@ -36,15 +34,14 @@ class TempDirFixtureTests(TestCase):
 
     def test_mkfile(self):
         """mkfile() creates a file."""
-        file_path = os.path.join(self.fixture.path, 'foo')
-        self.fixture.mkfile('foo')
-        self.assertTrue(os.path.isfile(file_path))
+        path = self.fixture.mkfile('foo')
+        self.assertTrue(path.is_file())
 
     def test_mkfile_path_tuple(self):
         """mkfile() creates a file with the path specified as a tuple."""
-        file_path = os.path.join(self.fixture.path, 'foo', 'bar')
-        self.fixture.mkfile(('foo', 'bar'))
-        self.assertTrue(os.path.isfile(file_path))
+        path = self.fixture.mkfile(('foo', 'bar'))
+        self.assertTrue(path.is_file())
+        self.assertEqual(path, self.fixture.path / 'foo' / 'bar')
 
     def test_mkfile_no_absolute_path(self):
         """mkfile() raises an error if the path is absolute."""
@@ -54,13 +51,11 @@ class TempDirFixtureTests(TestCase):
 
     def test_mkfile_content(self):
         """mkfile() creates a file with specified content."""
-        file_path = os.path.join(self.fixture.path, 'foo')
-        self.fixture.mkfile('foo', content='some content')
-        self.assertEqual(self.readfile(file_path), 'some content')
+        path = self.fixture.mkfile('foo', content='some content')
+        self.assertEqual(path.read_text(), 'some content')
 
     def test_mkfile_mode(self):
         """mkfile() creates a file with specified mode."""
-        file_path = os.path.join(self.fixture.path, 'foo')
-        self.fixture.mkfile('foo', mode=0o700)
-        mode = os.stat(file_path).st_mode & 0o777
+        path = self.fixture.mkfile('foo', mode=0o700)
+        mode = path.stat().st_mode & 0o777
         self.assertEqual(mode, 0o700)

@@ -1,9 +1,16 @@
 """Unit-test fixtures."""
 
 import os
-from tempfile import mkstemp, mkdtemp
+from pathlib import Path
+from tempfile import (
+    mkdtemp,
+    mkstemp,
+)
 
-from fixtures import Fixture, TempDir
+from fixtures import (
+    Fixture,
+    TempDir,
+)
 
 
 class TempDirFixture(Fixture):
@@ -21,19 +28,18 @@ class TempDirFixture(Fixture):
     def setUp(self):
         """Set up a temporary directory."""
         super().setUp()
-        self.path = self.useFixture(TempDir()).path
+        self.path = Path(self.useFixture(TempDir()).path).absolute()
 
     def join(self, *paths):
         """Join the specified path fragments with directory prefix."""
-        return os.path.join(self.path, *paths)
+        return self.path.joinpath(*paths)
 
     def mkdir(self, path=None):
         """Create a temporary directory and return the path.
 
         By default, a random name is chosen.
 
-        Parameters:
-          - path: if specified, it's appended to the base directory and all
+        :param path: if specified, it's appended to the base directory and all
             intermiediate directories are created too.
             A relative path *must* be specified.
             A tuple of strings can be also passed, in which case elements are
@@ -47,47 +53,45 @@ class TempDirFixture(Fixture):
 
         By default, a random name is chosen.
 
-        Parameters:
-          - path: if specified, it's appended to the base directory and all
+        :param path: if specified, it's appended to the base directory and all
             intermiediate directories are created too.
             A relative path *must* be specified.
             A tuple of strings can be also passed, in which case elements are
             joined using :func:`os.path.sep`.
-          - content: the content of the file.
-          - mode: Unix permissions for the file.
+        :param str content: the content of the file.
+        :param int mode: Unix permissions for the file.
 
         """
         path = self._mkpath(path, self._mkstemp, self._touch)
 
         if content:
-            with open(path, 'w') as fh:
-                fh.write(content)
+            path.write_text(content)
 
         if mode is not None:
-            os.chmod(path, mode)
+            path.chmod(mode)
         return path
 
     def _mkpath(self, path, create_temp, create_func):
         if path is None:
-            return create_temp(dir=self.path)
+            return Path(create_temp(dir=self.path))
 
         if isinstance(path, tuple):
-            path = os.path.join(*path)
-        if os.path.isabs(path):
+            path = Path().joinpath(*path)
+        else:
+            path = Path(path)
+        if path.is_absolute():
             raise ValueError('Path must be relative')
 
-        path = os.path.join(self.path, path)
-        dirname = os.path.dirname(path)
-        if dirname and not os.path.exists(dirname):
-            os.makedirs(dirname)
+        path = self.path / path
+        # ensure parent exists
+        path.parent.mkdir(parents=True, exist_ok=True)
         create_func(path)
         return path
 
     def _mkstemp(self, **kwargs):
         fd, path = mkstemp(**kwargs)
         os.close(fd)
-        return path
+        return Path(path)
 
     def _touch(self, path):
-        fd = open(path, 'w')
-        fd.close()
+        path.touch()

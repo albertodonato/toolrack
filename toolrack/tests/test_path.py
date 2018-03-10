@@ -20,7 +20,7 @@ class MatchFilesTests(TestCase):
         dir2.mkfile(path='name')
         self.assertCountEqual(
             match_files([dir1.path, dir2.path], ['name']),
-            [(dir1.path, 'name'), (dir2.path, 'name')])
+            [dir1.path / 'name', dir2.path / 'name'])
 
     def test_glob_match(self):
         """The method returns all files matching the pattern."""
@@ -29,7 +29,7 @@ class MatchFilesTests(TestCase):
         tempdir.mkfile(path='name2')
         self.assertCountEqual(
             match_files([tempdir.path], ['name*']),
-            [(tempdir.path, 'name1'), (tempdir.path, 'name2')])
+            [tempdir.path / 'name1', tempdir.path / 'name2'])
 
     def test_multple_matches(self):
         """The method returns files matching all patterns."""
@@ -39,8 +39,8 @@ class MatchFilesTests(TestCase):
         tempdir.mkfile(path='name1')
         self.assertCountEqual(
             match_files([tempdir.path], ['name*', '*-name']),
-            [(tempdir.path, 'this-name'), (tempdir.path, 'other-name'),
-             (tempdir.path, 'name1')])
+            [tempdir.path / 'this-name', tempdir.path / 'other-name',
+             tempdir.path / 'name1'])
 
     def test_case_sensitive(self):
         """The match is case sensitive by default."""
@@ -49,7 +49,7 @@ class MatchFilesTests(TestCase):
         tempdir.mkfile(path='Name')
         tempdir.mkfile(path='NAME')
         self.assertCountEqual(
-            match_files([tempdir.path], ['name']), [(tempdir.path, 'name')])
+            match_files([tempdir.path], ['name']), [tempdir.path / 'name'])
 
     def test_case_insensitive(self):
         """The match can be made case insensitive."""
@@ -59,5 +59,5 @@ class MatchFilesTests(TestCase):
         tempdir.mkfile(path='NAME')
         self.assertCountEqual(
             match_files([tempdir.path], ['name'], ignorecase=True),
-            [(tempdir.path, 'name'), (tempdir.path, 'Name'),
-             (tempdir.path, 'NAME')])
+            [tempdir.path / 'name', tempdir.path / 'Name',
+             tempdir.path / 'NAME'])

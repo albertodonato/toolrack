@@ -1,5 +1,6 @@
 """Base unit-test classes."""
 
+from pathlib import Path
 from unittest import TestCase as BaseTestCase
 
 from fixtures import TestWithFixtures
@@ -10,5 +11,4 @@ class TestCase(TestWithFixtures, BaseTestCase):
 
     def readfile(self, path):
         """Return the content of a file."""
-        with open(path) as fd:
-            return fd.read()
+        return Path(path).read_text()

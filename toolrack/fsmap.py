@@ -6,9 +6,10 @@ elements of a dict (e.g. ``directory['foo']`` or ``directory['foo/bar']``).
 
 """
 
-from os import listdir, mkdir, unlink
-from os.path import join, normpath, exists, isfile, isdir
+from os.path import normpath
+from pathlib import Path
 from shutil import rmtree
+
 
 #: Marker for creating directories.
 DIR = object()
@@ -51,49 +52,47 @@ class Directory:
     """
 
     def __init__(self, path):
-        self.path = normpath(path)
+        self.path = Path(normpath(path))
 
     def __str__(self):
         """Return the path of the directory."""
-        return self.path
+        return str(self.path)
 
     def __iter__(self):
         """Return an iterator yielding names of directory elements."""
-        return iter(listdir(self.path))
+        return self.path.iterdir()
 
     def __getitem__(self, attr):
         """Access a subitem of the Directory by name."""
         path = self._get_path(attr)
-        if isfile(path):
-            with open(path) as fd:
-                return fd.read()
-        if isdir(path):
+        if path.is_file():
+            return path.read_text()
+        if path.is_dir():
             return Directory(path)
 
     def __setitem__(self, attr, value):
         """Set the content of a file, or create a sub-directory."""
-        path = join(self.path, attr)
+        path = self.path / attr
         if value is DIR:
-            mkdir(path)
+            path.mkdir()
         else:
-            with open(path, 'w') as fd:
-                fd.write(value)
+            path.write_text(value)
 
     def __delitem__(self, attr):
         """Remove a file or sub-directory."""
         path = self._get_path(attr)
-        if isdir(path):
+        if path.is_dir():
             rmtree(path)
         else:
-            unlink(path)
+            path.unlink()
 
     def __add__(self, other):
         """Return a Directory joining paths of two Directories."""
-        return Directory(join(self.path, other.path))
+        return Directory(self.path / other.path)
 
     def _get_path(self, attr):
-        """Return the normalized path for a name."""
-        path = normpath(join(self.path, attr))
-        if not exists(path):
+        """Return the path for a name, raise an error if it doesn't exist."""
+        path = self.path / attr
+        if not path.exists():
             raise KeyError(attr)
         return path

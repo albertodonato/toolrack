@@ -19,13 +19,17 @@ class ProcessParserProtocolTests(LoopTestCase):
         self.loop = new_event_loop()  # use the real event loop
         set_event_loop(self.loop)
 
+    def make_command(self, content):
+        """create a test script and return its path."""
+        return str(self.tempdir.mkfile(content=content, mode=0o755))
+
     async def test_result(self):
         """When the process ends, stdout and stderr are returned."""
         script = dedent(
             '''#!/bin/sh
             echo out
             echo err >&2''')
-        cmd = self.tempdir.mkfile(content=script, mode=0o755)
+        cmd = self.make_command(script)
 
         transport, _ = await self.loop.subprocess_exec(
             self.protocol_factory, cmd)
@@ -53,7 +57,7 @@ class ProcessParserProtocolTests(LoopTestCase):
             echo line 1
             echo not parsed >&2
             echo line 2''')
-        cmd = self.tempdir.mkfile(content=script, mode=0o755)
+        cmd = self.make_command(script)
 
         lines = []
 
@@ -77,7 +81,7 @@ class ProcessParserProtocolTests(LoopTestCase):
             echo line 1 >&2
             echo not parsed
             echo line 2 >&2''')
-        cmd = self.tempdir.mkfile(content=script, mode=0o755)
+        cmd = self.make_command(script)
 
         lines = []
 
@@ -100,7 +104,7 @@ class ProcessParserProtocolTests(LoopTestCase):
             '''#!/bin/sh
             echo line 1
             echo -n line 2''')
-        cmd = self.tempdir.mkfile(content=script, mode=0o755)
+        cmd = self.make_command(script)
 
         lines = []
 
