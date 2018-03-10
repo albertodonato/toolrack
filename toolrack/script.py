@@ -31,9 +31,8 @@ import sys
 class ErrorExitMessage(Exception):
     """Raised to exit the process with the specified message and exit code.
 
-    Parameters:
-        - message: the error message.
-        - code: the script exit code.
+    :param str message: the error message.
+    :param int code: the script exit code.
 
     """
 
@@ -77,8 +76,7 @@ class Script:
         It gets called with the :class:`argparse.Namespace` instance returned
         by :func:`get_parser`.
 
-        Parameters:
-            - args: a :class:`argparse.Namespace` with the command line.
+        :param argparse.Namespace args: command line arguments.
 
         .. note::
             Subclasses must implement this method.

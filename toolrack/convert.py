@@ -7,10 +7,10 @@ BYTE_SUFFIXES = (None, 'kib', 'mib', 'gib', 'tib', 'pib', 'eib', 'zib', 'yib')
 def convert_bbyte(value, suffix=None, to=None):
     """Convert a binary byte value across multipliers.
 
-    Parameters:
-        - value: the current value.
-        - suffix: the current multiplier for the value (`None` for bytes).
-        - to: the target multiplier (`None` for bytes).
+    :param int value: the current value.
+    :param str suffix: the current multiplier for the value (:data:`None`
+        for bytes).
+    :param str to: the target multiplier (:data:`None` for bytes).
 
     """
     if suffix:

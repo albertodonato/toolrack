@@ -17,12 +17,11 @@ LOG_FORMAT = '%(asctime)s - %(levelname)s - %(name)s - %(message)s'
 def setup_logger(name=None, stream=None, level=None, format=LOG_FORMAT):
     """Helper to setup a logger with a default handler.
 
-    Parameters:
-        - name: the name of the logger. If not specified, the :data:`root`
-          logger is used.
-        - stream: an output stream for the log handler. If not specified,
-          the null handler is installed.
-        - level: the minimum log level for the logger.
+    :param str name: the name of the logger. If not specified, the :data:`root`
+        logger is used.
+    :param stream: an output stream for the log handler. If not specified,
+        the null handler is installed.
+    :param level: the minimum log level for the logger.
 
     """
     logger = logging.getLogger(name=name)

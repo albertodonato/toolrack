@@ -40,9 +40,8 @@ class Collection:
     It collects objects identified by the value of an attribute.
     No objects with duplicated keys are allowed.
 
-    Parameters:
-        - obj_type: string identifying the objects type.
-        - key: the object attribute to use as key.
+    :param type obj_type: string identifying the objects type.
+    :param str key: the object attribute to use as key.
 
     """
 

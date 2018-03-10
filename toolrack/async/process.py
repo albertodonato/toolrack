@@ -15,11 +15,12 @@ class ProcessParserProtocol(SubprocessProtocol):
     and stderr. Each tuple element is ``None`` if a parser is passed for that
     stream.
 
-    Parameters:
-        - future: an :class:`asyncio.Future` which is called with a tuple with
-          (stdout, stderr) from the process once it it exits.
-        - out_parser: an optional parser for the process standard output.
-        - err_parser: an optional parser for the process standard error.
+    :param asyncio.Future future: a Future called with a tuple with
+        (stdout, stderr) from the process once it it exits.
+    :param callable out_parser: an optional parser for the process standard
+        output.
+    :param callable err_parser: an optional parser for the process standard
+        error.
 
     """
 
@@ -59,10 +60,9 @@ class StreamHelper:
     would call ``callback`` twice, one with ``'line one'`` and one with
     ``'line two continues here'``
 
-    Parameters:
-        - callback: an optional function which is called with full lines of
-          text from the stream.
-        - separator: the line separator
+    :param callable callback: an optional function which is called with full
+        lines of text from the stream.
+    :param str separator: the line separator
 
     """
 

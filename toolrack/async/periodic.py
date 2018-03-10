@@ -29,10 +29,10 @@ class PeriodicCall:
     :meth:`start()`, the function is scheduled with the specified interval,
     until :meth:`stop()` is called.
 
-    Parameters:
-        - loop: the event loop to use.
-        - func: the function to call periodically.
-        - args: arguments to pass to the function.
+    :param loop: the event loop to use.
+    :param callable func: the function to call periodically.
+    :param list args: arguments to pass to the function.
+    :param dict kwargs: keyword arguments to pass to the function.
 
     """
 
@@ -53,9 +53,8 @@ class PeriodicCall:
     def start(self, interval, now=True):
         """Start calling the function periodically.
 
-        Parameters:
-            - interval: the time interval in seconds between calls.
-            - now: whether to make the first call immediately.
+        :param interval: the time interval in seconds between calls.
+        :param bool now: whether to make the first call immediately.
 
         """
         if self.running:

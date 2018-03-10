@@ -14,10 +14,9 @@ def flatten_dict(data, join_char='.', prefix=''):
       ('foo.bar': 3), ('foo.baz': 4), ('bza': 'something')
 
 
-    Parameters:
-        - data: a dict to flatten.
-        - join_char: the character to use to join key tokens.
-        - prefix: an optional prefix to prepend to keys.
+    :param dict data: a dict to flatten.
+    :param str join_char: the character to use to join key tokens.
+    :param str prefix: an optional prefix to prepend to keys.
 
     """
     if isinstance(data, dict):

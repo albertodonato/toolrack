@@ -7,9 +7,8 @@ from ssl import get_server_certificate
 def get_host_certificate(uri, get_func=get_server_certificate):
     """Return a string with the host certificate.
 
-    Parameters:
-        - uri: the host URI, in the form :data:`[scheme://]host[:port]`.
-          The scheme is optional (and ignored), and port defaults to 443.
+    :param str uri: the host URI, in the form :data:`[scheme://]host[:port]`.
+        The scheme is optional (and ignored), and port defaults to 443.
 
     """
     split = urlsplit(uri)

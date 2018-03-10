@@ -27,9 +27,8 @@ DEFAULT_LENGTH = 10
 def generate_password(chars=DEFAULT_CHARS, length=DEFAULT_LENGTH):
     """Generate a random password using the supplied characters.
 
-    Parameters:
-        - chars: a list of chars to choose from.
-        - length: number of chars for the password.
+    :param str chars: a string with chars to choose from.
+    :param int length: number of chars for the password.
 
     """
     random = SystemRandom()
