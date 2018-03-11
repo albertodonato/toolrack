@@ -1,3 +1,12 @@
+v2.0.0 - 2018-03-11
+===================
+
+- Update TempDirFixture to use/return pathlib.Path elements.
+- Add TempDirFixture.mksymlink function.
+- Change toolrack.path.match_files to return a list of pathlib.Path objects.
+- update toolrack.fsmap to use pathlib.Path elements.
+
+
 v1.6.1 - 2017-05-07
 ===================
 
