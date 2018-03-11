@@ -15,7 +15,7 @@ def match_files(dirpaths, patterns, ignorecase=False):
 
     """
     for dirpath in dirpaths:
-        for dirname, _, filenames in walk(dirpath):
+        for dirname, _, filenames in walk(str(dirpath)):
             for filename in filenames:
                 fname = filename.lower() if ignorecase else filename
                 if any(fnmatch(fname, pattern) for pattern in patterns):

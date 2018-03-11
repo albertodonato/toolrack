@@ -52,7 +52,7 @@ class Directory:
     """
 
     def __init__(self, path):
-        self.path = Path(normpath(path))
+        self.path = Path(normpath(str(path)))
 
     def __str__(self):
         """Return the path of the directory."""
@@ -82,7 +82,7 @@ class Directory:
         """Remove a file or sub-directory."""
         path = self._get_path(attr)
         if path.is_dir():
-            rmtree(path)
+            rmtree(str(path))
         else:
             path.unlink()
 

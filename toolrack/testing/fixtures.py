@@ -63,7 +63,7 @@ class TempDirFixture(Fixture):
         :param int mode: Unix permissions for the file.
 
         """
-        path = self._mkpath(path, self._mkstemp, lambda p: p.touch())
+        path = self._mkpath(path, self._mkstemp, lambda p: Path(p).touch())
 
         if content:
             path.write_text(content)
@@ -87,11 +87,11 @@ class TempDirFixture(Fixture):
         """
         return self._mkpath(
             path, partial(self._mkstemp_symlink, target),
-            lambda p: p.symlink_to(target))
+            lambda p: Path(p).symlink_to(target))
 
     def _mkpath(self, path, create_temp, create_func):
         if path is None:
-            return Path(create_temp(dir=self.path))
+            return Path(create_temp(dir=str(self.path)))
 
         if isinstance(path, tuple):
             path = Path().joinpath(*path)
@@ -103,7 +103,7 @@ class TempDirFixture(Fixture):
         path = self.path / path
         # ensure parent exists
         path.parent.mkdir(parents=True, exist_ok=True)
-        create_func(path)
+        create_func(str(path))
         return path
 
     def _mkstemp(self, dir=None):
