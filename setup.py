@@ -1,13 +1,20 @@
-from setuptools import setup, find_packages
+from pathlib import Path
+from setuptools import (
+    find_packages,
+    setup,
+)
 
-from toolrack import __version__, __doc__ as description
+from toolrack import (
+    __doc__ as description,
+    __version__,
+)
 
 config = {
     'name': 'toolrack',
     'version': __version__,
     'license': 'LGPLv3+',
     'description': description,
-    'long_description': open('README.rst').read(),
+    'long_description': Path('README.rst').read_text(),
     'author': 'Alberto Donato',
     'author_email': 'alberto.donato@gmail.com',
     'maintainer': 'Alberto Donato',
