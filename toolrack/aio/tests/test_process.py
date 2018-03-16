@@ -1,23 +1,24 @@
+from asyncio import Future
 from textwrap import dedent
-from asyncio import Future, new_event_loop, set_event_loop
 from unittest import TestCase
 
+from asynctest import TestCase as AsyncTestCase
+from fixtures import TestWithFixtures
+
+from ..process import (
+    ProcessParserProtocol,
+    StreamHelper,
+)
 from ...testing.fixtures import TempDirFixture
-from ...testing.async import LoopTestCase
-from ..process import ProcessParserProtocol, StreamHelper
 
 
-class ProcessParserProtocolTests(LoopTestCase):
+class ProcessParserProtocolTests(TestWithFixtures, AsyncTestCase):
 
     def setUp(self):
         super().setUp()
         self.tempdir = self.useFixture(TempDirFixture())
         self.future = Future()
         self.protocol_factory = lambda: ProcessParserProtocol(self.future)
-
-    def set_event_loop(self):
-        self.loop = new_event_loop()  # use the real event loop
-        set_event_loop(self.loop)
 
     def make_command(self, content):
         """create a test script and return its path."""

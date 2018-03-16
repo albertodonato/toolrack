@@ -9,6 +9,9 @@ from toolrack import (
     __version__,
 )
 
+
+tests_require = ['asynctest']
+
 config = {
     'name': 'toolrack',
     'version': __version__,
@@ -28,6 +31,8 @@ config = {
         'password-generator = toolrack.scripts.password_generator:script']},
     'test_suite': 'toolrack',
     'install_requires': ['fixtures'],
+    'tests_require': tests_require,
+    'extras_require': {'testing': tests_require},
     'keywords': 'library utility unittest asyncio',
     'classifiers': [
         'Development Status :: 4 - Beta',

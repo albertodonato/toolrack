@@ -1,8 +1,13 @@
-from ...testing.async import LoopTestCase
-from ..periodic import PeriodicCall, AlreadyRunning, NotRunning
+from asynctest import ClockedTestCase
+
+from ..periodic import (
+    AlreadyRunning,
+    NotRunning,
+    PeriodicCall,
+)
 
 
-class PeriodicCallTests(LoopTestCase):
+class PeriodicCallTests(ClockedTestCase):
 
     def setUp(self):
         super().setUp()
@@ -13,7 +18,7 @@ class PeriodicCallTests(LoopTestCase):
         """The PeriodicCall is not running by default."""
         self.assertFalse(self.periodic_call.running)
         self.periodic_call.start(5)
-        self.addCleanup(self.periodic_call.stop())
+        self.addCleanup(self.periodic_call.stop)
         self.assertTrue(self.periodic_call.running)
 
     def test_start(self):
@@ -30,7 +35,7 @@ class PeriodicCallTests(LoopTestCase):
         """Stopping the PeriodicCall stops periodic runs."""
         self.periodic_call.start(5)
         await self.periodic_call.stop()
-        self.loop.advance(5)
+        await self.advance(5)
         # Only the initial call is performed
         self.assertEqual(self.calls, [True])
 
@@ -39,12 +44,12 @@ class PeriodicCallTests(LoopTestCase):
         with self.assertRaises(NotRunning):
             await self.periodic_call.stop()
 
-    def test_periodic(self):
+    async def test_periodic(self):
         """The PeriodicCall gets called at each interval."""
         self.periodic_call.start(5)
-        self.loop.advance(5)
+        await self.advance(5)
         self.assertEqual(self.calls, [True, True])
-        self.loop.advance(5)
+        await self.advance(5)
         self.assertEqual(self.calls, [True, True, True])
 
     def test_start_later(self):
@@ -52,10 +57,10 @@ class PeriodicCallTests(LoopTestCase):
         self.periodic_call.start(5, now=False)
         self.assertEqual(self.calls, [])
 
-    def test_start_later_run_after_interval(self):
+    async def test_start_later_run_after_interval(self):
         """If now is False, the function is run after the interval."""
         self.periodic_call.start(5, now=False)
-        self.loop.advance(5)
+        await self.advance(5)
         self.assertEqual(self.calls, [True])
 
     async def test_func_arguments(self):
