@@ -1,35 +1,34 @@
 """Unit-test fixtures."""
 
+from functools import partial
 import os
 from pathlib import Path
-from functools import partial
+from shutil import rmtree
 from tempfile import (
     mkdtemp,
     mkstemp,
 )
 
-from fixtures import (
-    Fixture,
-    TempDir,
-)
+import pytest
 
 
-class TempDirFixture(Fixture):
-    """Fixture providing a temporary base dir.
+class Dir:
+    """A helper for creating files and directories under a base directory.
 
-    The fixture also provides method to create sub-directories and files under
-    the temporary directory.
-
-    It's can be used in a :class:`fixtures.TestWithFixtures`::
-
-      self.useFixture(TempDirFixture())
+    This is meant to be used for test fixtures.
 
     """
 
-    def setUp(self):
-        """Set up a temporary directory."""
-        super().setUp()
-        self.path = Path(self.useFixture(TempDir()).path).absolute()
+    def __init__(self, path: Path):
+        self.path = path
+
+    def __truediv__(self, other):
+        """Append to the path."""
+        return self.path / other
+
+    def __str__(self):
+        """The path as string."""
+        return str(self.path)
 
     def join(self, *paths):
         """Join the specified path fragments with directory prefix."""
@@ -49,7 +48,7 @@ class TempDirFixture(Fixture):
         """
         return self._mkpath(path, mkdtemp, os.mkdir)
 
-    def mkfile(self, path=None, content='', mode=None):
+    def mkfile(self, path=None, content="", mode=None):
         """Create a temporary file and return the :class:`pathlib.Path`.
 
         By default, a random name is chosen.
@@ -86,8 +85,10 @@ class TempDirFixture(Fixture):
 
         """
         return self._mkpath(
-            path, partial(self._mkstemp_symlink, target),
-            lambda p: Path(p).symlink_to(target))
+            path,
+            partial(self._mkstemp_symlink, target),
+            lambda p: Path(p).symlink_to(target),
+        )
 
     def _mkpath(self, path, create_temp, create_func):
         if path is None:
@@ -98,7 +99,7 @@ class TempDirFixture(Fixture):
         else:
             path = Path(path)
         if path.is_absolute():
-            raise ValueError('Path must be relative')
+            raise ValueError("Path must be relative")
 
         path = self.path / path
         # ensure parent exists
@@ -116,3 +117,11 @@ class TempDirFixture(Fixture):
         path.unlink()
         path.symlink_to(target)
         return path
+
+
+@pytest.fixture
+def tempdir(tmpdir):
+    """A temporary directory fixture."""
+    path = Path(mkdtemp(dir=str(tmpdir)))
+    yield Dir(path)
+    rmtree(str(path), ignore_errors=True)

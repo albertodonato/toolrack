@@ -11,7 +11,7 @@ import logging
 from .property import cachedproperty
 
 #: Default format for logging to a stream
-LOG_FORMAT = '%(asctime)s - %(levelname)s - %(name)s - %(message)s'
+LOG_FORMAT = "%(asctime)s - %(levelname)s - %(name)s - %(message)s"
 
 
 def setup_logger(name=None, stream=None, level=None, format=LOG_FORMAT):
@@ -47,7 +47,7 @@ class Loggable:
     @cachedproperty
     def logger(self):
         """Return a logger for this class."""
-        logger_name = '{}.{}'.format(self.__module__, self.__class__.__name__)
-        if hasattr(self, 'name'):
-            logger_name += '[{}]'.format(self.name)
+        logger_name = "{}.{}".format(self.__module__, self.__class__.__name__)
+        if hasattr(self, "name"):
+            logger_name += "[{}]".format(self.name)
         return logging.getLogger(name=logger_name)

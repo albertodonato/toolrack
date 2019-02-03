@@ -1,8 +1,8 @@
 """Functions for paths handling."""
 
 from fnmatch import fnmatch
-from pathlib import Path
 from os import walk
+from pathlib import Path
 
 
 def match_files(dirpaths, patterns, ignorecase=False):

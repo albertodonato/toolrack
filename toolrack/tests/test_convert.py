@@ -1,37 +1,36 @@
-from unittest import TestCase
+import pytest
 
 from ..convert import convert_bbyte
 
 
-class ConvertBbyteTests(TestCase):
-
+class TestConvertBbyte:
     def test_convert_no_conversion(self):
         """If no from/to multipliers are provided, no conversion is made."""
-        self.assertEqual(convert_bbyte(1024), 1024)
+        assert convert_bbyte(1024) == 1024
 
-    def test_convert_form(self):
+    @pytest.mark.parametrize("suffix,value", [("kib", 1024), ("mib", 1048576)])
+    def test_convert_form(self, suffix, value):
         """It's possible to convert form a multiplier to bytes."""
-        self.assertEqual(convert_bbyte(1, suffix='kib'), 1024)
-        self.assertEqual(convert_bbyte(1, suffix='mib'), 1048576)
+        assert convert_bbyte(1, suffix=suffix) == value
 
-    def test_convert_to(self):
+    @pytest.mark.parametrize("value,to", [(1073741824, "gib"), (1099511627776, "tib")])
+    def test_convert_to(self, value, to):
         """It's possible to convert to a multiplier from bytes."""
-        self.assertEqual(convert_bbyte(1073741824, to='gib'), 1)
-        self.assertEqual(convert_bbyte(1099511627776, to='tib'), 1)
+        assert convert_bbyte(value, to=to) == 1
 
-    def test_convert_from_to(self):
+    @pytest.mark.parametrize("value,suffix", [(1024, "mib"), (1048576, "kib")])
+    def test_convert_from_to(self, value, suffix):
         """It's possible to covert across multipliers."""
-        self.assertEqual(convert_bbyte(1024, suffix='mib', to='gib'), 1)
-        self.assertEqual(convert_bbyte(1048576, suffix='kib', to='gib'), 1)
+        assert convert_bbyte(value, suffix=suffix, to="gib") == 1
 
     def test_convert_unknown_suffix(self):
         """If the passed value for `suffix` is unknown, an error is raised."""
-        with self.assertRaises(ValueError) as error:
-            convert_bbyte(100, suffix='boo')
-        self.assertEqual(str(error.exception), 'Unknown multiplier suffix')
+        with pytest.raises(ValueError) as error:
+            convert_bbyte(100, suffix="boo")
+        assert str(error.value) == "Unknown multiplier suffix"
 
     def test_convert_unknown_to(self):
         """If the passed value for `to` is unknown, an error is raised."""
-        with self.assertRaises(ValueError) as error:
-            convert_bbyte(100, to='boo')
-        self.assertEqual(str(error.exception), 'Unknown target multiplier')
+        with pytest.raises(ValueError) as error:
+            convert_bbyte(100, to="boo")
+        assert str(error.value) == "Unknown target multiplier"

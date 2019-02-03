@@ -12,14 +12,14 @@ class AlreadyRunning(Exception):
     """The :class:`PeriodicCall` is already running."""
 
     def __init__(self):
-        super().__init__('PeriodicCall is already running')
+        super().__init__("PeriodicCall is already running")
 
 
 class NotRunning(Exception):
     """The :class:`PeriodicCall` is not running."""
 
     def __init__(self):
-        super().__init__('PeriodicCall is not running')
+        super().__init__("PeriodicCall is not running")
 
 
 class PeriodicCall:

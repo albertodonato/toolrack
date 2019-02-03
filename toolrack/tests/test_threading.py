@@ -1,61 +1,63 @@
 from threading import Thread
 
-from ..testing import TestCase
-from ..threading import ThreadLocalAttribute, thread_local_attrs
+import pytest
+
+from ..threading import (
+    thread_local_attrs,
+    ThreadLocalAttribute,
+)
 
 
 class SampleClass:
 
-    attr = ThreadLocalAttribute('attr')
+    attr = ThreadLocalAttribute("attr")
 
     def __init__(self, attr):
         self.attr = attr
 
 
-class ThreadLocalAttributeTests(TestCase):
+@pytest.fixture
+def instance():
+    yield SampleClass("value")
 
-    def setUp(self):
-        super().setUp()
-        self.instance = SampleClass('value')
 
-    def test_get_attr(self):
+class TestThreadLocalAttribute:
+    def test_get_attr(self, instance):
         """The descriptor allows getting the attribute value."""
-        self.assertEqual(self.instance.attr, 'value')
+        assert instance.attr == "value"
 
-    def test_set_attr(self):
+    def test_set_attr(self, instance):
         """The descriptor allows setting the attribute value."""
-        self.instance.attr = 'other value'
-        self.assertEqual(self.instance.attr, 'other value')
+        instance.attr = "other value"
+        assert instance.attr == "other value"
 
-    def test_del_attr(self):
+    def test_del_attr(self, instance):
         """The descriptor allows deleting the attribute."""
-        del self.instance.attr
-        self.assertFalse(hasattr(self.instance, 'attr'))
+        del instance.attr
+        assert not hasattr(instance, "attr")
 
-    def test_thread_local(self):
+    def test_thread_local(self, instance):
         """The attribute value is thread-local."""
         thread_value = []
 
         def target():
-            self.instance.attr = 'from thread'
-            thread_value.append(self.instance.attr)
+            instance.attr = "from thread"
+            thread_value.append(instance.attr)
 
         thread = Thread(target=target)
         thread.start()
         thread.join()
-        self.assertEqual(thread_value, ['from thread'])
+        assert thread_value == ["from thread"]
         # In the main thread the value is unchanged
-        self.assertEqual(self.instance.attr, 'value')
+        assert instance.attr == "value"
 
 
-class ThreadLocalAttrsTests(TestCase):
-
+class TestThreadLocalAttrs:
     def test_decorator(self):
         """The decorator makes specified attributes thread-local."""
 
-        @thread_local_attrs('attr1')
+        @thread_local_attrs("attr1")
         class DecoratedSampleClass:
-
             def __init__(self, attr1, attr2):
                 self.attr1 = attr1
                 self.attr2 = attr2
@@ -71,9 +73,9 @@ class ThreadLocalAttrsTests(TestCase):
         thread = Thread(target=target)
         thread.start()
         thread.join()
-        self.assertEqual(thread_values, [10, 20])
+        assert thread_values == [10, 20]
         # The value for the decorated attribute is not changed in the main
         # thread
-        self.assertEqual(instance.attr1, 1)
+        assert instance.attr1 == 1
         # The value for the non-decorated attribute is updated
-        self.assertEqual(instance.attr2, 20)
+        assert instance.attr2 == 20

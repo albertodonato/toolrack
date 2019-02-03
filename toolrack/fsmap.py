@@ -10,7 +10,6 @@ from os.path import normpath
 from pathlib import Path
 from shutil import rmtree
 
-
 #: Marker for creating directories.
 DIR = object()
 

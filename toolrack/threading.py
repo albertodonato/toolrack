@@ -34,9 +34,9 @@ class ThreadLocalAttribute:
         delattr(self._get_local(obj), self.name)
 
     def _get_local(self, obj):
-        if not hasattr(obj, '__thread_local'):
-            setattr(obj, '__thread_local', local())
-        return getattr(obj, '__thread_local')
+        if not hasattr(obj, "__thread_local"):
+            setattr(obj, "__thread_local", local())
+        return getattr(obj, "__thread_local")
 
 
 def thread_local_attrs(*attrs):

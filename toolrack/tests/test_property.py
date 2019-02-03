@@ -1,10 +1,7 @@
-from unittest import TestCase
-
 from ..property import cachedproperty
 
 
 class SampleClass:
-
     def __init__(self, value=True):
         self.value = value
         self.calls = 0
@@ -15,16 +12,15 @@ class SampleClass:
         return self.value
 
 
-class CachedpropertyTests(TestCase):
-
+class TestCachedproperty:
     def test_single_call(self):
         """The property function is called just once."""
         obj = SampleClass()
         obj.property
         obj.property
-        self.assertEqual(obj.calls, 1)
+        assert obj.calls == 1
 
     def test_value(self):
         """The property returns the value from the method."""
         obj = SampleClass(value=100)
-        self.assertEqual(obj.property, 100)
+        assert obj.property == 100

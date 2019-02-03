@@ -1,6 +1,9 @@
 """Utilities for dealing with JSON data."""
 
-from json import load, dump
+from json import (
+    dump,
+    load,
+)
 
 
 def indent(in_fd, out_fd, indent=4, ensure_ascii=False):
@@ -17,7 +20,5 @@ def indent(in_fd, out_fd, indent=4, ensure_ascii=False):
 
     """
     data = load(in_fd)
-    dump(
-        data, out_fd, sort_keys=True, ensure_ascii=ensure_ascii,
-        indent=indent)
-    out_fd.write('\n')
+    dump(data, out_fd, sort_keys=True, ensure_ascii=ensure_ascii, indent=indent)
+    out_fd.write("\n")

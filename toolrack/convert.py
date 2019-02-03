@@ -1,7 +1,7 @@
 """Utilities for unit conversion."""
 
 #: Binary byte multipliers
-BYTE_SUFFIXES = (None, 'kib', 'mib', 'gib', 'tib', 'pib', 'eib', 'zib', 'yib')
+BYTE_SUFFIXES = (None, "kib", "mib", "gib", "tib", "pib", "eib", "zib", "yib")
 
 
 def convert_bbyte(value, suffix=None, to=None):
@@ -16,9 +16,9 @@ def convert_bbyte(value, suffix=None, to=None):
     if suffix:
         suffix = suffix.lower()
     if suffix not in BYTE_SUFFIXES:
-        raise ValueError('Unknown multiplier suffix')
+        raise ValueError("Unknown multiplier suffix")
     if to not in BYTE_SUFFIXES:
-        raise ValueError('Unknown target multiplier')
+        raise ValueError("Unknown target multiplier")
     multiplier = 2 ** (10 * BYTE_SUFFIXES.index(suffix))
     converted = value * multiplier
     if to:

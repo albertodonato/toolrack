@@ -1,8 +1,8 @@
 """Protocol class for collecting a process stdout/stderr."""
 
+from asyncio import SubprocessProtocol
 from io import StringIO
 from locale import getpreferredencoding
-from asyncio import SubprocessProtocol
 
 
 class ProcessParserProtocol(SubprocessProtocol):
@@ -28,7 +28,8 @@ class ProcessParserProtocol(SubprocessProtocol):
         self.future = future
         self._outputs = {
             fd: StreamHelper(callback=parser)
-            for fd, parser in enumerate((out_parser, err_parser), 1)}
+            for fd, parser in enumerate((out_parser, err_parser), 1)
+        }
 
     def pipe_data_received(self, fd, data):
         stream = self._outputs[fd]
@@ -66,7 +67,7 @@ class StreamHelper:
 
     """
 
-    def __init__(self, callback=None, separator='\n'):
+    def __init__(self, callback=None, separator="\n"):
         self.separator = separator
         self._callback = callback
         self._buffer = StringIO() if not callback else None

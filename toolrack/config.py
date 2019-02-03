@@ -16,21 +16,25 @@ returns ``{'option1': 4, 'option2': True}``.
 
 """
 
-from operator import attrgetter
 from functools import partial
+from operator import attrgetter
+from typing import (
+    Any,
+    Callable,
+    Dict,
+    Optional,
+)
 
 
 class MissingConfigKey(Exception):
-
-    def __init__(self, key):
-        super().__init__('Missing configuration key: {}'.format(key))
+    def __init__(self, key: str):
+        super().__init__("Missing configuration key: {}".format(key))
         self.key = key
 
 
 class InvalidConfigValue(Exception):
-
-    def __init__(self, key):
-        super().__init__('Invalid value for configuration key: {}'.format(key))
+    def __init__(self, key: str):
+        super().__init__("Invalid value for configuration key: {}".format(key))
         self.key = key
 
 
@@ -42,30 +46,30 @@ class ConfigKeyTypes:
     _type_float = float
     _type_str = str
 
-    def get_converter(self, _type):
+    def get_converter(self, _type: str) -> Callable:
         """Return the converter method for the specified type."""
-        if _type.endswith('[]'):
-            _type = _type.strip('[]')
+        if _type.endswith("[]"):
+            _type = _type.strip("[]")
             elem_converter = self.get_converter(_type)
             converter = partial(self._type_list, elem_converter)
         else:
             try:
-                converter = getattr(self, '_type_{}'.format(_type))
+                converter = getattr(self, "_type_{}".format(_type))
             except AttributeError:
                 raise TypeError(_type)
 
         return converter
 
-    def _type_bool(self, value):
+    def _type_bool(self, value) -> bool:
         """Convert to boolean.
 
         Accepted values for True are 'true', 'yes' and '1', case insensitive.
         """
         if isinstance(value, str):
-            return value.lower() in ('true', 'yes', '1')
+            return value.lower() in ("true", "yes", "1")
         return bool(value)
 
-    def _type_list(self, converter, value):
+    def _type_list(self, converter: Callable, value) -> list:
         """Convert to list."""
         if isinstance(value, str):
             value = value.split()
@@ -75,8 +79,15 @@ class ConfigKeyTypes:
 class ConfigKey:
     """A key in the Configuration."""
 
-    def __init__(self, name, _type, description='', required=False,
-                 default=None, validator=None):
+    def __init__(
+        self,
+        name: str,
+        _type: str,
+        description: str = "",
+        required: bool = False,
+        default: Optional[Any] = None,
+        validator: Optional[Callable[[Any], None]] = None,
+    ):
         self.name = name
         self.type = _type
         self.description = description
@@ -121,12 +132,12 @@ class Config:
     A configuration has a set of keys of specific types.
     """
 
-    def __init__(self, *keys):
+    def __init__(self, *keys: ConfigKey):
         self._config_keys = {key.name: key for key in keys}
 
     def keys(self):
         """Return ConfigKeys sorted by name alphabetically."""
-        return sorted(self._config_keys.values(), key=attrgetter('name'))
+        return sorted(self._config_keys.values(), key=attrgetter("name"))
 
     def extend(self, *keys):
         """Return a new Config with additional keys."""
@@ -134,7 +145,7 @@ class Config:
         all_keys.update((key.name, key) for key in keys)
         return Config(*all_keys.values())
 
-    def parse(self, config):
+    def parse(self, config: Optional[Dict[str, Any]]) -> Dict[str, Any]:
         """Parse the provided configuration dict.
 
         Returns a dict with configuration keys and values converted to the

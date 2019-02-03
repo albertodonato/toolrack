@@ -14,9 +14,8 @@ yields a 5-chars password composed of letters, dashes and underscores.
 
 """
 
-import string
 from random import SystemRandom
-
+import string
 
 #: Default character set: letters, numbers and punctuation
 DEFAULT_CHARS = string.ascii_letters + string.digits + string.punctuation
@@ -32,18 +31,19 @@ def generate_password(chars=DEFAULT_CHARS, length=DEFAULT_LENGTH):
 
     """
     random = SystemRandom()
-    return ''.join(random.choice(chars) for _ in range(length))
+    return "".join(random.choice(chars) for _ in range(length))
 
 
 class PasswordProfile:
     """A password profile, specifying how to generate a random password."""
 
     CHAR_DEFS = {
-        'alnum': string.ascii_letters + string.digits,
-        'alpha': string.ascii_letters,
-        'num': string.digits,
-        'space': string.whitespace,
-        'punct': string.punctuation}
+        "alnum": string.ascii_letters + string.digits,
+        "alpha": string.ascii_letters,
+        "num": string.digits,
+        "space": string.whitespace,
+        "punct": string.punctuation,
+    }
 
     def __init__(self, definition):
         self.definition = definition
@@ -62,6 +62,6 @@ class PasswordProfile:
         """Return a list of chars from a definition."""
         chars_def = self.definition
         for tag, chars in self.CHAR_DEFS.items():
-            chars_def = chars_def.replace('{{{}}}'.format(tag), chars)
+            chars_def = chars_def.replace("{{{}}}".format(tag), chars)
         # remove duplicates
-        return ''.join(set(chars_def))
+        return "".join(set(chars_def))

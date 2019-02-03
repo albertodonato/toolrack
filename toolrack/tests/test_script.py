@@ -1,9 +1,12 @@
-from io import StringIO
 from argparse import ArgumentParser
+from io import StringIO
 
-from unittest import TestCase
+import pytest
 
-from ..script import ErrorExitMessage, Script
+from ..script import (
+    ErrorExitMessage,
+    Script,
+)
 
 
 class DummyScript(Script):
@@ -15,7 +18,7 @@ class DummyScript(Script):
 
     def get_parser(self):
         parser = ArgumentParser()
-        parser.add_argument('--foo', type=int)
+        parser.add_argument("--foo", type=int)
         return parser
 
     def main(self, args):
@@ -28,82 +31,87 @@ class DummyScript(Script):
         self.code = code
 
 
-class ErrorExitMessageTests(TestCase):
-
+class TestErrorExitMessage:
     def test_message(self):
         """ErrorExitMessage provides a message and a default code."""
-        message = 'Something went wrong!'
+        message = "Something went wrong!"
         error = ErrorExitMessage(message)
-        self.assertEqual(error.message, message)
-        self.assertEqual(str(error), message)
-        self.assertEqual(error.code, 1)
+        assert error.message == message
+        assert str(error) == message
+        assert error.code == 1
 
     def test_code(self):
         """ErrorExitMessage can provide a different error code."""
-        error = ErrorExitMessage('Something went wrong!', code=3)
-        self.assertEqual(error.code, 3)
+        error = ErrorExitMessage("Something went wrong!", code=3)
+        assert error.code == 3
 
 
-class ScriptTests(TestCase):
+@pytest.fixture
+def stderr():
+    yield StringIO()
 
-    def setUp(self):
-        super().setUp()
-        self.stderr = StringIO()
-        self.script = DummyScript(stderr=self.stderr)
 
+@pytest.fixture
+def script(stderr):
+    yield DummyScript(stderr=stderr)
+
+
+class TestScript:
     def test_get_parser_not_implemented(self):
         """get_parser() raises a NotImplementedError by default."""
-        self.assertRaises(NotImplementedError, Script().get_parser)
+        with pytest.raises(NotImplementedError):
+            Script().get_parser()
 
     def test_main_not_implemented(self):
         """main() raises a NotImplementedError by default."""
-        self.assertRaises(NotImplementedError, Script().main, None)
+        with pytest.raises(NotImplementedError):
+            Script().main(None)
 
-    def test_call_runs_main(self):
+    def test_call_runs_main(self, script):
         """When a Script is called, the main method is executed."""
-        self.script([])
-        self.assertTrue(self.script.called)
-        self.assertIsNone(self.script.code)
+        script([])
+        assert script.called
+        assert script.code is None
 
-    def test_call_parse_args(self):
+    def test_call_parse_args(self, script, stderr):
         """When a Script is called, get_parser parses the arguments."""
-        self.script(['--foo', '3'])
-        self.assertEqual(self.script.args.foo, 3)
-        self.assertEqual(self.stderr.getvalue(), '')
+        script(["--foo", "3"])
+        assert script.args.foo == 3
+        assert stderr.getvalue() == ""
 
-    def test_failure(self):
+    def test_failure(self, script, stderr):
         """If ErrorExitMessage is raised, the script is terminated."""
-        self.script.failure = ErrorExitMessage('Fail!', code=3)
-        self.script([])
-        self.assertEqual(self.stderr.getvalue(), 'Fail!\n')
-        self.assertEqual(self.script.code, 3)
+        script.failure = ErrorExitMessage("Fail!", code=3)
+        script([])
+        assert stderr.getvalue() == "Fail!\n"
+        assert script.code == 3
 
-    def test_exit(self):
+    def test_exit(self, script):
         """Script.exit exits the process with 0 as return code."""
         calls = []
-        self.script._exit = calls.append
-        self.script.exit()
-        self.assertEqual(calls, [0])
+        script._exit = calls.append
+        script.exit()
+        assert calls == [0]
 
-    def test_exit_with_code(self):
+    def test_exit_with_code(self, script):
         """Script.exit exits the process with the specified return code."""
         calls = []
-        self.script._exit = calls.append
-        self.script.exit(code=4)
-        self.assertEqual(calls, [4])
+        script._exit = calls.append
+        script.exit(code=4)
+        assert calls == [4]
 
-    def test_handle_keyboard_interrupt(self):
+    def test_handle_keyboard_interrupt(self, script):
         """Script.handle_keyboard_interrupt exits cleanly by default."""
         calls = []
-        self.script._exit = calls.append
-        self.script.handle_keyboard_interrupt(KeyboardInterrupt())
-        self.assertEqual(calls, [0])
+        script._exit = calls.append
+        script.handle_keyboard_interrupt(KeyboardInterrupt())
+        assert calls == [0]
 
-    def test_handle_keyboard_interrupt_called(self):
+    def test_handle_keyboard_interrupt_called(self, script):
         """Script.handle_keyboard_interrupt is called on KeyboardInterrupt."""
         interrupt = KeyboardInterrupt()
         calls = []
-        self.script.failure = interrupt
-        self.script.handle_keyboard_interrupt = calls.append
-        self.script([])
-        self.assertEqual(calls, [interrupt])
+        script.failure = interrupt
+        script.handle_keyboard_interrupt = calls.append
+        script([])
+        assert calls == [interrupt]

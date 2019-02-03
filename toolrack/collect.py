@@ -19,19 +19,26 @@ The :class:`Collection` is iterable, and yields the contained objects::
 
 """
 
+from typing import (
+    Any,
+    Dict,
+    Iterator,
+    List,
+)
+
 
 class UnknownObject(Exception):
     """No object with the specified key in the :class:`Collection`."""
 
-    def __init__(self, obj_type, obj_key):
-        super().__init__('Unknown {}: {}'.format(obj_type, obj_key))
+    def __init__(self, obj_type, obj_key: str):
+        super().__init__("Unknown {}: {}".format(obj_type, obj_key))
 
 
 class DuplicatedObject(Exception):
     """An object with the specified key is already the :class:`Collection`."""
 
-    def __init__(self, obj_type, obj_key):
-        super().__init__('Duplicated {}: {}'.format(obj_type, obj_key))
+    def __init__(self, obj_type: type, obj_key: str):
+        super().__init__("Duplicated {}: {}".format(obj_type, obj_key))
 
 
 class Collection:
@@ -40,17 +47,17 @@ class Collection:
     It collects objects identified by the value of an attribute.
     No objects with duplicated keys are allowed.
 
-    :param type obj_type: string identifying the objects type.
-    :param str key: the object attribute to use as key.
+    :param obj_type: string identifying the objects type.
+    :param key: the object attribute to use as key.
 
     """
 
-    def __init__(self, obj_type, key):
+    def __init__(self, obj_type: type, key: str):
         self.obj_type = obj_type
         self.key = key
-        self._objects = {}
+        self._objects: Dict[str, Any] = {}
 
-    def add(self, obj):
+    def add(self, obj: Any):
         """Add and return an object."""
         key = self._get_key(obj)
         if key in self._objects:
@@ -58,24 +65,24 @@ class Collection:
         self._objects[key] = obj
         return obj
 
-    def get(self, key):
+    def get(self, key: str) -> Any:
         """Return the object with the specified key."""
         try:
             return self._objects[key]
         except KeyError:
             raise UnknownObject(self.obj_type, key)
 
-    def remove(self, key):
+    def remove(self, key: str) -> Any:
         """Remove and return the object with the specified key."""
         obj = self.get(key)
         del self._objects[key]
         return obj
 
-    def keys(self):
+    def keys(self) -> Iterator[str]:
         """Return an iterator with collection keys."""
         return iter(self._objects.keys())
 
-    def sorted(self):
+    def sorted(self) -> List:
         """Return a list of objects sorted by key."""
         return sorted(self, key=self._get_key)
 

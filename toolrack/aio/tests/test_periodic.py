@@ -1,4 +1,4 @@
-from asynctest import ClockedTestCase
+import pytest
 
 from ..periodic import (
     AlreadyRunning,
@@ -7,76 +7,89 @@ from ..periodic import (
 )
 
 
-class PeriodicCallTests(ClockedTestCase):
+@pytest.fixture
+def calls():
+    yield []
 
-    def setUp(self):
-        super().setUp()
-        self.calls = []
-        self.periodic_call = PeriodicCall(self.loop, self.calls.append, True)
 
-    def test_running(self):
+@pytest.fixture
+def periodic_call(event_loop, calls):
+    yield PeriodicCall(event_loop, calls.append, True)
+
+
+class TestPeriodicCall:
+    def test_running(self, periodic_call):
         """The PeriodicCall is not running by default."""
-        self.assertFalse(self.periodic_call.running)
-        self.periodic_call.start(5)
-        self.addCleanup(self.periodic_call.stop)
-        self.assertTrue(self.periodic_call.running)
+        assert not periodic_call.running
+        periodic_call.start(5)
+        assert periodic_call.running
 
-    def test_start(self):
+    def test_start(self, periodic_call, calls):
         """Starting the PeriodicCall makes it call the function immediately."""
-        self.periodic_call.start(5)
-        self.assertEqual(self.calls, [True])
+        periodic_call.start(5)
+        assert calls == [True]
 
-    def test_start_already_running(self):
+    def test_start_already_running(self, periodic_call):
         """Starting an already started PeriodicCall raises an error."""
-        self.periodic_call.start(5)
-        self.assertRaises(AlreadyRunning, self.periodic_call.start, 5)
+        periodic_call.start(5)
+        with pytest.raises(AlreadyRunning):
+            periodic_call.start(5)
 
-    async def test_stop(self):
+    @pytest.mark.asyncio
+    async def test_stop(
+        self, advance_time, periodic_call, calls,
+    ):
         """Stopping the PeriodicCall stops periodic runs."""
-        self.periodic_call.start(5)
-        await self.periodic_call.stop()
-        await self.advance(5)
+        periodic_call.start(5)
+        await periodic_call.stop()
+        await advance_time(5)
         # Only the initial call is performed
-        self.assertEqual(self.calls, [True])
+        assert calls == [True]
 
-    async def test_stop_not_running(self):
+    @pytest.mark.asyncio
+    async def test_stop_not_running(self, periodic_call):
         """Stopping a PeriodicCall that is not running raises an error."""
-        with self.assertRaises(NotRunning):
-            await self.periodic_call.stop()
+        with pytest.raises(NotRunning):
+            await periodic_call.stop()
 
-    async def test_periodic(self):
+    @pytest.mark.asyncio
+    async def test_periodic(self, advance_time, periodic_call, calls):
         """The PeriodicCall gets called at each interval."""
-        self.periodic_call.start(5)
-        await self.advance(5)
-        self.assertEqual(self.calls, [True, True])
-        await self.advance(5)
-        self.assertEqual(self.calls, [True, True, True])
+        periodic_call.start(5)
+        await advance_time(5)
+        assert calls == [True, True]
+        await advance_time(5)
+        assert calls == [True, True, True]
 
-    def test_start_later(self):
+    def test_start_later(self, periodic_call, calls):
         """If now is False, the function is not run immediately."""
-        self.periodic_call.start(5, now=False)
-        self.assertEqual(self.calls, [])
+        periodic_call.start(5, now=False)
+        assert calls == []
 
-    async def test_start_later_run_after_interval(self):
+    @pytest.mark.asyncio
+    async def test_start_later_run_after_interval(
+        self, advance_time, periodic_call, calls
+    ):
         """If now is False, the function is run after the interval."""
-        self.periodic_call.start(5, now=False)
-        await self.advance(5)
-        self.assertEqual(self.calls, [True])
+        periodic_call.start(5, now=False)
+        await advance_time(5)
+        assert calls == [True]
 
-    async def test_func_arguments(self):
+    @pytest.mark.asyncio
+    async def test_func_arguments(self, event_loop, calls):
         """Specified arguments are passed to the function on call."""
 
         def func(*args, **kwargs):
-            self.calls.append((args, kwargs))
+            calls.append((args, kwargs))
 
         periodic_call = PeriodicCall(
-            self.loop, func, 'foo', 'bar', baz='baz', bza='bza')
+            event_loop, func, "foo", "bar", baz="baz", bza="bza"
+        )
         periodic_call.start(5)
         await periodic_call.stop()
-        [call] = self.calls
-        self.assertEqual((('foo', 'bar'), {'baz': 'baz', 'bza': 'bza'}), call)
+        assert calls == [(("foo", "bar"), {"baz": "baz", "bza": "bza"})]
 
-    def test_run_no_op_if_not_running(self):
+    def test_run_no_op_if_not_running(self, periodic_call, calls):
         """The _run() method no-ops if the PeriodicCall is not running."""
-        self.periodic_call._run()
-        self.assertEqual(self.calls, [])
+        periodic_call._run()
+        assert calls == []

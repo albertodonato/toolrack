@@ -110,5 +110,5 @@ class Script:
 
     def _error_exit(self, error):
         """Terminate with the specified :class:`ErrorExitMessage`."""
-        self._stderr.write('{}\n'.format(error.message))
+        self._stderr.write("{}\n".format(error.message))
         self.exit(error.code)

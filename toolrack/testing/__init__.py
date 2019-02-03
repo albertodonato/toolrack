@@ -1,7 +1,8 @@
 """Unit-test features."""
 
-from .base import TestCase
-from .fixtures import TempDirFixture
+from .fixtures import (
+    Dir,
+    tempdir,
+)
 
-
-__all__ = ['TestCase', 'TempDirFixture']
+__all__ = ["Dir", "tempdir"]
