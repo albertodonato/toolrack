@@ -49,7 +49,7 @@ As a user run:
 .. |Latest Version| image:: https://img.shields.io/pypi/v/toolrack.svg
    :target: https://pypi.python.org/pypi/toolrack
 .. |Build Status| image:: https://img.shields.io/travis/albertodonato/toolrack.svg
-   :target: https://travis-ci.org/albertodonato/toolrack
+   :target: https://travis-ci.com/albertodonato/toolrack
 .. |Coverage Status| image:: https://img.shields.io/codecov/c/github/albertodonato/toolrack/master.svg
    :target: https://codecov.io/gh/albertodonato/toolrack
 .. |Documentation Status| image:: https://readthedocs.org/projects/toolrack/badge/?version=stable
