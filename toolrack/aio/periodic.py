@@ -61,7 +61,6 @@ class PeriodicCall:
             raise AlreadyRunning()
 
         self._interval = interval
-        self._next_time = self._loop.time()
         self._future = Future()
         self._run(now=now)
 
@@ -85,7 +84,7 @@ class PeriodicCall:
         if not self.running:
             return
 
-        self._next_time += self._interval
-        self._handle = self._loop.call_at(self._next_time, self._run)
+        next_time = self._loop.time() + self._interval
+        self._handle = self._loop.call_at(next_time, self._run)
         if now:
             self._func(*self._args, **self._kwargs)

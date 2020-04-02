@@ -1,8 +1,17 @@
 """Protocol class for collecting a process stdout/stderr."""
 
-from asyncio import SubprocessProtocol
+from asyncio import (
+    Future,
+    SubprocessProtocol,
+)
 from io import StringIO
 from locale import getpreferredencoding
+from typing import (
+    Callable,
+    cast,
+    IO,
+    Optional,
+)
 
 
 class ProcessParserProtocol(SubprocessProtocol):
@@ -24,7 +33,7 @@ class ProcessParserProtocol(SubprocessProtocol):
 
     """
 
-    def __init__(self, future, out_parser=None, err_parser=None):
+    def __init__(self, future: Future, out_parser=None, err_parser=None):
         self.future = future
         self._outputs = {
             fd: StreamHelper(callback=parser)
@@ -67,13 +76,15 @@ class StreamHelper:
 
     """
 
-    def __init__(self, callback=None, separator="\n"):
+    def __init__(
+        self, callback: Optional[Callable[[str], None]] = None, separator: str = "\n"
+    ):
         self.separator = separator
         self._callback = callback
         self._buffer = StringIO() if not callback else None
         self._partial = StringIO()
 
-    def receive_data(self, data):
+    def receive_data(self, data: str):
         """Receive data and process them.
 
         If a ``callback`` has been passed to the class, it's called for each
@@ -83,7 +94,7 @@ class StreamHelper:
         if self._callback:
             self._parse_data(data)
         else:
-            self._buffer.write(data)
+            cast(IO, self._buffer).write(data)
 
     def get_data(self):
         """Return the full content of the stream."""
@@ -99,7 +110,7 @@ class StreamHelper:
         if partial:
             self._callback(partial)
 
-    def _parse_data(self, data):
+    def _parse_data(self, data: str):
         """Process data parsing full lines."""
         lines = data.split(self.separator)
         lines[0] = self._pop_partial() + lines[0]
@@ -107,7 +118,7 @@ class StreamHelper:
         # Call the callback on full lines
         for line in lines:
             if line:
-                self._callback(line)
+                cast(Callable, self._callback)(line)
 
     def _pop_partial(self):
         """Return the current partial line and reset it."""
