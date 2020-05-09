@@ -4,6 +4,7 @@ from .periodic import (
     AlreadyRunning,
     NotRunning,
     PeriodicCall,
+    TimedCall,
 )
 from .process import (
     ProcessParserProtocol,
@@ -11,9 +12,10 @@ from .process import (
 )
 
 __all__ = [
-    "PeriodicCall",
     "AlreadyRunning",
     "NotRunning",
+    "PeriodicCall",
     "ProcessParserProtocol",
     "StreamHelper",
+    "TimedCall",
 ]

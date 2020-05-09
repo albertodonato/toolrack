@@ -1,70 +1,80 @@
 """Utilities based on the asyncio library.
 
-This modules provides a :class:`PeriodicCall` class to periodically execute a
-task.
+This modules provides :class:`TimedCall` and :class:`PeriodicCall` classes for
+timed and periodical tasks execution.
 
 """
 
-from asyncio import Future
+from asyncio import (
+    Future,
+    get_event_loop,
+)
+from typing import (
+    Callable,
+    Iterable,
+    Optional,
+    Union,
+)
 
 
 class AlreadyRunning(Exception):
-    """The :class:`PeriodicCall` is already running."""
+    """The TimedCall is already running."""
 
     def __init__(self):
-        super().__init__("PeriodicCall is already running")
+        super().__init__("Timed call is already running")
 
 
 class NotRunning(Exception):
-    """The :class:`PeriodicCall` is not running."""
+    """The TimedCall is not running."""
 
     def __init__(self):
-        super().__init__("PeriodicCall is not running")
+        super().__init__("Timed call is not running")
 
 
-class PeriodicCall:
-    """Call a function at a periodic interval.
+TimesIterable = Iterable[Union[float, int]]
+
+
+class TimedCall:
+    """Call a function based on a timer.
 
     The class takes a function with optional arguments. Upon
-    :meth:`start()`, the function is scheduled with the specified interval,
-    until :meth:`stop()` is called.
+    :meth:`start()`, the function is scheduled at specified times
+    until :meth:`stop()` is called (or the time iterator is exausted).
 
-    :param loop: the event loop to use.
-    :param callable func: the function to call periodically.
-    :param list args: arguments to pass to the function.
-    :param dict kwargs: keyword arguments to pass to the function.
+    :param func: the function to call periodically.
+    :param args: arguments to pass to the function.
+    :param kwargs: keyword arguments to pass to the function.
 
     """
 
-    def __init__(self, loop, func, *args, **kwargs):
-        self._loop = loop
+    def __init__(self, func: Callable, *args, **kwargs):
         self._func = func
         self._args = args
         self._kwargs = kwargs
-        self._interval = None
         self._next_time = None
-        self._future = None
+        self._future: Optional[Future] = None
+        self._loop = get_event_loop()
 
     @property
     def running(self):
         """Whether the PeriodicCall is currently running."""
         return self._future is not None
 
-    def start(self, interval, now=True):
-        """Start calling the function periodically.
+    def start(self, times_iter: TimesIterable):
+        """Start calling the function at specified times.
 
-        :param interval: the time interval in seconds between calls.
-        :param bool now: whether to make the first call immediately.
+        :param times_iter: an iterable yielding times to execute the function
+        at. If the iterator exhausts, the TimedCall is stopped.  Times must be
+        compatible with :meth:`loop.time()`.
 
         """
         if self.running:
             raise AlreadyRunning()
 
-        self._interval = interval
         self._future = Future()
-        self._run(now=now)
+        self._run(times_iter, do_call=False)
 
-    async def stop(self):
+    def stop(self):
         """Stop calling the function periodically.
 
         It returns an :class:`asyncio.Future` to wait for the stop to complete.
@@ -80,11 +90,42 @@ class PeriodicCall:
         future.set_result(None)
         return future
 
-    def _run(self, now=True):
+    def _run(self, times_iter: TimesIterable, do_call: bool = True):
         if not self.running:
             return
 
-        next_time = self._loop.time() + self._interval
-        self._handle = self._loop.call_at(next_time, self._run)
-        if now:
+        now = self._loop.time()
+        next_time: Union[float, int] = -1
+        while next_time < now:
+            try:
+                next_time = next(times_iter)  # type: ignore
+            except StopIteration:
+                self.stop()
+                break
+
+        if self.running:
+            self._handle = self._loop.call_at(next_time, self._run, times_iter)
+        if do_call:
             self._func(*self._args, **self._kwargs)
+
+
+class PeriodicCall(TimedCall):
+    """A TimedCall called at a fixed time intervals."""
+
+    def start(self, interval: Union[int, float], now: bool = True):  # type: ignore
+        """Start calling the function periodically.
+
+        :param interval: the time interval in seconds between calls.
+        :param now: whether to make the first call immediately.
+
+        """
+
+        def times():
+            time = self._loop.time()
+            if not now:
+                time += interval
+            while True:
+                yield time
+                time += interval
+
+        super().start(times())
