@@ -12,7 +12,6 @@ class TestIndent:
         in_fd.write(dumps({"foo": 3, "bar": [4, 5]}))
         in_fd.seek(0)
         indent(in_fd, out_fd)
-        print(out_fd.getvalue())
         assert out_fd.getvalue() == dedent(
             """\
             {
