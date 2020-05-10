@@ -1,3 +1,11 @@
+v3.0.0 - 2020-05-10
+===================
+
+- Rework project layout.
+- Switch to pytest.
+- Add type checks
+- Add ``toolrack.aio.TimedCall``.  
+
 v2.1.0 - 2018-03-19
 ===================
 
