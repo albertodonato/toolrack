@@ -126,7 +126,10 @@ class TestPeriodicCall:
 
     @pytest.mark.asyncio
     async def test_stop(
-        self, advance_time, periodic_call, calls,
+        self,
+        advance_time,
+        periodic_call,
+        calls,
     ):
         """Stopping the PeriodicCall stops periodic runs."""
         periodic_call.start(5)
