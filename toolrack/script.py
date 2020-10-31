@@ -25,18 +25,27 @@ The instance can be referenced in :mod:`setuptools` ``entry_points`` key::
 
 """
 
+from argparse import (
+    ArgumentParser,
+    Namespace,
+)
 import sys
+from typing import (
+    IO,
+    List,
+    Optional,
+)
 
 
 class ErrorExitMessage(Exception):
     """Raised to exit the process with the specified message and exit code.
 
-    :param str message: the error message.
-    :param int code: the script exit code.
+    :param message: the error message.
+    :param code: the script exit code.
 
     """
 
-    def __init__(self, message, code=1):
+    def __init__(self, message: str, code: int = 1):
         self.message = message
         self.code = code
 
@@ -55,13 +64,11 @@ class Script:
 
     """
 
-    _exit = sys.exit  # For testing
-
-    def __init__(self, stdout=None, stderr=None):
+    def __init__(self, stdout: Optional[IO] = None, stderr: Optional[IO] = None):
         self._stdout = stdout or sys.stdout
         self._stderr = stderr or sys.stderr
 
-    def get_parser(self):
+    def get_parser(self) -> ArgumentParser:
         """Return a configured :class:`argparse.ArgumentParser` instance.
 
         .. note::
@@ -70,13 +77,13 @@ class Script:
         """
         raise NotImplementedError()
 
-    def main(self, args):
+    def main(self, args: Namespace):
         """The body of the script.
 
         It gets called with the :class:`argparse.Namespace` instance returned
         by :func:`get_parser`.
 
-        :param argparse.Namespace args: command line arguments.
+        :param args: command line arguments.
 
         .. note::
             Subclasses must implement this method.
@@ -84,11 +91,11 @@ class Script:
         """
         raise NotImplementedError()
 
-    def exit(self, code=0):
+    def exit(self, code: int = 0):
         """Exit with the specified return code."""
-        self._exit(code)
+        sys.exit(code)
 
-    def handle_keyboard_interrupt(self, interrupt):
+    def handle_keyboard_interrupt(self, interrupt: KeyboardInterrupt):
         """Called when a :class:`KeyboardInterrupt` is raised.
 
         By default it just traps the exception and exits with success.
@@ -97,7 +104,7 @@ class Script:
         """
         self.exit()
 
-    def __call__(self, args=None):
+    def __call__(self, args: Optional[List[str]] = None):
         """Call the script, passing :data:`sys.argv` by default."""
         parser = self.get_parser()
         parsed_args = parser.parse_args(args=args)
@@ -108,7 +115,7 @@ class Script:
         except ErrorExitMessage as error:
             self._error_exit(error)
 
-    def _error_exit(self, error):
+    def _error_exit(self, error: ErrorExitMessage):
         """Terminate with the specified :class:`ErrorExitMessage`."""
-        self._stderr.write("{}\n".format(error.message))
+        self._stderr.write(f"{error.message}\n")
         self.exit(error.code)

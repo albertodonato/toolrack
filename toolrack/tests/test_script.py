@@ -12,7 +12,6 @@ from ..script import (
 class DummyScript(Script):
 
     called = False
-    code = None
     args = None
     failure = None
 
@@ -26,9 +25,6 @@ class DummyScript(Script):
         self.args = args
         if self.failure is not None:
             raise self.failure
-
-    def _exit(self, code):
-        self.code = code
 
 
 class TestErrorExitMessage:
@@ -56,6 +52,11 @@ def script(stderr):
     yield DummyScript(stderr=stderr)
 
 
+@pytest.fixture
+def sys_exit(mocker):
+    return mocker.patch("sys.exit")
+
+
 class TestScript:
     def test_get_parser_not_implemented(self):
         """get_parser() raises a NotImplementedError by default."""
@@ -67,11 +68,11 @@ class TestScript:
         with pytest.raises(NotImplementedError):
             Script().main(None)
 
-    def test_call_runs_main(self, script):
+    def test_call_runs_main(self, script, sys_exit):
         """When a Script is called, the main method is executed."""
         script([])
         assert script.called
-        assert script.code is None
+        assert sys_exit.not_called()
 
     def test_call_parse_args(self, script, stderr):
         """When a Script is called, get_parser parses the arguments."""
@@ -79,33 +80,27 @@ class TestScript:
         assert script.args.foo == 3
         assert stderr.getvalue() == ""
 
-    def test_failure(self, script, stderr):
+    def test_failure(self, script, stderr, sys_exit):
         """If ErrorExitMessage is raised, the script is terminated."""
         script.failure = ErrorExitMessage("Fail!", code=3)
         script([])
         assert stderr.getvalue() == "Fail!\n"
-        assert script.code == 3
+        assert sys_exit.called_once_with(3)
 
-    def test_exit(self, script):
+    def test_exit(self, script, sys_exit):
         """Script.exit exits the process with 0 as return code."""
-        calls = []
-        script._exit = calls.append
         script.exit()
-        assert calls == [0]
+        assert sys_exit.called_once_with(0)
 
-    def test_exit_with_code(self, script):
+    def test_exit_with_code(self, script, sys_exit):
         """Script.exit exits the process with the specified return code."""
-        calls = []
-        script._exit = calls.append
         script.exit(code=4)
-        assert calls == [4]
+        assert sys_exit.called_once_with(4)
 
-    def test_handle_keyboard_interrupt(self, script):
+    def test_handle_keyboard_interrupt(self, script, sys_exit):
         """Script.handle_keyboard_interrupt exits cleanly by default."""
-        calls = []
-        script._exit = calls.append
         script.handle_keyboard_interrupt(KeyboardInterrupt())
-        assert calls == [0]
+        assert sys_exit.called_once_with(0)
 
     def test_handle_keyboard_interrupt_called(self, script):
         """Script.handle_keyboard_interrupt is called on KeyboardInterrupt."""
