@@ -6,7 +6,7 @@
    :hidden:
    :maxdepth: 3
 
-   mod-async.rst
+   mod-aio.rst
    mod-certificate.rst
    mod-collect.rst
    mod-config.rst
