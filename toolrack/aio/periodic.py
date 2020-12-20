@@ -7,8 +7,8 @@ timed and periodical tasks execution.
 
 from asyncio import (
     Future,
-    iscoroutinefunction,
     get_event_loop,
+    iscoroutinefunction,
 )
 from functools import partial
 from typing import (

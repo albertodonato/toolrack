@@ -53,7 +53,7 @@ As a user run:
    :alt: Build Status
    :target: https://github.com/albertodonato/toolrack/actions?query=workflow%3ACI
 .. |Coverage Status| image:: https://img.shields.io/codecov/c/github/albertodonato/toolrack/master.svg
-   :Coverage Status:
+   :alt: Coverage Status
    :target: https://codecov.io/gh/albertodonato/toolrack
 .. |Documentation| image:: https://readthedocs.org/projects/toolrack/badge/?version=stable
    :alt: Documentation
