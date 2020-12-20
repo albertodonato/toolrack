@@ -66,8 +66,8 @@ class TimedCall:
         """Start calling the function at specified times.
 
         :param times_iter: an iterable yielding times to execute the function
-        at. If the iterator exhausts, the TimedCall is stopped.  Times must be
-        compatible with :meth:`loop.time()`.
+          at. If the iterator exhausts, the TimedCall is stopped.  Times must be
+          compatible with :meth:`loop.time()`.
 
         """
         if self.running:
