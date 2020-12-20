@@ -7,8 +7,10 @@ timed and periodical tasks execution.
 
 from asyncio import (
     Future,
+    iscoroutinefunction,
     get_event_loop,
 )
+from functools import partial
 from typing import (
     Callable,
     Iterable,
@@ -106,7 +108,14 @@ class TimedCall:
         if self.running:
             self._handle = self._loop.call_at(next_time, self._run, times_iter)
         if do_call:
-            self._func(*self._args, **self._kwargs)
+            self._run_function()
+
+    async def _run_function(self):
+        func = partial(self._func, *self._args, **self._kwargs)
+        if iscoroutinefunction(self._func):
+            await func()
+        else:
+            await self._loop.run_in_executor(None, func)
 
 
 class PeriodicCall(TimedCall):

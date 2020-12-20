@@ -1,7 +1,7 @@
 ToolRack
 ========
 
-|Latest Version| |Build Status| |Coverage Status| |Documentation Status|
+|Latest Version| |Build Status| |Coverage Status| |Documentation|
 
 A collection of utility functions and classes, and a few scripts too.
 
@@ -47,10 +47,14 @@ As a user run:
 .. _Virtualenv: https://virtualenv.pypa.io/
 
 .. |Latest Version| image:: https://img.shields.io/pypi/v/toolrack.svg
+   :alt: Latest Version
    :target: https://pypi.python.org/pypi/toolrack
-.. |Build Status| image:: https://img.shields.io/travis/albertodonato/toolrack.svg
-   :target: https://travis-ci.com/albertodonato/toolrack
+.. |Build Status| image:: https://github.com/albertodonato/toolrack/workflows/CI/badge.svg
+   :alt: Build Status
+   :target: https://github.com/albertodonato/toolrack/actions?query=workflow%3ACI
 .. |Coverage Status| image:: https://img.shields.io/codecov/c/github/albertodonato/toolrack/master.svg
+   :Coverage Status:
    :target: https://codecov.io/gh/albertodonato/toolrack
-.. |Documentation Status| image:: https://readthedocs.org/projects/toolrack/badge/?version=stable
+.. |Documentation| image:: https://readthedocs.org/projects/toolrack/badge/?version=stable
+   :alt: Documentation
    :target: https://toolrack.readthedocs.io/en/stable/?badge=stable
