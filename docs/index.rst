@@ -20,7 +20,6 @@
    mod-property.rst
    mod-script.rst
    mod-testing.rst
-   mod-testing.async.rst
    mod-testing.fixtures.rst
    mod-threading.rst
 
