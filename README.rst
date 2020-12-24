@@ -28,23 +28,23 @@ Development installation
 ------------------------
 
 The source tree is available available at
-`<https://github.com/albertodonato/toolrack>`_, users should install
-Virtualenv_ for development.
+`<https://github.com/albertodonato/toolrack>`_.
+
+Development setup can be done via Virtualenv.
 
 As a user run:
 
 .. code:: bash
 
-  $ virtualenv <target-dir>
+  $ python3 -m venv <target-dir>
   $ . <target-dir>/bin/activate
   $ git clone https://github.com/albertodonato/toolrack
   $ cd toolrack
-  $ python setup.py develop
+  $ python3 setup.py develop
 
 
 .. _ReadTheDocs: https://toolrack.readthedocs.io/en/latest/
 .. _PyPI: https://pypi.python.org/
-.. _Virtualenv: https://virtualenv.pypa.io/
 
 .. |Latest Version| image:: https://img.shields.io/pypi/v/toolrack.svg
    :alt: Latest Version
@@ -55,6 +55,6 @@ As a user run:
 .. |Coverage Status| image:: https://img.shields.io/codecov/c/github/albertodonato/toolrack/master.svg
    :alt: Coverage Status
    :target: https://codecov.io/gh/albertodonato/toolrack
-.. |Documentation| image:: https://readthedocs.org/projects/toolrack/badge/?version=stable
+.. |Documentation| image:: https://readthedocs.org/projects/toolrack/badge/?version=latest
    :alt: Documentation
-   :target: https://toolrack.readthedocs.io/en/stable/?badge=stable
+   :target: https://toolrack.readthedocs.io/en/stable/?badge=latest
