@@ -6,9 +6,12 @@ timed and periodical tasks execution.
 """
 
 from asyncio import (
+    ensure_future,
     Future,
     get_event_loop,
+    Handle,
     iscoroutinefunction,
+    Task,
 )
 from functools import partial
 from typing import (
@@ -50,15 +53,14 @@ class TimedCall:
     """
 
     def __init__(self, func: Callable, *args, **kwargs):
-        self._func = func
-        self._args = args
-        self._kwargs = kwargs
+        self._func = partial(func, *args, **kwargs)
         self._next_time = None
         self._future: Optional[Future] = None
+        self._handle: Optional[Handle] = None
         self._loop = get_event_loop()
 
     @property
-    def running(self):
+    def running(self) -> bool:
         """Whether the PeriodicCall is currently running."""
         return self._future is not None
 
@@ -111,11 +113,10 @@ class TimedCall:
             self._run_function()
 
     async def _run_function(self):
-        func = partial(self._func, *self._args, **self._kwargs)
         if iscoroutinefunction(self._func):
-            await func()
+            await self._func()
         else:
-            await self._loop.run_in_executor(None, func)
+            await self._loop.run_in_executor(None, self._func)
 
 
 class PeriodicCall(TimedCall):
