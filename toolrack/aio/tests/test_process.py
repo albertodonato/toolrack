@@ -157,7 +157,7 @@ class TestProcessParserProtocol:
 
 class TestStreamHelper:
     def test_receive_data_handles_partial(self):
-        """receive_data caches partial lines and joins them. """
+        """receive_data caches partial lines and joins them."""
         lines = []
         helper = StreamHelper(callback=lines.append)
         helper.receive_data("foo\nbar")
@@ -166,7 +166,7 @@ class TestStreamHelper:
         assert lines == ["foo", "barbaz"]
 
     def test_receive_data_separator(self):
-        """It's possible to specify a different line separator. """
+        """It's possible to specify a different line separator."""
         lines = []
         helper = StreamHelper(callback=lines.append, separator="X")
         helper.receive_data("fooXbarX")
