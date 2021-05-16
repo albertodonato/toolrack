@@ -1,3 +1,5 @@
+import asyncio
+
 import pytest
 
 from ..periodic import (
@@ -14,21 +16,35 @@ def calls():
 
 
 @pytest.fixture
-async def timed_call(calls):
-    call = TimedCall(calls.append, True)
-    yield call
-    if call.running:
-        await call.stop()
+def sync_func(event_loop, calls):
+    yield lambda: calls.append(event_loop.time())
 
 
 @pytest.fixture
-def periodic_call(calls):
-    yield PeriodicCall(calls.append, True)
+def async_func(event_loop, calls):
+    async def func():
+        calls.append(event_loop.time())
+        await asyncio.sleep(0.1)
+
+    yield func
+
+
+@pytest.fixture
+def timed_call(sync_func):
+    call = TimedCall(sync_func)
+    yield call
+    if call.running:
+        call.stop()
+
+
+@pytest.fixture
+def periodic_call(sync_func):
+    yield PeriodicCall(sync_func)
 
 
 @pytest.fixture
 def time_intervals():
-    return [1, 5]
+    return [1.0, 5.0]
 
 
 @pytest.fixture
@@ -42,6 +58,7 @@ def times_iter(event_loop, time_intervals):
     yield times
 
 
+@pytest.mark.asyncio
 class TestTimedCall:
     def test_running(self, timed_call, times_iter):
         """The TimedCall is not running by default."""
@@ -49,12 +66,11 @@ class TestTimedCall:
         timed_call.start(times_iter())
         assert timed_call.running
 
-    @pytest.mark.asyncio
     async def test_start(self, advance_time, timed_call, times_iter, calls):
         """Starting the TimedCall makes it call the function."""
         timed_call.start(times_iter())
         await advance_time(2)
-        assert calls == [True]
+        assert calls == [1.0]
 
     def test_start_already_running(self, timed_call, times_iter):
         """Starting an already started TimedCall raises an error."""
@@ -62,23 +78,20 @@ class TestTimedCall:
         with pytest.raises(AlreadyRunning):
             timed_call.start(times_iter())
 
-    @pytest.mark.asyncio
     async def test_stop(self, advance_time, timed_call, times_iter, calls):
         """Stopping the TimedCall stops runs."""
         timed_call.start(times_iter())
         await advance_time(2)
-        await timed_call.stop()
+        timed_call.stop()
         await advance_time(10)
         # Only the initial call is performed
-        assert calls == [True]
+        assert calls == [1.0]
 
-    @pytest.mark.asyncio
-    async def test_stop_not_running(self, timed_call):
+    def test_stop_not_running(self, timed_call):
         """Stopping a TimedCall that is not running raises an error."""
         with pytest.raises(NotRunning):
-            await timed_call.stop()
+            timed_call.stop()
 
-    @pytest.mark.asyncio
     async def test_func_arguments(self, advance_time, times_iter, calls):
         """Specified arguments are passed to the function on call."""
 
@@ -88,24 +101,26 @@ class TestTimedCall:
         timed_call = TimedCall(func, "foo", "bar", baz="baz", bza="bza")
         timed_call.start(times_iter())
         await advance_time(2)
-        await timed_call.stop()
+        timed_call.stop()
         assert calls == [(("foo", "bar"), {"baz": "baz", "bza": "bza"})]
 
-    def test_run_no_op_if_not_running(self, timed_call, times_iter, calls):
-        """The _run() method no-ops if the Timedcall is not running."""
-        timed_call._run(times_iter())
-        assert calls == []
-
-    @pytest.mark.asyncio
     async def test_run_at_time_intervals(
-        self, timed_call, times_iter, time_intervals, calls
+        self, advance_time, timed_call, times_iter, calls
     ):
-        """The function is called at specified time intervals."""
-        time_intervals[:] = [5, 3]
+        """The sync function is called at specified time intervals."""
         timed_call.start(times_iter())
-        assert calls == []
+        await advance_time(10)
+        assert calls == [1.0, 6.0]
 
-    @pytest.mark.asyncio
+    async def test_run_async_at_time_intervals(
+        self, advance_time, async_func, times_iter, calls
+    ):
+        """The async function is called at specified time intervals."""
+        timed_call = TimedCall(async_func)
+        timed_call.start(times_iter())
+        await advance_time(10)
+        assert calls == [1.0, 6.0]
+
     async def test_stop_after_iterator_ends(
         self, advance_time, timed_call, times_iter, time_intervals, calls
     ):
@@ -113,18 +128,16 @@ class TestTimedCall:
         timed_call.start(times_iter())
         await advance_time(10)
         assert not timed_call.running
-        assert calls == [True, True]
 
 
+@pytest.mark.asyncio
 class TestPeriodicCall:
-    @pytest.mark.asyncio
     async def test_start(self, advance_time, periodic_call, calls):
         """Starting the PeriodicCall makes it call the function immediately."""
         periodic_call.start(5)
         await advance_time(1)
-        assert calls == [True]
+        assert calls == [0]
 
-    @pytest.mark.asyncio
     async def test_stop(
         self,
         advance_time,
@@ -134,32 +147,29 @@ class TestPeriodicCall:
         """Stopping the PeriodicCall stops periodic runs."""
         periodic_call.start(5)
         await advance_time(1)
-        await periodic_call.stop()
+        periodic_call.stop()
         await advance_time(10)
         # Only the initial call is performed
-        assert calls == [True]
+        assert calls == [0]
 
-    @pytest.mark.asyncio
     async def test_periodic(self, advance_time, periodic_call, calls):
         """The PeriodicCall gets called at each interval."""
         periodic_call.start(5)
         await advance_time(6)
-        assert calls == [True, True]
+        assert calls == [0, 5.0]
         await advance_time(5)
-        assert calls == [True, True, True]
+        assert calls == [0, 5.0, 10.0]
 
-    @pytest.mark.asyncio
     async def test_start_later(self, advance_time, periodic_call, calls):
         """If now is False, the function is not run immediately."""
         periodic_call.start(5, now=False)
         await advance_time(1)
         assert calls == []
 
-    @pytest.mark.asyncio
     async def test_start_later_run_after_interval(
         self, advance_time, periodic_call, calls
     ):
         """If now is False, the function is run after the interval."""
         periodic_call.start(5, now=False)
         await advance_time(6)
-        assert calls == [True]
+        assert calls == [5.0]

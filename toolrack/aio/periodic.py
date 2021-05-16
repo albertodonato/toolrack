@@ -6,8 +6,6 @@ timed and periodical tasks execution.
 """
 
 from asyncio import (
-    ensure_future,
-    Future,
     get_event_loop,
     Handle,
     iscoroutinefunction,
@@ -16,7 +14,8 @@ from asyncio import (
 from functools import partial
 from typing import (
     Callable,
-    Iterable,
+    cast,
+    Iterator,
     Optional,
     Union,
 )
@@ -36,7 +35,7 @@ class NotRunning(Exception):
         super().__init__("Timed call is not running")
 
 
-TimesIterable = Iterable[Union[float, int]]
+TimesIterator = Iterator[Union[float, int]]
 
 
 class TimedCall:
@@ -53,18 +52,17 @@ class TimedCall:
     """
 
     def __init__(self, func: Callable, *args, **kwargs):
-        self._func = partial(func, *args, **kwargs)
-        self._next_time = None
-        self._future: Optional[Future] = None
-        self._handle: Optional[Handle] = None
+        self._func = self._wrap_func(func, *args, **kwargs)
         self._loop = get_event_loop()
+        self._handle: Optional[Handle] = None
+        self._task: Optional[Task] = None
 
     @property
     def running(self) -> bool:
         """Whether the PeriodicCall is currently running."""
-        return self._future is not None
+        return self._handle is not None
 
-    def start(self, times_iter: TimesIterable):
+    def start(self, times_iter: TimesIterator):
         """Start calling the function at specified times.
 
         :param times_iter: an iterable yielding times to execute the function
@@ -75,48 +73,51 @@ class TimedCall:
         if self.running:
             raise AlreadyRunning()
 
-        self._future = Future()
         self._run(times_iter, do_call=False)
 
     def stop(self):
-        """Stop calling the function periodically.
-
-        It returns an :class:`asyncio.Future` to wait for the stop to complete.
-
-        """
+        """Stop calling the function periodically."""
         if not self.running:
             raise NotRunning()
 
-        self._handle.cancel()
-        self._handle = None
+        if self._handle:
+            self._handle.cancel()
+            self._handle = None
+        if self._task:
+            self._task.cancel()
+            self._task = None
 
-        future, self._future = self._future, None
-        future.set_result(None)
-        return future
+    def _run(self, times_iter: TimesIterator, do_call: bool = True):
+        if do_call:
+            self._task = self._loop.create_task(self._func())
+        self._schedule_next_run(times_iter)
 
-    def _run(self, times_iter: TimesIterable, do_call: bool = True):
-        if not self.running:
-            return
+    def _schedule_next_run(self, times_iter: TimesIterator):
+        delay = self._get_run_delay(times_iter)
+        if delay is None:
+            self._handle = None
+        else:
+            self._handle = self._loop.call_later(delay, self._run, times_iter)
 
+    def _get_run_delay(self, times_iter: TimesIterator) -> Optional[float]:
         now = self._loop.time()
         next_time: Union[float, int] = -1
         while next_time < now:
             try:
-                next_time = next(times_iter)  # type: ignore
+                next_time = next(times_iter)
             except StopIteration:
-                self.stop()
-                break
+                return None
+        return float(next_time - now)
 
-        if self.running:
-            self._handle = self._loop.call_at(next_time, self._run, times_iter)
-        if do_call:
-            self._run_function()
-
-    async def _run_function(self):
-        if iscoroutinefunction(self._func):
-            await self._func()
+    def _wrap_func(self, func: Callable, *args, **kwargs) -> Callable:
+        if iscoroutinefunction(func):
+            return cast(Callable, partial(func, *args, **kwargs))
         else:
-            await self._loop.run_in_executor(None, self._func)
+
+            async def f():
+                return func(*args, **kwargs)
+
+            return f
 
 
 class PeriodicCall(TimedCall):
