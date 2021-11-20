@@ -75,7 +75,7 @@ class TimedCall:
 
         self._run(times_iter, do_call=False)
 
-    def stop(self):
+    async def stop(self):
         """Stop calling the function periodically."""
         if not self.running:
             raise NotRunning()
@@ -84,7 +84,7 @@ class TimedCall:
             self._handle.cancel()
             self._handle = None
         if self._task:
-            self._task.cancel()
+            await self._task
             self._task = None
 
     def _run(self, times_iter: TimesIterator, do_call: bool = True):

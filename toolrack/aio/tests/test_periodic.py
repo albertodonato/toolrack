@@ -30,11 +30,11 @@ def async_func(event_loop, calls):
 
 
 @pytest.fixture
-def timed_call(sync_func):
+async def timed_call(sync_func):
     call = TimedCall(sync_func)
     yield call
     if call.running:
-        call.stop()
+        await call.stop()
 
 
 @pytest.fixture
@@ -82,15 +82,15 @@ class TestTimedCall:
         """Stopping the TimedCall stops runs."""
         timed_call.start(times_iter())
         await advance_time(2)
-        timed_call.stop()
+        await timed_call.stop()
         await advance_time(10)
         # Only the initial call is performed
         assert calls == [1.0]
 
-    def test_stop_not_running(self, timed_call):
+    async def test_stop_not_running(self, timed_call):
         """Stopping a TimedCall that is not running raises an error."""
         with pytest.raises(NotRunning):
-            timed_call.stop()
+            await timed_call.stop()
 
     async def test_func_arguments(self, advance_time, times_iter, calls):
         """Specified arguments are passed to the function on call."""
@@ -101,7 +101,7 @@ class TestTimedCall:
         timed_call = TimedCall(func, "foo", "bar", baz="baz", bza="bza")
         timed_call.start(times_iter())
         await advance_time(2)
-        timed_call.stop()
+        await timed_call.stop()
         assert calls == [(("foo", "bar"), {"baz": "baz", "bza": "bza"})]
 
     async def test_run_at_time_intervals(
@@ -147,7 +147,7 @@ class TestPeriodicCall:
         """Stopping the PeriodicCall stops periodic runs."""
         periodic_call.start(5)
         await advance_time(1)
-        periodic_call.stop()
+        await periodic_call.stop()
         await advance_time(10)
         # Only the initial call is performed
         assert calls == [0]
