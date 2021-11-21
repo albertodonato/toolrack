@@ -40,7 +40,7 @@ As a user run:
   $ . <target-dir>/bin/activate
   $ git clone https://github.com/albertodonato/toolrack
   $ cd toolrack
-  $ python3 setup.py develop
+  $ pip install -e .
 
 
 .. _ReadTheDocs: https://toolrack.readthedocs.io/en/latest/
