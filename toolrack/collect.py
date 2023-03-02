@@ -19,26 +19,22 @@ The :class:`Collection` is iterable, and yields the contained objects::
 
 """
 
-from typing import (
-    Any,
-    Dict,
-    Iterator,
-    List,
-)
+from collections.abc import Iterator
+from typing import Any
 
 
 class UnknownObject(Exception):
     """No object with the specified key in the :class:`Collection`."""
 
     def __init__(self, obj_type, obj_key: str):
-        super().__init__("Unknown {}: {}".format(obj_type, obj_key))
+        super().__init__(f"Unknown {obj_type}: {obj_key}")
 
 
 class DuplicatedObject(Exception):
     """An object with the specified key is already the :class:`Collection`."""
 
     def __init__(self, obj_type: type, obj_key: str):
-        super().__init__("Duplicated {}: {}".format(obj_type, obj_key))
+        super().__init__(f"Duplicated {obj_type}: {obj_key}")
 
 
 class Collection:
@@ -55,7 +51,7 @@ class Collection:
     def __init__(self, obj_type: type, key: str):
         self.obj_type = obj_type
         self.key = key
-        self._objects: Dict[str, Any] = {}
+        self._objects: dict[str, Any] = {}
 
     def add(self, obj: Any):
         """Add and return an object."""
@@ -82,7 +78,7 @@ class Collection:
         """Return an iterator with collection keys."""
         return iter(self._objects.keys())
 
-    def sorted(self) -> List:
+    def sorted(self) -> list:
         """Return a list of objects sorted by key."""
         return sorted(self, key=self._get_key)
 

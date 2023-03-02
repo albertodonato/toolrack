@@ -2,7 +2,7 @@ from collections import Counter
 
 import pytest
 
-from ..collect import (
+from toolrack.collect import (
     Collection,
     DuplicatedObject,
     UnknownObject,

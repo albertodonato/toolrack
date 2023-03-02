@@ -4,13 +4,12 @@ from asyncio import (
     Future,
     SubprocessProtocol,
 )
+from collections.abc import Callable
 from io import StringIO
 from locale import getpreferredencoding
 from typing import (
-    Callable,
     cast,
     IO,
-    Optional,
 )
 
 
@@ -77,7 +76,7 @@ class StreamHelper:
     """
 
     def __init__(
-        self, callback: Optional[Callable[[str], None]] = None, separator: str = "\n"
+        self, callback: Callable[[str], None] | None = None, separator: str = "\n"
     ):
         self.separator = separator
         self._callback = callback

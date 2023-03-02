@@ -1,14 +1,13 @@
 from io import StringIO
 import logging
 
-from ..log import (
+from toolrack.log import (
     Loggable,
     setup_logger,
 )
 
 
 class SampleLoggable(Loggable):
-
     name = "loggable"
 
 
@@ -47,4 +46,4 @@ class TestLoggable:
             setup_logger(stream=stream)
             loggable = SampleLoggable()
             loggable.logger.info("info message")
-        assert "toolrack.tests.test_log.SampleLoggable[loggable]" in stream.getvalue()
+        assert "tests.log_test.SampleLoggable[loggable]" in stream.getvalue()

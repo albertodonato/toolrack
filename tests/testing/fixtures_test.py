@@ -2,7 +2,7 @@ from pathlib import Path
 
 import pytest
 
-from .. import Dir
+from toolrack.testing.fixtures import Dir
 
 
 @pytest.fixture

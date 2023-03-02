@@ -2,14 +2,13 @@ from threading import Thread
 
 import pytest
 
-from ..threading import (
+from toolrack.threading import (
     thread_local_attrs,
     ThreadLocalAttribute,
 )
 
 
 class SampleClass:
-
     attr = ThreadLocalAttribute("attr")
 
     def __init__(self, attr):

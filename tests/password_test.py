@@ -1,4 +1,4 @@
-from ..password import (
+from toolrack.password import (
     DEFAULT_CHARS,
     generate_password,
     PasswordProfile,

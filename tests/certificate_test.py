@@ -1,4 +1,4 @@
-from ..certificate import get_host_certificate
+from toolrack.certificate import get_host_certificate
 
 
 class TestGetHostCertificate:

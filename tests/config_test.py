@@ -2,7 +2,7 @@ from operator import attrgetter
 
 import pytest
 
-from ..config import (
+from toolrack.config import (
     Config,
     ConfigKey,
     ConfigKeyTypes,

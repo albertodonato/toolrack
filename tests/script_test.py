@@ -3,14 +3,13 @@ from io import StringIO
 
 import pytest
 
-from ..script import (
+from toolrack.script import (
     ErrorExitMessage,
     Script,
 )
 
 
 class DummyScript(Script):
-
     called = False
     args = None
     failure = None

@@ -62,6 +62,6 @@ class PasswordProfile:
         """Return a list of chars from a definition."""
         chars_def = self.definition
         for tag, chars in self.CHAR_DEFS.items():
-            chars_def = chars_def.replace("{{{}}}".format(tag), chars)
+            chars_def = chars_def.replace(f"{{{tag}}}", chars)
         # remove duplicates
         return "".join(set(chars_def))

@@ -1,4 +1,4 @@
-from ..property import cachedproperty
+from toolrack.property import cachedproperty
 
 
 class SampleClass:

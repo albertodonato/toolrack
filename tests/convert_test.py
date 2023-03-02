@@ -1,6 +1,6 @@
 import pytest
 
-from ..convert import convert_bbyte
+from toolrack.convert import convert_bbyte
 
 
 class TestConvertBbyte:
