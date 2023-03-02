@@ -16,25 +16,21 @@ returns ``{'option1': 4, 'option2': True}``.
 
 """
 
+from collections.abc import Callable
 from functools import partial
 from operator import attrgetter
-from typing import (
-    Any,
-    Callable,
-    Dict,
-    Optional,
-)
+from typing import Any
 
 
 class MissingConfigKey(Exception):
     def __init__(self, key: str):
-        super().__init__("Missing configuration key: {}".format(key))
+        super().__init__(f"Missing configuration key: {key}")
         self.key = key
 
 
 class InvalidConfigValue(Exception):
     def __init__(self, key: str):
-        super().__init__("Invalid value for configuration key: {}".format(key))
+        super().__init__(f"Invalid value for configuration key: {key}")
         self.key = key
 
 
@@ -54,7 +50,7 @@ class ConfigKeyTypes:
             converter = partial(self._type_list, elem_converter)
         else:
             try:
-                converter = getattr(self, "_type_{}".format(_type))
+                converter = getattr(self, f"_type_{_type}")
             except AttributeError:
                 raise TypeError(_type)
 
@@ -85,8 +81,8 @@ class ConfigKey:
         _type: str,
         description: str = "",
         required: bool = False,
-        default: Optional[Any] = None,
-        validator: Optional[Callable[[Any], None]] = None,
+        default: Any | None = None,
+        validator: Callable[[Any], None] | None = None,
     ):
         self.name = name
         self.type = _type
@@ -145,7 +141,7 @@ class Config:
         all_keys.update((key.name, key) for key in keys)
         return Config(*all_keys.values())
 
-    def parse(self, config: Optional[Dict[str, Any]]) -> Dict[str, Any]:
+    def parse(self, config: dict[str, Any] | None) -> dict[str, Any]:
         """Parse the provided configuration dict.
 
         Returns a dict with configuration keys and values converted to the

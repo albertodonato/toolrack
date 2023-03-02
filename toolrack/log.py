@@ -47,7 +47,7 @@ class Loggable:
     @cachedproperty
     def logger(self):
         """Return a logger for this class."""
-        logger_name = "{}.{}".format(self.__module__, self.__class__.__name__)
+        logger_name = f"{self.__module__}.{self.__class__.__name__}"
         if hasattr(self, "name"):
-            logger_name += "[{}]".format(self.name)
+            logger_name += f"[{self.name}]"
         return logging.getLogger(name=logger_name)

@@ -2,7 +2,7 @@ import asyncio
 
 import pytest
 
-from ..periodic import (
+from toolrack.aio.periodic import (
     AlreadyRunning,
     NotRunning,
     PeriodicCall,
@@ -58,7 +58,6 @@ def times_iter(event_loop, time_intervals):
     yield times
 
 
-@pytest.mark.asyncio
 class TestTimedCall:
     def test_running(self, timed_call, times_iter):
         """The TimedCall is not running by default."""
@@ -66,6 +65,7 @@ class TestTimedCall:
         timed_call.start(times_iter())
         assert timed_call.running
 
+    @pytest.mark.asyncio
     async def test_start(self, advance_time, timed_call, times_iter, calls):
         """Starting the TimedCall makes it call the function."""
         timed_call.start(times_iter())
@@ -78,6 +78,7 @@ class TestTimedCall:
         with pytest.raises(AlreadyRunning):
             timed_call.start(times_iter())
 
+    @pytest.mark.asyncio
     async def test_stop(self, advance_time, timed_call, times_iter, calls):
         """Stopping the TimedCall stops runs."""
         timed_call.start(times_iter())
@@ -87,11 +88,13 @@ class TestTimedCall:
         # Only the initial call is performed
         assert calls == [1.0]
 
+    @pytest.mark.asyncio
     async def test_stop_not_running(self, timed_call):
         """Stopping a TimedCall that is not running raises an error."""
         with pytest.raises(NotRunning):
             await timed_call.stop()
 
+    @pytest.mark.asyncio
     async def test_func_arguments(self, advance_time, times_iter, calls):
         """Specified arguments are passed to the function on call."""
 
@@ -104,6 +107,7 @@ class TestTimedCall:
         await timed_call.stop()
         assert calls == [(("foo", "bar"), {"baz": "baz", "bza": "bza"})]
 
+    @pytest.mark.asyncio
     async def test_run_at_time_intervals(
         self, advance_time, timed_call, times_iter, calls
     ):
@@ -112,6 +116,7 @@ class TestTimedCall:
         await advance_time(10)
         assert calls == [1.0, 6.0]
 
+    @pytest.mark.asyncio
     async def test_run_async_at_time_intervals(
         self, advance_time, async_func, times_iter, calls
     ):
@@ -121,6 +126,7 @@ class TestTimedCall:
         await advance_time(10)
         assert calls == [1.0, 6.0]
 
+    @pytest.mark.asyncio
     async def test_stop_after_iterator_ends(
         self, advance_time, timed_call, times_iter, time_intervals, calls
     ):

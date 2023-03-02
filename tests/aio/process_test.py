@@ -4,7 +4,7 @@ from textwrap import dedent
 
 import pytest
 
-from ..process import (
+from toolrack.aio.process import (
     ProcessParserProtocol,
     StreamHelper,
 )

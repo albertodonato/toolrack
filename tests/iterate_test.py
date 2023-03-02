@@ -1,6 +1,6 @@
 import pytest
 
-from ..iterate import flatten_dict
+from toolrack.iterate import flatten_dict
 
 
 class TestFlattenDict:

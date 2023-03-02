@@ -3,7 +3,7 @@ from pathlib import Path
 
 import pytest
 
-from ..fsmap import (
+from toolrack.fsmap import (
     DIR,
     Directory,
 )

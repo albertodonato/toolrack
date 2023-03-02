@@ -11,12 +11,13 @@ from asyncio import (
     iscoroutinefunction,
     Task,
 )
+from collections.abc import (
+    Callable,
+    Iterator,
+)
 from functools import partial
 from typing import (
-    Callable,
     cast,
-    Iterator,
-    Optional,
     Union,
 )
 
@@ -54,8 +55,8 @@ class TimedCall:
     def __init__(self, func: Callable, *args, **kwargs):
         self._func = self._wrap_func(func, *args, **kwargs)
         self._loop = get_event_loop()
-        self._handle: Optional[Handle] = None
-        self._task: Optional[Task] = None
+        self._handle: Handle | None = None
+        self._task: Task | None = None
 
     @property
     def running(self) -> bool:
@@ -99,9 +100,9 @@ class TimedCall:
         else:
             self._handle = self._loop.call_later(delay, self._run, times_iter)
 
-    def _get_run_delay(self, times_iter: TimesIterator) -> Optional[float]:
+    def _get_run_delay(self, times_iter: TimesIterator) -> float | None:
         now = self._loop.time()
-        next_time: Union[float, int] = -1
+        next_time: float | int = -1
         while next_time < now:
             try:
                 next_time = next(times_iter)
@@ -123,7 +124,7 @@ class TimedCall:
 class PeriodicCall(TimedCall):
     """A TimedCall called at a fixed time intervals."""
 
-    def start(self, interval: Union[int, float], now: bool = True):  # type: ignore
+    def start(self, interval: int | float, now: bool = True):  # type: ignore
         """Start calling the function periodically.
 
         :param interval: the time interval in seconds between calls.

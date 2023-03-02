@@ -1,7 +1,7 @@
 from collections.abc import Iterable
 from pathlib import Path
 
-from ..path import match_files
+from toolrack.path import match_files
 
 
 class TestMatchFiles:

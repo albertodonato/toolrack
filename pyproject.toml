@@ -1,11 +1,61 @@
-[tool.coverage.report]
-show_missing = true
-fail_under = 100.0
-skip_covered = true
+[build-system]
+build-backend = "setuptools.build_meta"
+requires = [
+  "setuptools",
+]
 
-[tool.coverage.run]
-source = ["toolrack"]
-omit = ["toolrack/scripts/*"]
+[project]
+name = "toolrack"
+description = "A collection of miscellaneous utility functions and classes"
+readme = "README.rst"
+keywords = [
+  "asyncio",
+  "library",
+  "utility",
+]
+license = {file = "LICENSE.txt"}
+maintainers = [
+    {name = "Alberto Donato", email = "alberto.donato@gmail.com"},
+]
+authors = [
+    {name = "Alberto Donato", email = "alberto.donato@gmail.com"},
+]
+requires-python = ">=3.10"
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "Intended Audience :: System Administrators",
+    "License :: OSI Approved :: GNU Lesser General Public License v3 or later (LGPLv3+)",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Software Development :: Libraries",
+    "Topic :: Utilities",
+]
+dynamic = [
+  "version",
+]
+dependencies = [
+  "pytest",
+]
+[project.optional-dependencies]
+testing = [
+  "pytest-asyncio",
+  "pytest-mock",
+]
+[project.urls]
+changelog = "https://github.com/albertodonato/toolrack/blob/main/CHANGES.rst"
+documentation = "https://readthedocs.org/projects/toolrack/"
+homepage = "https://github.com/albertodonato/toolrack"
+repository = "https://github.com/albertodonato/toolrack"
+[project.scripts]
+cert-info = "toolrack.scripts.certinfo:script"
+password-generator = "toolrack.scripts.password_generator:script"
+
+[tool.setuptools.packages.find]
+include = ["toolrack*"]
+[tool.setuptools.dynamic]
+version = {attr = "toolrack.__version__"}
 
 [tool.isort]
 combine_as_imports = true
@@ -18,9 +68,25 @@ order_by_type = false
 profile = "black"
 use_parentheses = true
 
+[tool.flake8]
+ignore = ["E203", "E501", "W503"]
+max-line-length = 80
+select = ["C", "E", "F", "W", "B", "B950"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+
+[tool.coverage.report]
+fail_under = 100.0
+show_missing = true
+skip_covered = true
+[tool.coverage.run]
+source = ["toolrack"]
+omit = ["toolrack/scripts/*"]
+
 [tool.mypy]
+ignore_missing_imports = true
 install_types = true
 non_interactive = true
 warn_return_any = true
 warn_unused_configs = true
-ignore_missing_imports = true

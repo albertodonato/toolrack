@@ -2,7 +2,7 @@ from io import StringIO
 from json import dumps
 from textwrap import dedent
 
-from ..json_util import indent
+from toolrack.json_util import indent
 
 
 class TestIndent:

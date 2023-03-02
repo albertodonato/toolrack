@@ -30,11 +30,7 @@ from argparse import (
     Namespace,
 )
 import sys
-from typing import (
-    IO,
-    List,
-    Optional,
-)
+from typing import IO
 
 
 class ErrorExitMessage(Exception):
@@ -64,7 +60,7 @@ class Script:
 
     """
 
-    def __init__(self, stdout: Optional[IO] = None, stderr: Optional[IO] = None):
+    def __init__(self, stdout: IO | None = None, stderr: IO | None = None):
         self._stdout = stdout or sys.stdout
         self._stderr = stderr or sys.stderr
 
@@ -104,7 +100,7 @@ class Script:
         """
         self.exit()
 
-    def __call__(self, args: Optional[List[str]] = None):
+    def __call__(self, args: list[str] | None = None):
         """Call the script, passing :data:`sys.argv` by default."""
         parser = self.get_parser()
         parsed_args = parser.parse_args(args=args)
