@@ -24,25 +24,6 @@ As a user run:
   $ pip install toolrack
 
 
-Development installation
-------------------------
-
-The source tree is available available at
-`<https://github.com/albertodonato/toolrack>`_.
-
-Development setup can be done via Virtualenv.
-
-As a user run:
-
-.. code:: bash
-
-  $ python3 -m venv <target-dir>
-  $ . <target-dir>/bin/activate
-  $ git clone https://github.com/albertodonato/toolrack
-  $ cd toolrack
-  $ pip install -e .
-
-
 .. _ReadTheDocs: https://toolrack.readthedocs.io/en/latest/
 .. _PyPI: https://pypi.python.org/
 
