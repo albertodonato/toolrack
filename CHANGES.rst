@@ -1,8 +1,17 @@
+v3.1.0 - 2020-03-02
+===================
+
+- Require Python 3.10 or later.
+- Reqork project setup, move tests.
+- Drop ``setup.{py,cfg}``, extract ``tox.ini`` config.
+
+
 v3.0.1 - 2020-11-19
 ===================
 
 - Drop ``json-indent`` script.
 - Add missing type annotations.
+
 
 v3.0.0 - 2020-05-10
 ===================
@@ -10,7 +19,8 @@ v3.0.0 - 2020-05-10
 - Rework project layout.
 - Switch to pytest.
 - Add type checks.
-- Add ``toolrack.aio.TimedCall``.  
+- Add ``toolrack.aio.TimedCall``.
+
 
 v2.1.0 - 2018-03-19
 ===================
@@ -60,7 +70,7 @@ v1.5.2 - 2017-01-28
 
 - Export ``StreamHelper`` and ``TempDirFixture``.
 
-  
+
 v1.5.1 - 2016-12-03
 ===================
 
@@ -142,7 +152,7 @@ v0.1.0 - 2015-04-08
 
 - Added ``toolrack.config module``.
 - Fixed use of ``mkstemp`` in ``TempDirFixture``.
-  
+
 
 v0.0.3 - 2015-03-25
 ===================
