@@ -30,7 +30,7 @@ def async_func(event_loop, calls):
 
 
 @pytest.fixture
-async def timed_call(sync_func):
+async def timed_call(event_loop, sync_func):
     call = TimedCall(sync_func)
     yield call
     if call.running:
@@ -38,7 +38,8 @@ async def timed_call(sync_func):
 
 
 @pytest.fixture
-def periodic_call(sync_func):
+def periodic_call(event_loop, sync_func):
+    asyncio.set_event_loop(event_loop)
     yield PeriodicCall(sync_func)
 
 

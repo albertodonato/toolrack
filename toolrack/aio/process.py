@@ -6,7 +6,6 @@ from asyncio import (
 )
 from collections.abc import Callable
 from io import StringIO
-from locale import getpreferredencoding
 from typing import (
     cast,
     IO,
@@ -38,21 +37,28 @@ class ProcessParserProtocol(SubprocessProtocol):
             fd: StreamHelper(callback=parser)
             for fd, parser in enumerate((out_parser, err_parser), 1)
         }
+        self._exception = None
+        self._data = ["", ""]  # hold stdout/stderr data
 
     def pipe_data_received(self, fd, data):
         stream = self._outputs[fd]
-        data = data.decode(getpreferredencoding(False))
-        stream.receive_data(data)
+        stream.receive_data(data.decode())
 
-    def connection_lost(self, exc):
-        self._outputs[1].flush_partial()
-        self._outputs[2].flush_partial()
-        stdout = self._outputs[1].get_data()
-        stderr = self._outputs[2].get_data()
+    def pipe_connection_lost(self, fd, exc):
+        output = self._outputs.get(fd)
+        if not output:
+            return
         if exc:
-            self.future.set_exception(exc)
+            self._exception = exc
+            return
+        output.flush_partial()
+        self._data[fd - 1] = output.get_data()
+
+    def process_exited(self):
+        if self._exception:
+            self.future.set_exception(self._exception)
         else:
-            self.future.set_result((stdout, stderr))
+            self.future.set_result(tuple(self._data))
 
 
 class StreamHelper:

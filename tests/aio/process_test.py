@@ -11,8 +11,8 @@ from toolrack.aio.process import (
 
 
 @pytest.fixture
-def future():
-    yield Future()
+def future(event_loop):
+    yield Future(loop=event_loop)
 
 
 @pytest.fixture
@@ -68,7 +68,8 @@ class TestProcessParserProtocol:
         protocol = ProcessParserProtocol(future)
         exception = Exception("fail!")
         # Simulate an error while process is running
-        protocol.connection_lost(exception)
+        protocol.pipe_connection_lost(1, exception)
+        protocol.process_exited()
         with pytest.raises(Exception) as error:
             await future
         assert error.value is exception
