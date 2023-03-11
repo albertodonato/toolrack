@@ -18,7 +18,9 @@ class TestSetupLogger:
             logger = setup_logger(name="test-logger")
             assert logger.name == "test-logger"
             logger.info("log message")
-        assert caplog.record_tuples == [("test-logger", logging.INFO, "log message")]
+        assert caplog.record_tuples == [
+            ("test-logger", logging.INFO, "log message")
+        ]
 
     def test_setup_level(self, caplog):
         """If specified, a level is set on the logger."""

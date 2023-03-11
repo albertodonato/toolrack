@@ -26,7 +26,11 @@ class PasswordGenerator(Script):
             "-n", type=int, default=1, help="number of passwords to generate"
         )
         parser.add_argument(
-            "-l", "--length", type=int, default=DEFAULT_LENGTH, help="password length"
+            "-l",
+            "--length",
+            type=int,
+            default=DEFAULT_LENGTH,
+            help="password length",
         )
         parser.add_argument(
             "-p",
@@ -38,10 +42,16 @@ class PasswordGenerator(Script):
             ),
         )
         parser.add_argument(
-            "-L", "--list-profiles", action="store_true", help="list available profiles"
+            "-L",
+            "--list-profiles",
+            action="store_true",
+            help="list available profiles",
         )
         parser.add_argument(
-            "-d", "--list-defs", action="store_true", help="list characters definitions"
+            "-d",
+            "--list-defs",
+            action="store_true",
+            help="list characters definitions",
         )
         return parser
 

@@ -104,7 +104,9 @@ class TestProcessParserProtocol:
         assert result == (None, "not parsed\n")
 
     @pytest.mark.asyncio
-    async def test_parse_stderr(self, event_loop, future, executable, write_executable):
+    async def test_parse_stderr(
+        self, event_loop, future, executable, write_executable
+    ):
         """It's possible to pass a function to parse stderr line by line."""
         write_executable(
             dedent(

@@ -38,7 +38,11 @@ class TestMatchFiles:
         file2.touch()
         file3 = Path(tmpdir / "name1")
         file3.touch()
-        assert set(match_files([tmpdir], ["name*", "*-name"])) == {file1, file2, file3}
+        assert set(match_files([tmpdir], ["name*", "*-name"])) == {
+            file1,
+            file2,
+            file3,
+        }
 
     def test_case_sensitive(self, tmpdir):
         """The match is case sensitive by default."""

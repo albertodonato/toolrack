@@ -200,6 +200,8 @@ class TestConfig:
 
     def test_parse_includes_defaults(self):
         """If a config key is missing, the default value is returned."""
-        config = Config(ConfigKey("foo", "str"), ConfigKey("bar", "str", default=10))
+        config = Config(
+            ConfigKey("foo", "str"), ConfigKey("bar", "str", default=10)
+        )
         parsed = config.parse({"foo": "Foo"})
         assert parsed == {"foo": "Foo", "bar": 10}

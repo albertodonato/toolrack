@@ -13,7 +13,9 @@ class CertInfo(Script):
     """Get information about SSL certificates."""
 
     def get_parser(self):
-        parser = ArgumentParser(description="Get information about SSL certificates.")
+        parser = ArgumentParser(
+            description="Get information about SSL certificates."
+        )
         subparsers = parser.add_subparsers(
             metavar="ACTION", dest="action", help="action to perform"
         )
@@ -23,7 +25,8 @@ class CertInfo(Script):
             "get-cert", help="get certificate for a host"
         )
         get_cert_parser.add_argument(
-            "hostname", help="hostname in the host[:port] format. Port defaults to 443"
+            "hostname",
+            help="hostname in the host[:port] format. Port defaults to 443",
         )
         return parser
 

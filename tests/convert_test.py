@@ -13,7 +13,9 @@ class TestConvertBbyte:
         """It's possible to convert form a multiplier to bytes."""
         assert convert_bbyte(1, suffix=suffix) == value
 
-    @pytest.mark.parametrize("value,to", [(1073741824, "gib"), (1099511627776, "tib")])
+    @pytest.mark.parametrize(
+        "value,to", [(1073741824, "gib"), (1099511627776, "tib")]
+    )
     def test_convert_to(self, value, to):
         """It's possible to convert to a multiplier from bytes."""
         assert convert_bbyte(value, to=to) == 1

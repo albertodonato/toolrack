@@ -6,7 +6,8 @@ from urllib.parse import urlsplit
 
 
 def get_host_certificate(
-    uri: str, get_func: Callable[[tuple[str, int]], str] = get_server_certificate
+    uri: str,
+    get_func: Callable[[tuple[str, int]], str] = get_server_certificate,
 ) -> str:
     """Return a string with the host certificate.
 

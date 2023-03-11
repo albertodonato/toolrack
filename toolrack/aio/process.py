@@ -82,7 +82,9 @@ class StreamHelper:
     """
 
     def __init__(
-        self, callback: Callable[[str], None] | None = None, separator: str = "\n"
+        self,
+        callback: Callable[[str], None] | None = None,
+        separator: str = "\n",
     ):
         self.separator = separator
         self._callback = callback

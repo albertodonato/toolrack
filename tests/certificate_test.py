@@ -11,7 +11,8 @@ class TestGetHostCertificate:
             return "cert"
 
         result = get_host_certificate(
-            "https://example.com:443/resource", get_func=fake_get_host_certificate
+            "https://example.com:443/resource",
+            get_func=fake_get_host_certificate,
         )
         assert result == "cert"
         assert remotes == [("example.com", 443)]
