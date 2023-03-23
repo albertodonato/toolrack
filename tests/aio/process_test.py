@@ -54,7 +54,8 @@ class TestProcessParserProtocol:
             dedent(
                 """#!/bin/sh
                 echo out
-                echo err >&2"""
+                echo err >&2
+                """
             )
         )
 
@@ -84,7 +85,8 @@ class TestProcessParserProtocol:
                 """#!/bin/sh
                 echo line 1
                 echo not parsed >&2
-                echo line 2"""
+                echo line 2
+                """
             )
         )
 
@@ -113,7 +115,8 @@ class TestProcessParserProtocol:
                 """#!/bin/sh
                 echo line 1 >&2
                 echo not parsed
-                echo line 2 >&2"""
+                echo line 2 >&2
+                """
             )
         )
 
@@ -140,7 +143,8 @@ class TestProcessParserProtocol:
             dedent(
                 """#!/bin/sh
                 echo line 1
-                echo -n line 2"""
+                echo -n line 2
+                """
             )
         )
 
@@ -159,14 +163,36 @@ class TestProcessParserProtocol:
 
 
 class TestStreamHelper:
-    def test_receive_data_handles_partial(self):
-        """receive_data caches partial lines and joins them."""
-        lines = []
-        helper = StreamHelper(callback=lines.append)
-        helper.receive_data("foo\nbar")
-        assert lines == ["foo"]
-        helper.receive_data("baz\n")
-        assert lines == ["foo", "barbaz"]
+    @pytest.mark.parametrize(
+        "data,lines",
+        [
+            (("foo\n", "bar\n", "baz\n"), ["foo", "bar", "baz"]),
+            (("foo\nbar", "baz\n"), ["foo", "barbaz"]),
+            (("foo\n", "bar\n", "baz"), ["foo", "bar", "baz"]),
+        ],
+    )
+    def test_with_callback(self, data, lines):
+        """The callback is called with full lines of data."""
+        callback_lines = []
+        helper = StreamHelper(callback=callback_lines.append)
+        for part in data:
+            helper.receive_data(part)
+        helper.flush_partial()
+        assert callback_lines == lines
+
+    @pytest.mark.parametrize(
+        "data,output",
+        [
+            (("foo\n", "bar\n", "baz\n"), "foo\nbar\nbaz\n"),
+            (("foo\nbar", "baz\n"), "foo\nbarbaz\n"),
+            (("foo\n", "bar\n", "baz"), "foo\nbar\nbaz"),
+        ],
+    )
+    def test_no_callbacks(self, data, output):
+        helper = StreamHelper()
+        for part in data:
+            helper.receive_data(part)
+        assert helper.get_data() == output
 
     def test_receive_data_separator(self):
         """It's possible to specify a different line separator."""

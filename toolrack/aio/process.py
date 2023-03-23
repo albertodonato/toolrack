@@ -22,12 +22,10 @@ class ProcessParserProtocol(SubprocessProtocol):
     and stderr. Each tuple element is ``None`` if a parser is passed for that
     stream.
 
-    :param asyncio.Future future: a Future called with a tuple with
-        (stdout, stderr) from the process once it it exits.
-    :param callable out_parser: an optional parser for the process standard
-        output.
-    :param callable err_parser: an optional parser for the process standard
-        error.
+    :param future: a Future called with a tuple with (stdout, stderr) from the
+        process once it it exits.
+    :param out_parser: an optional parser for the process standard output.
+    :param err_parser: an optional parser for the process standard error.
 
     """
 
@@ -48,10 +46,10 @@ class ProcessParserProtocol(SubprocessProtocol):
         output = self._outputs.get(fd)
         if not output:
             return
+        output.flush_partial()
         if exc:
             self._exception = exc
             return
-        output.flush_partial()
         self._data[fd - 1] = output.get_data()
 
     def process_exited(self):
@@ -68,7 +66,7 @@ class StreamHelper:
     lines are received.
     For example::
 
-      stream = StreamHelper(callback)
+      stream = StreamHelper(callback=callback)
       stream.receive_data('line one\\nline two')
       stream.receive_data('continues here\\n')
 
@@ -103,10 +101,10 @@ class StreamHelper:
         else:
             cast(IO, self._buffer).write(data)
 
-    def get_data(self):
-        """Return the full content of the stream."""
+    def get_data(self) -> str | None:
+        """Return the full content of the stream if no callback is defined."""
         if not self._buffer:
-            return
+            return None
         return self._buffer.getvalue() + self._partial.getvalue()
 
     def flush_partial(self):
@@ -119,16 +117,19 @@ class StreamHelper:
 
     def _parse_data(self, data: str):
         """Process data parsing full lines."""
+        if not data:
+            return
         lines = data.split(self.separator)
-        lines[0] = self._pop_partial() + lines[0]
+        if len(lines) > 1:  # at least one full line
+            lines[0] = self._pop_partial() + lines[0]
+        # might be empty if data ended with separator
         self._partial.write(lines.pop())
-        # Call the callback on full lines
+        # call the callback on full lines
         for line in lines:
-            if line:
-                cast(Callable, self._callback)(line)
+            cast(Callable, self._callback)(line)
 
     def _pop_partial(self):
         """Return the current partial line and reset it."""
         line = self._partial.getvalue()
-        self._partial.truncate()
+        self._partial.truncate(0)
         return line
