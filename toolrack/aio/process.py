@@ -2,61 +2,70 @@
 
 from asyncio import (
     Future,
+    get_event_loop,
     SubprocessProtocol,
 )
 from collections.abc import Callable
 from io import StringIO
-from typing import (
-    cast,
-    IO,
-)
+from typing import cast
 
 
 class ProcessParserProtocol(SubprocessProtocol):
     """Collect process stdout and stderr.
 
-    Line parser functions can be passed for stdout and stderr, and they are
-    called on each full line of output.
+    If parser functions are be passed for stdout and/or stderr, they are called
+    on each full line of output.
 
-    When the process ends, the ``future`` returns a tuple with the full stdout
-    and stderr. Each tuple element is ``None`` if a parser is passed for that
-    stream.
+    If no parser function is passed, the full output content is returned when
+    the process terminates via the ``done`` :class:`Future`.  This returns a
+    tuple with the full stdout and stderr. Each tuple element is ``None`` if a
+    parser is passed for that stream.
 
-    :param future: a Future called with a tuple with (stdout, stderr) from the
-        process once it it exits.
     :param out_parser: an optional parser for the process standard output.
     :param err_parser: an optional parser for the process standard error.
 
     """
 
-    def __init__(self, future: Future, out_parser=None, err_parser=None):
-        self.future = future
-        self._outputs = {
-            fd: StreamHelper(callback=parser)
-            for fd, parser in enumerate((out_parser, err_parser), 1)
+    done: Future
+
+    def __init__(self, out_parser=None, err_parser=None):
+        self.done = get_event_loop().create_future()
+        self._streams = {
+            1: StreamHelper(callback=out_parser),
+            2: StreamHelper(callback=err_parser),
         }
+        self._data = [None, None]  # hold stdout/stderr data
         self._exception = None
-        self._data = ["", ""]  # hold stdout/stderr data
+        self._process_exited = False
 
     def pipe_data_received(self, fd, data):
-        stream = self._outputs[fd]
-        stream.receive_data(data.decode())
+        stream = self._streams.get(fd)
+        if stream:
+            stream.receive_data(data.decode())
 
     def pipe_connection_lost(self, fd, exc):
-        output = self._outputs.get(fd)
-        if not output:
+        stream = self._streams.pop(fd, None)
+        if not stream:
             return
-        output.flush_partial()
+
+        stream.flush_partial()
+        self._data[fd - 1] = stream.get_data()
         if exc:
             self._exception = exc
-            return
-        self._data[fd - 1] = output.get_data()
+        self._maybe_done()
 
     def process_exited(self):
+        self._process_exited = True
+        self._maybe_done()
+
+    def _maybe_done(self):
+        if not self._process_exited or self._streams:
+            return
+
         if self._exception:
-            self.future.set_exception(self._exception)
+            self.done.set_exception(self._exception)
         else:
-            self.future.set_result(tuple(self._data))
+            self.done.set_result(tuple(self._data))
 
 
 class StreamHelper:
@@ -86,7 +95,7 @@ class StreamHelper:
     ):
         self.separator = separator
         self._callback = callback
-        self._buffer = StringIO() if not callback else None
+        self._buffer = StringIO()
         self._partial = StringIO()
 
     def receive_data(self, data: str):
@@ -99,11 +108,11 @@ class StreamHelper:
         if self._callback:
             self._parse_data(data)
         else:
-            cast(IO, self._buffer).write(data)
+            self._buffer.write(data)
 
     def get_data(self) -> str | None:
         """Return the full content of the stream if no callback is defined."""
-        if not self._buffer:
+        if self._callback:
             return None
         return self._buffer.getvalue() + self._partial.getvalue()
 
@@ -117,8 +126,6 @@ class StreamHelper:
 
     def _parse_data(self, data: str):
         """Process data parsing full lines."""
-        if not data:
-            return
         lines = data.split(self.separator)
         if len(lines) > 1:  # at least one full line
             lines[0] = self._pop_partial() + lines[0]

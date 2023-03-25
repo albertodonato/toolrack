@@ -1,4 +1,3 @@
-from asyncio import Future
 from pathlib import Path
 from textwrap import dedent
 
@@ -11,16 +10,6 @@ from toolrack.aio.process import (
 
 
 @pytest.fixture
-def future(event_loop):
-    yield Future(loop=event_loop)
-
-
-@pytest.fixture
-def protocol_factory(future):
-    yield lambda: ProcessParserProtocol(future)
-
-
-@pytest.fixture
 def executable(tmpdir):
     executable = Path(tmpdir / "exe")
     executable.touch()
@@ -29,17 +18,12 @@ def executable(tmpdir):
 
 
 @pytest.fixture
-def write_executable(executable):
-    yield lambda content: executable.write_text(content)
-
-
-@pytest.fixture
-def exec_process(event_loop, future, protocol_factory, executable):
-    async def run():
-        transport, _ = await event_loop.subprocess_exec(
+def exec_process(event_loop, executable):
+    async def run(protocol_factory=ProcessParserProtocol):
+        transport, protocol = await event_loop.subprocess_exec(
             protocol_factory, str(executable)
         )
-        result = await future
+        result = await protocol.done
         transport.close()
         return result
 
@@ -48,9 +32,9 @@ def exec_process(event_loop, future, protocol_factory, executable):
 
 @pytest.mark.asyncio
 class TestProcessParserProtocol:
-    async def test_result(self, exec_process, write_executable):
+    async def test_result(self, executable, exec_process):
         """When the process ends, stdout and stderr are returned."""
-        write_executable(
+        executable.write_text(
             dedent(
                 """#!/bin/sh
                 echo out
@@ -59,28 +43,26 @@ class TestProcessParserProtocol:
             )
         )
 
-        result = await exec_process()
-        out, err = result
+        out, err = await exec_process()
         assert out == "out\n"
         assert err == "err\n"
 
-    async def test_error(self, future):
+    async def test_error(self, event_loop):
         """If the process errors, an exception is raised."""
-        protocol = ProcessParserProtocol(future)
+        protocol = ProcessParserProtocol()
         exception = Exception("fail!")
         # Simulate an error while process is running
         protocol.pipe_connection_lost(1, exception)
+        protocol.pipe_connection_lost(2, None)
         protocol.process_exited()
         with pytest.raises(Exception) as error:
-            await future
+            await protocol.done
         assert error.value is exception
 
     @pytest.mark.asyncio
-    async def test_parse_stdout(
-        self, event_loop, future, executable, exec_process, write_executable
-    ):
+    async def test_parse_stdout(self, event_loop, executable, exec_process):
         """It's possible to pass a function to parse stdout line by line."""
-        write_executable(
+        executable.write_text(
             dedent(
                 """#!/bin/sh
                 echo line 1
@@ -91,26 +73,19 @@ class TestProcessParserProtocol:
         )
 
         lines = []
-
-        def protocol_factory():
-            return ProcessParserProtocol(future, out_parser=lines.append)
-
-        transport, _ = await event_loop.subprocess_exec(
-            protocol_factory, str(executable)
+        result = await exec_process(
+            protocol_factory=lambda: ProcessParserProtocol(
+                out_parser=lines.append
+            )
         )
-        transport.close()
-
-        result = await future
         assert lines == ["line 1", "line 2"]
         # Full stdout is not returned
         assert result == (None, "not parsed\n")
 
     @pytest.mark.asyncio
-    async def test_parse_stderr(
-        self, event_loop, future, executable, write_executable
-    ):
+    async def test_parse_stderr(self, event_loop, executable, exec_process):
         """It's possible to pass a function to parse stderr line by line."""
-        write_executable(
+        executable.write_text(
             dedent(
                 """#!/bin/sh
                 echo line 1 >&2
@@ -121,25 +96,20 @@ class TestProcessParserProtocol:
         )
 
         lines = []
-
-        def protocol_factory():
-            return ProcessParserProtocol(future, err_parser=lines.append)
-
-        transport, _ = await event_loop.subprocess_exec(
-            protocol_factory, str(executable)
+        result = await exec_process(
+            protocol_factory=lambda: ProcessParserProtocol(
+                err_parser=lines.append
+            )
         )
-        transport.close()
-
-        result = await future
         assert lines == ["line 1", "line 2"]
         # Full stderr is not returned
         assert result == ("not parsed\n", None)
 
     async def test_parse_no_ending_newline(
-        self, event_loop, future, executable, write_executable
+        self, event_loop, executable, exec_process
     ):
         """The last line of output is partse if it doesn't have a newline."""
-        write_executable(
+        executable.write_text(
             dedent(
                 """#!/bin/sh
                 echo line 1
@@ -149,16 +119,11 @@ class TestProcessParserProtocol:
         )
 
         lines = []
-
-        def protocol_factory():
-            return ProcessParserProtocol(future, out_parser=lines.append)
-
-        transport, _ = await event_loop.subprocess_exec(
-            protocol_factory, str(executable)
+        await exec_process(
+            protocol_factory=lambda: ProcessParserProtocol(
+                out_parser=lines.append
+            )
         )
-        transport.close()
-
-        await future
         assert lines == ["line 1", "line 2"]
 
 
