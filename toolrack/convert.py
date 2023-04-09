@@ -4,13 +4,15 @@
 BYTE_SUFFIXES = (None, "kib", "mib", "gib", "tib", "pib", "eib", "zib", "yib")
 
 
-def convert_bbyte(value, suffix=None, to=None):
+def convert_bbyte(
+    value: int, suffix: str | None = None, to: str | None = None
+) -> int:
     """Convert a binary byte value across multipliers.
 
-    :param int value: the current value.
-    :param str suffix: the current multiplier for the value (:data:`None`
+    :param value: the current value.
+    :param suffix: the current multiplier for the value (:data:`None`
         for bytes).
-    :param str to: the target multiplier (:data:`None` for bytes).
+    :param to: the target multiplier (:data:`None` for bytes).
 
     """
     if suffix:
@@ -19,7 +21,7 @@ def convert_bbyte(value, suffix=None, to=None):
         raise ValueError("Unknown multiplier suffix")
     if to not in BYTE_SUFFIXES:
         raise ValueError("Unknown target multiplier")
-    multiplier = 2 ** (10 * BYTE_SUFFIXES.index(suffix))
+    multiplier: int = 2 ** (10 * BYTE_SUFFIXES.index(suffix))
     converted = value * multiplier
     if to:
         to = to.lower()

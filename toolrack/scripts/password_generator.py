@@ -1,6 +1,9 @@
 """Generate random passwords."""
 
-from argparse import ArgumentParser
+from argparse import (
+    ArgumentParser,
+    Namespace,
+)
 from collections import OrderedDict
 
 from ..password import (
@@ -20,7 +23,7 @@ PROFILES = OrderedDict(
 class PasswordGenerator(Script):
     """Script to generate random passwords."""
 
-    def get_parser(self):
+    def get_parser(self) -> ArgumentParser:
         parser = ArgumentParser(description="Generate random passwords")
         parser.add_argument(
             "-n", type=int, default=1, help="number of passwords to generate"
@@ -55,7 +58,7 @@ class PasswordGenerator(Script):
         )
         return parser
 
-    def main(self, args):
+    def main(self, args: Namespace) -> None:
         if args.list_profiles:
             self._list_profiles()
             self.exit()
@@ -73,13 +76,13 @@ class PasswordGenerator(Script):
             password = profile.generate(length=args.length)
             print(password)
 
-    def _list_profiles(self):
+    def _list_profiles(self) -> None:
         """List available profiles."""
         for name, profile in PROFILES.items():
             message = "{}:\n  definition: {}\n  characters: {}"
             print(message.format(name, profile.definition, profile.chars))
 
-    def _list_definitions(self):
+    def _list_definitions(self) -> None:
         """List available character set definitions."""
         for tag, chars in PasswordProfile.CHAR_DEFS.items():
             print(f"{tag}: {chars!r}")

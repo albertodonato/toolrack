@@ -23,22 +23,22 @@ class Dir:
 
     """
 
-    def __init__(self, path: Path):
-        self.path = path
+    def __init__(self, path: str | Path):
+        self.path = Path(path)
 
-    def __truediv__(self, other):
+    def __truediv__(self, other: Path) -> Path:
         """Append to the path."""
         return self.path / other
 
-    def __str__(self):
+    def __str__(self) -> str:
         """The path as string."""
         return str(self.path)
 
-    def join(self, *paths):
+    def join(self, *paths: str | Path) -> Path:
         """Join the specified path fragments with directory prefix."""
         return self.path.joinpath(*paths)
 
-    def mkdir(self, path=None):
+    def mkdir(self, path: str | None = None) -> Path:
         """Create a temporary directory and return the :class:`pathlib.Path`.
 
         By default, a random name is chosen.
@@ -52,7 +52,12 @@ class Dir:
         """
         return self._mkpath(path, mkdtemp, os.mkdir)
 
-    def mkfile(self, path=None, content="", mode=None):
+    def mkfile(
+        self,
+        path: str | Path | None = None,
+        content: str = "",
+        mode: int | None = None,
+    ) -> Path:
         """Create a temporary file and return the :class:`pathlib.Path`.
 
         By default, a random name is chosen.
@@ -75,7 +80,9 @@ class Dir:
             path.chmod(mode)
         return path
 
-    def mksymlink(self, target, path=None):
+    def mksymlink(
+        self, target: str | Path, path: str | Path | None = None
+    ) -> Path:
         """Create a symbolic link and return the :class:`pathlib.Path`.
 
         By default, a random name is chosen.
@@ -94,7 +101,12 @@ class Dir:
             lambda p: Path(p).symlink_to(target),
         )
 
-    def _mkpath(self, path, create_temp, create_func):
+    def _mkpath(
+        self,
+        path: str | Path | tuple[str | Path] | None,
+        create_temp,
+        create_func,
+    ) -> Path:
         if path is None:
             return Path(create_temp(dir=str(self.path)))
 
@@ -111,12 +123,14 @@ class Dir:
         create_func(str(path))
         return path
 
-    def _mkstemp(self, dir=None):
+    def _mkstemp(self, dir: str | Path | None = None) -> Path:
         fd, path = mkstemp(dir=dir)
         os.close(fd)
         return Path(path)
 
-    def _mkstemp_symlink(self, target, dir=None):
+    def _mkstemp_symlink(
+        self, target: str | Path, dir: str | Path | None = None
+    ) -> Path:
         path = self._mkstemp(dir=dir)
         path.unlink()
         path.symlink_to(target)

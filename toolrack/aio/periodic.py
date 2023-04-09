@@ -16,27 +16,24 @@ from collections.abc import (
     Iterator,
 )
 from functools import partial
-from typing import (
-    cast,
-    Union,
-)
+from typing import cast
 
 
 class AlreadyRunning(Exception):
     """The TimedCall is already running."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__("Timed call is already running")
 
 
 class NotRunning(Exception):
     """The TimedCall is not running."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__("Timed call is not running")
 
 
-TimesIterator = Iterator[Union[float, int]]
+TimesIterator = Iterator[float | int]
 
 
 class TimedCall:
@@ -52,7 +49,7 @@ class TimedCall:
 
     """
 
-    def __init__(self, func: Callable, *args, **kwargs):
+    def __init__(self, func: Callable, *args, **kwargs) -> None:
         self._func = self._wrap_func(func, *args, **kwargs)
         self._loop = get_event_loop()
         self._handle: Handle | None = None
@@ -76,7 +73,7 @@ class TimedCall:
 
         self._run(times_iter, do_call=False)
 
-    async def stop(self):
+    async def stop(self) -> None:
         """Stop calling the function periodically."""
         if not self.running:
             raise NotRunning()
@@ -88,12 +85,12 @@ class TimedCall:
             await self._task
             self._task = None
 
-    def _run(self, times_iter: TimesIterator, do_call: bool = True):
+    def _run(self, times_iter: TimesIterator, do_call: bool = True) -> None:
         if do_call:
             self._task = self._loop.create_task(self._func())
         self._schedule_next_run(times_iter)
 
-    def _schedule_next_run(self, times_iter: TimesIterator):
+    def _schedule_next_run(self, times_iter: TimesIterator) -> None:
         delay = self._get_run_delay(times_iter)
         if delay is None:
             self._handle = None

@@ -1,10 +1,17 @@
 """Utility functions for iterables."""
 
+from typing import (
+    Any,
+    Iterator,
+)
 
-def flatten_dict(data, join_char=".", prefix=""):
-    """Flatten a nested dict to (key, value) tuples.
 
-    A neted dict like::
+def flatten_dict(
+    data: Any, join_char: str = ".", prefix: str = ""
+) -> Iterator[tuple[str, Any]]:
+    """Flatten a nested dict to `(key, value)` tuples.
+
+    A nested dict like::
 
       {'foo': {'bar': 3, 'baz': 4},
        'bza': 'something'}
@@ -14,9 +21,9 @@ def flatten_dict(data, join_char=".", prefix=""):
       ('foo.bar': 3), ('foo.baz': 4), ('bza': 'something')
 
 
-    :param dict data: a dict to flatten.
-    :param str join_char: the character to use to join key tokens.
-    :param str prefix: an optional prefix to prepend to keys.
+    :param data: a dict to flatten.
+    :param join_char: the character to use to join key tokens.
+    :param prefix: an optional prefix to prepend to keys.
 
     """
     if isinstance(data, dict):

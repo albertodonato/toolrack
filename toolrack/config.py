@@ -42,7 +42,7 @@ class ConfigKeyTypes:
     _type_float = float
     _type_str = str
 
-    def get_converter(self, _type: str) -> Callable:
+    def get_converter(self, _type: str) -> Callable[[Any], Any]:
         """Return the converter method for the specified type."""
         if _type.endswith("[]"):
             _type = _type.strip("[]")
@@ -56,7 +56,7 @@ class ConfigKeyTypes:
 
         return converter
 
-    def _type_bool(self, value) -> bool:
+    def _type_bool(self, value: Any) -> bool:
         """Convert to boolean.
 
         Accepted values for True are 'true', 'yes' and '1', case insensitive.
@@ -65,7 +65,9 @@ class ConfigKeyTypes:
             return value.lower() in ("true", "yes", "1")
         return bool(value)
 
-    def _type_list(self, converter: Callable, value) -> list:
+    def _type_list(
+        self, converter: Callable[[Any], Any], value: Any
+    ) -> list[Any]:
         """Convert to list."""
         if isinstance(value, str):
             value = value.split()
@@ -93,7 +95,7 @@ class ConfigKey:
         self.description
         self._config_types = ConfigKeyTypes()
 
-    def parse(self, value):
+    def parse(self, value: Any) -> Any:
         """Convert and validate a value."""
         try:
             value = self._convert(value)
@@ -102,21 +104,20 @@ class ConfigKey:
             raise InvalidConfigValue(self.name)
         return value
 
-    def validate(self, value):
+    def validate(self, value: Any) -> None:
         """Validate a value based for the key.
 
         Can be overridden by subclasses. It should raise a ValueError if the
         value is invalid.
         """
-        pass
 
-    def _validate(self, value):
+    def _validate(self, value: Any) -> None:
         """Call the type validator."""
         self.validate(value)
         if self.validator is not None:
             self.validator(value)
 
-    def _convert(self, value):
+    def _convert(self, value: Any) -> Any:
         """Convert the value to the proper type."""
         converter = self._config_types.get_converter(self.type)
         return converter(value)
@@ -131,11 +132,11 @@ class Config:
     def __init__(self, *keys: ConfigKey):
         self._config_keys = {key.name: key for key in keys}
 
-    def keys(self):
+    def keys(self) -> list[ConfigKey]:
         """Return ConfigKeys sorted by name alphabetically."""
         return sorted(self._config_keys.values(), key=attrgetter("name"))
 
-    def extend(self, *keys):
+    def extend(self, *keys: ConfigKey) -> "Config":
         """Return a new Config with additional keys."""
         all_keys = self._config_keys.copy()
         all_keys.update((key.name, key) for key in keys)

@@ -41,7 +41,7 @@ class ErrorExitMessage(Exception):
 
     """
 
-    def __init__(self, message: str, code: int = 1):
+    def __init__(self, message: str, code: int = 1) -> None:
         self.message = message
         self.code = code
 
@@ -60,7 +60,9 @@ class Script:
 
     """
 
-    def __init__(self, stdout: IO | None = None, stderr: IO | None = None):
+    def __init__(
+        self, stdout: IO | None = None, stderr: IO | None = None
+    ) -> None:
         self._stdout = stdout or sys.stdout
         self._stderr = stderr or sys.stderr
 
@@ -73,7 +75,7 @@ class Script:
         """
         raise NotImplementedError()
 
-    def main(self, args: Namespace):
+    def main(self, args: Namespace) -> int | None:
         """The body of the script.
 
         It gets called with the :class:`argparse.Namespace` instance returned
@@ -87,7 +89,7 @@ class Script:
         """
         raise NotImplementedError()
 
-    def exit(self, code: int = 0):
+    def exit(self, code: int = 0) -> None:
         """Exit with the specified return code."""
         sys.exit(code)
 
@@ -100,18 +102,15 @@ class Script:
         """
         self.exit()
 
-    def __call__(self, args: list[str] | None = None):
+    def __call__(self, args: list[str] | None = None) -> int:
         """Call the script, passing :data:`sys.argv` by default."""
         parser = self.get_parser()
         parsed_args = parser.parse_args(args=args)
         try:
-            self.main(parsed_args)
+            return self.main(parsed_args) or 0
         except KeyboardInterrupt as interrupt:
             self.handle_keyboard_interrupt(interrupt)
         except ErrorExitMessage as error:
-            self._error_exit(error)
-
-    def _error_exit(self, error: ErrorExitMessage):
-        """Terminate with the specified :class:`ErrorExitMessage`."""
-        self._stderr.write(f"{error.message}\n")
-        self.exit(error.code)
+            self._stderr.write(f"{error.message}\n")
+            self.exit(error.code)
+        return 0
