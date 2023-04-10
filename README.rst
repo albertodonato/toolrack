@@ -3,8 +3,7 @@ ToolRack
 
 |Latest Version| |Build Status| |Coverage Status| |Documentation|
 
-A collection of utility functions and classes, and a few scripts too.
-
+A collection of miscellaneous utility functions and classes, and a few scripts.
 
 Documentation
 -------------

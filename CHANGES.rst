@@ -1,3 +1,12 @@
+v4.0.0 - 2023-04-10
+===================
+
+- Change ``toolrack.aio.process.ProcessParserProtocol`` to avoid passing in the
+  ``Future``.
+- Improve ``toolrack.aio.process.StreamHelper``.
+- [ci] Add matrix testing.
+
+
 v3.1.0 - 2020-03-02
 ===================
 
