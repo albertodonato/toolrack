@@ -84,22 +84,22 @@ class TestScript:
         script.failure = ErrorExitMessage("Fail!", code=3)
         script([])
         assert stderr.getvalue() == "Fail!\n"
-        assert sys_exit.called_once_with(3)
+        sys_exit.assert_called_once_with(3)
 
     def test_exit(self, script, sys_exit):
         """Script.exit exits the process with 0 as return code."""
         script.exit()
-        assert sys_exit.called_once_with(0)
+        sys_exit.assert_called_once_with(0)
 
     def test_exit_with_code(self, script, sys_exit):
         """Script.exit exits the process with the specified return code."""
         script.exit(code=4)
-        assert sys_exit.called_once_with(4)
+        sys_exit.assert_called_once_with(4)
 
     def test_handle_keyboard_interrupt(self, script, sys_exit):
         """Script.handle_keyboard_interrupt exits cleanly by default."""
         script.handle_keyboard_interrupt(KeyboardInterrupt())
-        assert sys_exit.called_once_with(0)
+        sys_exit.assert_called_once_with(0)
 
     def test_handle_keyboard_interrupt_called(self, script):
         """Script.handle_keyboard_interrupt is called on KeyboardInterrupt."""
