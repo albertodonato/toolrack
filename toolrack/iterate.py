@@ -1,8 +1,8 @@
 """Utility functions for iterables."""
 
+from collections.abc import Iterator
 from typing import (
     Any,
-    Iterator,
 )
 
 

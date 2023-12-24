@@ -6,10 +6,10 @@ timed and periodical tasks execution.
 """
 
 from asyncio import (
-    get_event_loop,
     Handle,
-    iscoroutinefunction,
     Task,
+    get_event_loop,
+    iscoroutinefunction,
 )
 from collections.abc import (
     Callable,

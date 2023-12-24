@@ -37,13 +37,13 @@ def generate_password(chars=DEFAULT_CHARS, length=DEFAULT_LENGTH):
 class PasswordProfile:
     """A password profile, specifying how to generate a random password."""
 
-    CHAR_DEFS = {
-        "alnum": string.ascii_letters + string.digits,
-        "alpha": string.ascii_letters,
-        "num": string.digits,
-        "space": string.whitespace,
-        "punct": string.punctuation,
-    }
+    CHAR_DEFS = (
+        ("alnum", string.ascii_letters + string.digits),
+        ("alpha", string.ascii_letters),
+        ("num", string.digits),
+        ("space", string.whitespace),
+        ("punct", string.punctuation),
+    )
 
     def __init__(self, definition):
         self.definition = definition
@@ -61,7 +61,7 @@ class PasswordProfile:
     def _get_chars(self):
         """Return a list of chars from a definition."""
         chars_def = self.definition
-        for tag, chars in self.CHAR_DEFS.items():
+        for tag, chars in self.CHAR_DEFS:
             chars_def = chars_def.replace(f"{{{tag}}}", chars)
         # remove duplicates
         return "".join(set(chars_def))

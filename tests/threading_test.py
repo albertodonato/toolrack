@@ -3,8 +3,8 @@ from threading import Thread
 import pytest
 
 from toolrack.threading import (
-    thread_local_attrs,
     ThreadLocalAttribute,
+    thread_local_attrs,
 )
 
 

@@ -84,7 +84,7 @@ class PasswordGenerator(Script):
 
     def _list_definitions(self) -> None:
         """List available character set definitions."""
-        for tag, chars in PasswordProfile.CHAR_DEFS.items():
+        for tag, chars in PasswordProfile.CHAR_DEFS:
             print(f"{tag}: {chars!r}")
 
 

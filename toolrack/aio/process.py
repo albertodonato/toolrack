@@ -2,8 +2,8 @@
 
 from asyncio import (
     Future,
-    get_event_loop,
     SubprocessProtocol,
+    get_event_loop,
 )
 from collections.abc import Callable
 from io import StringIO
