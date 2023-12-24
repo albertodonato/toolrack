@@ -30,7 +30,7 @@ def async_func(event_loop, calls):
 
 
 @pytest.fixture
-async def timed_call(event_loop, sync_func):
+async def timed_call(sync_func):
     call = TimedCall(sync_func)
     yield call
     if call.running:

@@ -47,7 +47,7 @@ class TestProcessParserProtocol:
         assert out == "out\n"
         assert err == "err\n"
 
-    async def test_error(self, event_loop):
+    async def test_error(self):
         """If the process errors, an exception is raised."""
         protocol = ProcessParserProtocol()
         exception = Exception("fail!")
@@ -59,8 +59,7 @@ class TestProcessParserProtocol:
             await protocol.done
         assert error.value is exception
 
-    @pytest.mark.asyncio
-    async def test_parse_stdout(self, event_loop, executable, exec_process):
+    async def test_parse_stdout(self, executable, exec_process):
         """It's possible to pass a function to parse stdout line by line."""
         executable.write_text(
             dedent(
@@ -82,8 +81,7 @@ class TestProcessParserProtocol:
         # Full stdout is not returned
         assert result == (None, "not parsed\n")
 
-    @pytest.mark.asyncio
-    async def test_parse_stderr(self, event_loop, executable, exec_process):
+    async def test_parse_stderr(self, executable, exec_process):
         """It's possible to pass a function to parse stderr line by line."""
         executable.write_text(
             dedent(
@@ -105,9 +103,7 @@ class TestProcessParserProtocol:
         # Full stderr is not returned
         assert result == ("not parsed\n", None)
 
-    async def test_parse_no_ending_newline(
-        self, event_loop, executable, exec_process
-    ):
+    async def test_parse_no_ending_newline(self, executable, exec_process):
         """The last line of output is partse if it doesn't have a newline."""
         executable.write_text(
             dedent(

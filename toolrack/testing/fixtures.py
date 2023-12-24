@@ -146,12 +146,13 @@ def tempdir(tmpdir):
 
 
 @pytest.fixture
-async def advance_time(event_loop):
+async def advance_time():
     """Replace the loop clock with a manually advanceable clock.
 
     Code is taken from `asynctest.ClockedTestCase`.
 
     """
+    event_loop = asyncio.get_running_loop()
 
     class Clocker:
         time = 0
