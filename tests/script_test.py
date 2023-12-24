@@ -71,7 +71,7 @@ class TestScript:
         """When a Script is called, the main method is executed."""
         script([])
         assert script.called
-        assert sys_exit.not_called()
+        sys_exit.assert_not_called()
 
     def test_call_parse_args(self, script, stderr):
         """When a Script is called, get_parser parses the arguments."""
