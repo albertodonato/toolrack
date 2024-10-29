@@ -13,12 +13,12 @@ keywords = [
   "library",
   "utility",
 ]
-license = {file = "LICENSE.txt"}
+license = { file = "LICENSE.txt" }
 maintainers = [
-    {name = "Alberto Donato", email = "alberto.donato@gmail.com"},
+  { name = "Alberto Donato", email = "alberto.donato@gmail.com" },
 ]
 authors = [
-    {name = "Alberto Donato", email = "alberto.donato@gmail.com"},
+  { name = "Alberto Donato", email = "alberto.donato@gmail.com" },
 ]
 requires-python = ">=3.10"
 classifiers = [
@@ -31,6 +31,7 @@ classifiers = [
   "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
   "Topic :: Software Development :: Libraries",
   "Topic :: Software Development :: Libraries :: Python Modules",
   "Topic :: Utilities",
@@ -41,41 +42,36 @@ dynamic = [
 dependencies = [
   "pytest",
 ]
-[project.optional-dependencies]
-testing = [
+optional-dependencies.testing = [
   "pytest-asyncio",
   "pytest-mock",
 ]
-[project.urls]
-changelog = "https://github.com/albertodonato/toolrack/blob/main/CHANGES.rst"
-documentation = "https://readthedocs.org/projects/toolrack/"
-homepage = "https://github.com/albertodonato/toolrack"
-repository = "https://github.com/albertodonato/toolrack"
-[project.scripts]
-cert-info = "toolrack.scripts.certinfo:script"
-password-generator = "toolrack.scripts.password_generator:script"
+urls.changelog = "https://github.com/albertodonato/toolrack/blob/main/CHANGES.rst"
+urls.documentation = "https://readthedocs.org/projects/toolrack/"
+urls.homepage = "https://github.com/albertodonato/toolrack"
+urls.repository = "https://github.com/albertodonato/toolrack"
+scripts.cert-info = "toolrack.scripts.certinfo:script"
+scripts.password-generator = "toolrack.scripts.password_generator:script"
 
 [tool.setuptools.dynamic]
-version = {attr = "toolrack.__version__"}
+version = { attr = "toolrack.__version__" }
 
 [tool.setuptools.packages.find]
-include = ["toolrack*"]
+include = [ "toolrack*" ]
 
 [tool.setuptools.package-data]
-toolrack = ["py.typed"]
+toolrack = [ "py.typed" ]
 
 [tool.ruff]
 line-length = 79
 
-[tool.ruff.lint]
-select = ["I", "RUF", "UP"]
-
-[tool.ruff.lint.isort]
-combine-as-imports = true
-force-sort-within-sections = true
+lint.select = [ "I", "RUF", "UP" ]
+lint.isort.combine-as-imports = true
+lint.isort.force-sort-within-sections = true
 
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"
 
 [tool.coverage.report]
 fail_under = 100.0
@@ -83,8 +79,8 @@ show_missing = true
 skip_covered = true
 
 [tool.coverage.run]
-source = ["toolrack"]
-omit = ["toolrack/scripts/*"]
+source = [ "toolrack" ]
+omit = [ "toolrack/scripts/*" ]
 
 [tool.mypy]
 ignore_missing_imports = true
