@@ -1,3 +1,11 @@
+v4.0.1 - 2024-10-29
+===================
+
+- [ci] Add Python 3.13.
+- Switch to ``ruff`` for formatting.
+- Fix deprecation warnings.
+
+
 v4.0.0 - 2023-04-10
 ===================
 
