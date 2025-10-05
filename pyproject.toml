@@ -7,7 +7,7 @@ requires = [
 [project]
 name = "toolrack"
 description = "A collection of miscellaneous utility functions and classes"
-readme = { file = "README.txt", content-type = "text/x-rst" }
+readme = { file = "README.rst", content-type = "text/x-rst" }
 keywords = [
   "asyncio",
   "library",
