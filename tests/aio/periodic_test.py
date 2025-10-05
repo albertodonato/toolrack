@@ -15,15 +15,19 @@ def calls():
     yield []
 
 
-@pytest.fixture
-def sync_func(event_loop, calls):
-    yield lambda: calls.append(event_loop.time())
+def loop_time():
+    return asyncio.get_event_loop().time()
 
 
 @pytest.fixture
-def async_func(event_loop, calls):
+def sync_func(calls):
+    yield lambda: calls.append(loop_time())
+
+
+@pytest.fixture
+def async_func(calls):
     async def func():
-        calls.append(event_loop.time())
+        calls.append(loop_time())
         await asyncio.sleep(0.1)
 
     yield func
@@ -38,8 +42,7 @@ async def timed_call(sync_func):
 
 
 @pytest.fixture
-def periodic_call(event_loop, sync_func):
-    asyncio.set_event_loop(event_loop)
+def periodic_call(sync_func):
     yield PeriodicCall(sync_func)
 
 
@@ -49,9 +52,9 @@ def time_intervals():
 
 
 @pytest.fixture
-def times_iter(event_loop, time_intervals):
+def times_iter(time_intervals):
     def times():
-        time = event_loop.time()
+        time = loop_time()
         for interval in time_intervals:
             time += interval
             yield time

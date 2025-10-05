@@ -1,0 +1,18 @@
+version: 2
+updates:
+  - package-ecosystem: pip
+    directory: /docs
+    schedule:
+      interval: weekly
+    groups:
+      minor:
+        update-types: [minor]
+      major:
+        update-types: [major]
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    groups:
+      all:
+        update-types: [major, minor]

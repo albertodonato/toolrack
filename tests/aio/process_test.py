@@ -1,3 +1,4 @@
+import asyncio
 from pathlib import Path
 from textwrap import dedent
 
@@ -18,9 +19,10 @@ def executable(tmpdir):
 
 
 @pytest.fixture
-def exec_process(event_loop, executable):
+def exec_process(executable):
     async def run(protocol_factory=ProcessParserProtocol):
-        transport, protocol = await event_loop.subprocess_exec(
+        loop = asyncio.get_event_loop()
+        transport, protocol = await loop.subprocess_exec(
             protocol_factory, str(executable)
         )
         result = await protocol.done
