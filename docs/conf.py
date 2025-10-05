@@ -11,7 +11,7 @@ import toolrack
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
 project = "toolrack"
-copyright = "{}, Alberto Donato".format(datetime.today().year)
+copyright = f"{datetime.today().year}, Alberto Donato"
 author = "Alberto Donato"
 release = toolrack.__version__
 
