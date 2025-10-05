@@ -1,3 +1,10 @@
+v4.0.2 - 2025-10-05
+===================
+
+- Require Python 3.11 or later.
+- Remove usage of `event_loop` fixture for tests.
+
+
 v4.0.1 - 2024-10-29
 ===================
 
